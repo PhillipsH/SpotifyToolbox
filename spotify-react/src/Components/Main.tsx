@@ -1,26 +1,29 @@
 import React, { useState } from 'react';
 import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {authorize} from '../flux/actions/authorizeAction';
+import {getLikedSongs} from '../flux/actions/spotifyActions';
 import {IAuthProps} from '../types/interfaces';
-import Axios from "axios";
+import axios from "axios";
 import querystring from 'querystring';
 
-export const Authorizer = ({authorize})  => {
+export const Main = (props)  => {
 
-  const authorizeClick = () =>{
-    const code = (window.location.href.split("?")[1].split("=")[1])
-    console.log(code)
+  const getLikedSongs = () =>{
+    const code:string = (window.location.href.split("?")[1].split("=")[1]);
+    // const url:string = ("http://localhost:5000/spotify/getLikedSongs/?code=" + code); 
+    props.getLikedSongs(code);
+    // Axios.get(url).then(response =>{console.log(response)})
+    
   }
 return (
   <div>
-    <Button onClick={authorizeClick} color="success">YOU ARE IN MAIN</Button><br></br>
+    <Button onClick={getLikedSongs} color="success">YOU ARE IN MAIN</Button><br></br>
   </div>
   );
 }
 
 const mapStateToProps = (state:IAuthProps) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+  likedSongs: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, {authorize})(Authorizer);
+export default connect(mapStateToProps, {getLikedSongs})(Main);
