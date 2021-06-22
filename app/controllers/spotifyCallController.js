@@ -35,28 +35,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateUser = void 0;
-var axios = require("axios");
+exports.getLikedSongs = void 0;
+var axios_1 = __importDefault(require("axios"));
+var querystring = require('querystring');
 var redirect_uri = 'http://localhost:3000/callback';
 var client_id = '300ac0b33203415b98bd63ec4146c74c';
-// const client_secret : string = 'a78fd6a2e88a4d0282c4c8724771646f'
-var querystring = require('querystring');
+var client_secret = 'a78fd6a2e88a4d0282c4c8724771646f';
+var likedSongUri = 'https://api.spotify.com/v1/me/tracks';
 //Function adds user to database then redirects user to the main page.
-function authenticateUser(req, res) {
+function getLikedSongs(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var scope;
         return __generator(this, function (_a) {
-            scope = 'user-library-read';
-            res.redirect('https://accounts.spotify.com/authorize?' +
-                querystring.stringify({
-                    response_type: 'code',
-                    client_id: client_id,
-                    scope: scope,
-                    redirect_uri: redirect_uri,
-                }));
+            console.log("GETTING LIKED SONGS");
+            console.log(req.query.code);
+            axios_1.default.get(likedSongUri, {
+                params: {
+                    market: 'US',
+                    limit: '50',
+                    offset: '1'
+                },
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + req.query.code,
+                    "Content-Type": "application/json"
+                }
+            }).then(function (response) { console.log(response); }).catch(function (error) {
+                console.log(error);
+            });
             return [2 /*return*/];
         });
     });
 }
-exports.authenticateUser = authenticateUser;
+exports.getLikedSongs = getLikedSongs;

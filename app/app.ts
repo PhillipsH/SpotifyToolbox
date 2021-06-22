@@ -2,7 +2,9 @@ import express from "express";
 import cors from 'cors';
 import path from "path";
 
-import apiRouter from "./routes/api";
+// import apiRouter from "./routes/api";
+import authenticateRouter from './routes/authenticateRouter'
+import spotifyCallRouter from './routes/spotifyCallRouter'
 var cookieParser = require('cookie-parser');
 
 const app = express();
@@ -24,9 +26,8 @@ app.get('/', (req, res) =>{
     res.sendFile(path.resolve(__dirname,'../', 'spotify-react', 'build', 'index.html'))
 })
 
-let authenticateRouter = require('./routes/authenticateRouter')
-
-app.use('', apiRouter);
-app.use(authenticateRouter);
+// app.use('', apiRouter);
+app.use('/spotify/', spotifyCallRouter);
+app.use('/authenticate',authenticateRouter);
 
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));

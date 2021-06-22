@@ -1,11 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const authenticateController = require('../controllers/authenticateController')
+// const authenticateController = require('../controllers/authenticateController');
+import * as authenticateController from '../controllers/authenticateController'
 
-router.get('/authenticate', authenticateController.authenticateUser)
+router.get('/', authenticateController.authenticateUser);
 
-// router.get('/value/:id', tickerController.getValue)
-
-
-module.exports = router;
+export default router;
