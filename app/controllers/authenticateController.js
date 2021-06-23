@@ -47,7 +47,7 @@ function authenticateUser(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var scope;
         return __generator(this, function (_a) {
-            scope = 'user-library-read';
+            scope = 'user-read-private user-read-email user-library-read';
             res.redirect('https://accounts.spotify.com/authorize?' +
                 querystring.stringify({
                     response_type: 'code',

@@ -9,37 +9,55 @@ const client_secret:string = 'a78fd6a2e88a4d0282c4c8724771646f'
 const likedSongUri:string = 'https://api.spotify.com/v1/me/tracks'
 
 //Function adds user to database then redirects user to the main page.
+// export async function getLikedSongs (req:Request, res:Response) {
+//     console.log("GETTING LIKED SONGS")
+//     // console.log(req.query.code)
+//     axios.get(likedSongUri, {
+//         params: {
+//             market: 'US',
+//             limit: '50',
+//             offset: '1'
+//         },
+//         headers: {
+//             Accept: "application/json",
+//             Authorization: "Bearer " + req.query.code,
+//             "Content-Type": "application/json"
+//         }
+//     }).then(response =>{console.log(response)}).catch((error)=>{
+//         console.log(error)
+//     })
+// }
 export async function getLikedSongs (req:Request, res:Response) {
     console.log("GETTING LIKED SONGS")
-    console.log(req.query.code)
-    axios.get(likedSongUri, {
+    // console.log(req.query.code)
+    // console.log("NEW RAN")
+    const authURI = 'https://accounts.spotify.com/api/token'
+    axios({
+        url: authURI,
+        method: 'post',
         params: {
-            market: 'US',
-            limit: '50',
-            offset: '1'
+          grant_type: 'client_credentials'
         },
         headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + req.query.code,
-            "Content-Type": "application/json"
+          'Accept':'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        auth: {
+          username: client_id,
+          password: client_secret
         }
-    }).then(response =>{console.log(response)}).catch((error)=>{
-        console.log(error)
-    })
-    // axios.get(likedSongUri, {
-    //     params: {
-    //         market: 'US',
-    //         limit: '50',
-    //         offset: '1'
+    }).then(response => console.log(response.data.access_token))
+
+    // var authOptions = {
+    //     url: 'https://accounts.spotify.com/api/token',
+    //     form: {
+    //       code: req.query.code,
+    //       redirect_uri: redirect_uri,
+    //       grant_type: 'authorization_code'
     //     },
     //     headers: {
-    //         Accept: "application/json",
-    //         Authorization: "Bearer BQAA26f4wr4CED34QVPZrSktgKtMXtpNom73BilA9DlwhfEnBHMxmAkBnSSkHPSRm7sE9ioU48RHV0-y-q2quUT8-He2SWU9V3dUcF78-Uq_aghR7CvTuvobbQ4Ex2NywxczTwD0lkK5-GGCI_qeedi9kZl6K7LFEOyeG87g4N8AYWW-Q556fwbFCGutvg" ,
-    //         "Content-Type": "application/json"
-    //     }
-    // }).then(response =>{console.log(response)})
-    // .catch((error)=>{
-    //     console.log(error)
-    // })
-    
+    //       'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+    //     },
+    //     json: true
+    //   };
 }

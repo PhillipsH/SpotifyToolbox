@@ -47,25 +47,45 @@ var client_id = '300ac0b33203415b98bd63ec4146c74c';
 var client_secret = 'a78fd6a2e88a4d0282c4c8724771646f';
 var likedSongUri = 'https://api.spotify.com/v1/me/tracks';
 //Function adds user to database then redirects user to the main page.
+// export async function getLikedSongs (req:Request, res:Response) {
+//     console.log("GETTING LIKED SONGS")
+//     // console.log(req.query.code)
+//     axios.get(likedSongUri, {
+//         params: {
+//             market: 'US',
+//             limit: '50',
+//             offset: '1'
+//         },
+//         headers: {
+//             Accept: "application/json",
+//             Authorization: "Bearer " + req.query.code,
+//             "Content-Type": "application/json"
+//         }
+//     }).then(response =>{console.log(response)}).catch((error)=>{
+//         console.log(error)
+//     })
+// }
 function getLikedSongs(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var authURI;
         return __generator(this, function (_a) {
             console.log("GETTING LIKED SONGS");
-            console.log(req.query.code);
-            axios_1.default.get(likedSongUri, {
+            authURI = 'https://accounts.spotify.com/api/token';
+            axios_1.default({
+                url: authURI,
+                method: 'post',
                 params: {
-                    market: 'US',
-                    limit: '50',
-                    offset: '1'
+                    grant_type: 'client_credentials'
                 },
                 headers: {
-                    Accept: "application/json",
-                    Authorization: "Bearer " + req.query.code,
-                    "Content-Type": "application/json"
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                auth: {
+                    username: client_id,
+                    password: client_secret
                 }
-            }).then(function (response) { console.log(response); }).catch(function (error) {
-                console.log(error);
-            });
+            }).then(function (response) { return console.log(response.data.access_token); });
             return [2 /*return*/];
         });
     });

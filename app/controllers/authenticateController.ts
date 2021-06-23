@@ -10,13 +10,14 @@ const querystring = require('querystring');
 //Function adds user to database then redirects user to the main page.
 export async function authenticateUser (req:Request, res:Response) {
   // const scope = 'user-read-private playlist-read-private user-library-read';
-  const scope:string = 'user-library-read';
+  // const scope:string = 'user-library-read';
+  var scope = 'user-read-private user-read-email user-library-read';
   res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      scope: scope,
-      redirect_uri: redirect_uri,
-      // state: state
-    }));
+  querystring.stringify({
+    response_type: 'code',
+    client_id: client_id,
+    scope: scope,
+    redirect_uri: redirect_uri,
+  }));
+    
 }
