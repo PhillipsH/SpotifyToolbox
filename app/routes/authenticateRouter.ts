@@ -5,5 +5,6 @@ const router = express.Router();
 import * as authenticateController from '../controllers/authenticateController'
 
 router.get('/', authenticateController.authenticateUser);
+router.get('/getTokens', authenticateController.getTokens);
 
 export default router;

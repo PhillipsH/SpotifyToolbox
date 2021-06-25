@@ -47,17 +47,4 @@ export async function getLikedSongs (req:Request, res:Response) {
           password: client_secret
         }
     }).then(response => console.log(response.data.access_token))
-
-    // var authOptions = {
-    //     url: 'https://accounts.spotify.com/api/token',
-    //     form: {
-    //       code: req.query.code,
-    //       redirect_uri: redirect_uri,
-    //       grant_type: 'authorization_code'
-    //     },
-    //     headers: {
-    //       'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-    //     },
-    //     json: true
-    //   };
 }
