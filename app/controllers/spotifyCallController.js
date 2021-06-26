@@ -70,6 +70,9 @@ function getLikedSongs(req, res) {
         var authURI;
         return __generator(this, function (_a) {
             console.log("GETTING LIKED SONGS");
+            // console.log(req.query.code)
+            // console.log("NEW RAN")
+            console.log(req.query.code);
             authURI = 'https://accounts.spotify.com/api/token';
             axios_1.default({
                 url: authURI,

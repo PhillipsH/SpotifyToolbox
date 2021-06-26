@@ -14,8 +14,8 @@ function App() {
         <div className="App">
           <header className="App-header">
           <Switch>
-            <Route exact path="/" component={Authorizer}/>
-            <Route exact path="/callback" component={Main}/>
+            <Route exact path="/" component={Main}/>
+            <Route exact path="/login" component={Authorizer}/>
             <Authorizer></Authorizer>
           </Switch>
           </header>

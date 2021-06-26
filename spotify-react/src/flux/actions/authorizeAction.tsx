@@ -1,10 +1,13 @@
 import axios from 'axios';
 import {AUTHORIZE, USER_LOADING, USER_LOADED, AUTH_ERROR} from './types';
+import cookie, { Cookies } from 'react-cookie'
 
 export const authorize = () => (dispatch: Function) => {
-  axios
-    .get('http://localhost:5000/spotify/getLikedSongs')
-    .then(res =>
-      console.log(res)
-    );
+  let cookie = new Cookies();
+
+  console.log("in authorize action ran")
+  dispatch({
+    type: authorize,
+    payload: "yo"
+  })
 };

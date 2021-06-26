@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 const axios = require("axios");
 
-const redirect_uri:string = 'http://localhost:3000/callback'
+const redirect_uri:string = 'http://localhost:5000/authenticate/getTokens'
 const client_id : string = '300ac0b33203415b98bd63ec4146c74c'
 const client_secret : string = 'a78fd6a2e88a4d0282c4c8724771646f'
 const querystring = require('querystring');
@@ -23,15 +23,15 @@ export async function authenticateUser (req:Request, res:Response) {
 }
 
 export async function getTokens (req:Request, res:Response) {
-  console.log("GETTING LIKED SONGS")
-  // console.log(req.query.code)
-  // console.log("NEW RAN")
+  console.log(req.query.code)
+  console.log(req.originalUrl)
   const authURI = 'https://accounts.spotify.com/api/token'
   axios({
       url: authURI,
       method: 'post',
       params: {
-        grant_type: 'client_credentials'
+        grant_type: 'client_credentials',
+        code: req.query.code
       },
       headers: {
         'Accept':'application/json',
@@ -42,6 +42,8 @@ export async function getTokens (req:Request, res:Response) {
         password: client_secret
       }
   }).then(response => {
-    res.redirect("http://localhost:3000")
+    console.log("setting cookie")
+    res.cookie('access_token',response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: true });
+    res.redirect('http://localhost:3000/')
   })
 }

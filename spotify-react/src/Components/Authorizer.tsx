@@ -7,15 +7,12 @@ import { useParams } from "react-router";
 import Axios from "axios"
 
 export const Authorizer = ({authorize})  => {
+  authorize()
 
-  const authorizeClick = () =>{
-    console.log("working")
-    // Axios.get('http://localhost:5000/authenticate')
-  }
+
 return (
   <div>
-    {/* <Button onClick={authorizeClick} color="success">success</Button><br></br> */}
-    <a href="http://localhost:5000/authenticate"><Button color="success">Link</Button></a>
+    <a href="http://localhost:5000/authenticate"><Button color="success">Login With Spotify</Button></a>
   </div>
   );
 }

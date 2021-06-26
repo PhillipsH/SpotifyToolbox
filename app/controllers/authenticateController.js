@@ -36,11 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateUser = void 0;
+exports.getTokens = exports.authenticateUser = void 0;
 var axios = require("axios");
-var redirect_uri = 'http://localhost:3000/callback';
+var redirect_uri = 'http://localhost:5000/authenticate/getTokens';
 var client_id = '300ac0b33203415b98bd63ec4146c74c';
-// const client_secret : string = 'a78fd6a2e88a4d0282c4c8724771646f'
+var client_secret = 'a78fd6a2e88a4d0282c4c8724771646f';
 var querystring = require('querystring');
 //Function adds user to database then redirects user to the main page.
 function authenticateUser(req, res) {
@@ -60,3 +60,35 @@ function authenticateUser(req, res) {
     });
 }
 exports.authenticateUser = authenticateUser;
+function getTokens(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var authURI;
+        return __generator(this, function (_a) {
+            console.log(req.query.code);
+            console.log(req.originalUrl);
+            authURI = 'https://accounts.spotify.com/api/token';
+            axios({
+                url: authURI,
+                method: 'post',
+                params: {
+                    grant_type: 'client_credentials',
+                    code: req.query.code
+                },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                auth: {
+                    username: client_id,
+                    password: client_secret
+                }
+            }).then(function (response) {
+                console.log("setting cookie");
+                res.cookie('access_token', response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: true });
+                res.redirect('http://localhost:3000/');
+            });
+            return [2 /*return*/];
+        });
+    });
+}
+exports.getTokens = getTokens;

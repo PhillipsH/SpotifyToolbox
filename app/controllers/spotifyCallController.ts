@@ -31,6 +31,7 @@ export async function getLikedSongs (req:Request, res:Response) {
     console.log("GETTING LIKED SONGS")
     // console.log(req.query.code)
     // console.log("NEW RAN")
+    console.log(req.query.code)
     const authURI = 'https://accounts.spotify.com/api/token'
     axios({
         url: authURI,
