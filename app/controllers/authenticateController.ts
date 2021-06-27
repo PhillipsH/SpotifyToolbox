@@ -43,7 +43,15 @@ export async function getTokens (req:Request, res:Response) {
       }
   }).then(response => {
     console.log("setting cookie")
-    res.cookie('access_token',response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: true });
+    res.cookie('access_token',response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: false });
     res.redirect('http://localhost:3000/')
   })
+}
+
+export async function checkAuth (req:Request, res:Response) {
+  console.log(JSON.stringify(req.cookies))
+  console.log('cookie: ', req.cookies); 
+  console.log(req.headers.cookie + "head")
+  console.log("CHECK AUTH TOKEN " + req.cookies.access_token)
+  console.log("check auth")
 }

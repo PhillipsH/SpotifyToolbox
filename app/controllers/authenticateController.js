@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTokens = exports.authenticateUser = void 0;
+exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
 var axios = require("axios");
 var redirect_uri = 'http://localhost:5000/authenticate/getTokens';
 var client_id = '300ac0b33203415b98bd63ec4146c74c';
@@ -84,7 +84,7 @@ function getTokens(req, res) {
                 }
             }).then(function (response) {
                 console.log("setting cookie");
-                res.cookie('access_token', response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: true });
+                res.cookie('access_token', response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: false });
                 res.redirect('http://localhost:3000/');
             });
             return [2 /*return*/];
@@ -92,3 +92,16 @@ function getTokens(req, res) {
     });
 }
 exports.getTokens = getTokens;
+function checkAuth(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            console.log(JSON.stringify(req.cookies));
+            console.log('cookie: ', req.cookies);
+            console.log(req.headers.cookie + "head");
+            console.log("CHECK AUTH TOKEN " + req.cookies.access_token);
+            console.log("check auth");
+            return [2 /*return*/];
+        });
+    });
+}
+exports.checkAuth = checkAuth;

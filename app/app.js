@@ -6,14 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var path_1 = __importDefault(require("path"));
-// import apiRouter from "./routes/api";
 var authenticateRouter_1 = __importDefault(require("./routes/authenticateRouter"));
 var spotifyCallRouter_1 = __importDefault(require("./routes/spotifyCallRouter"));
+// import apiRouter from "./routes/api";
 var cookieParser = require('cookie-parser');
 var app = express_1.default();
-app.use(express_1.default.static(__dirname + '/public'));
 app.use(cors_1.default());
 app.use(cookieParser());
+app.use(express_1.default.static(__dirname + '/public'));
 var port = 5000;
 app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 // Configuring body parser middleware

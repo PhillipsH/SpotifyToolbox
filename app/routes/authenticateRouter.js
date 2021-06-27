@@ -28,4 +28,5 @@ var router = express_1.default.Router();
 var authenticateController = __importStar(require("../controllers/authenticateController"));
 router.get('/', authenticateController.authenticateUser);
 router.get('/getTokens', authenticateController.getTokens);
+router.get('/checkAuth', authenticateController.checkAuth);
 exports.default = router;

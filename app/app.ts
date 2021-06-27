@@ -1,16 +1,16 @@
 import express from "express";
 import cors from 'cors';
 import path from "path";
-
-// import apiRouter from "./routes/api";
 import authenticateRouter from './routes/authenticateRouter'
 import spotifyCallRouter from './routes/spotifyCallRouter'
+// import apiRouter from "./routes/api";
+
 var cookieParser = require('cookie-parser');
 
 const app = express();
-app.use(express.static(__dirname + '/public'))
 app.use(cors())
 app.use(cookieParser());
+app.use(express.static(__dirname + '/public'))
 const port = 5000;
 app.use(express.static(path.join(__dirname, 'public')));
 
