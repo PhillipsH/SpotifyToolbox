@@ -2,7 +2,8 @@ import {
     AUTHORIZE,
     USER_LOADING,
     USER_LOADED,
-    AUTH_ERROR
+    AUTH_ERROR,
+    CHECK_AUTHORIZE
   } from '../actions/types';
   
   const initialState = {
@@ -11,15 +12,18 @@ import {
   
   export default function(state = initialState, action: any) {
     switch (action.type) {
-      case AUTHORIZE:
-        console.log("ALALALAL")
+      case CHECK_AUTHORIZE:
         return {
           ...state,
           details: action.payload,
+          isAuthenticated: action.payload,
           loading: false
         };
       default:
         return state;
     }
   }
+  
+
+  
   
