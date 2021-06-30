@@ -3,22 +3,26 @@ import cors from 'cors';
 import path from "path";
 import authenticateRouter from './routes/authenticateRouter'
 import spotifyCallRouter from './routes/spotifyCallRouter'
+import session from 'express-session';
 // import apiRouter from "./routes/api";
-
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
 
 const app = express();
-app.use(cors())
-app.use(cookieParser());
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(session({
+  secret: "Shh, its a secret!",
+  resave: true,
+  saveUninitialized: true}));
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
+// app.use(cookieParser());
 app.use(express.static(__dirname + '/public'))
 const port = 5000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuring body parser middleware
-app.use(express.json());
-app.use(express.urlencoded({
-  extended: true
-}));
 
 app.use(express.static('../spotify-react/build'));
 

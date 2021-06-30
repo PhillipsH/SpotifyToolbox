@@ -23,8 +23,6 @@ export async function authenticateUser (req:Request, res:Response) {
 }
 
 export async function getTokens (req:Request, res:Response) {
-  console.log(req.query.code)
-  console.log(req.originalUrl)
   const authURI = 'https://accounts.spotify.com/api/token'
   axios({
       url: authURI,
@@ -43,15 +41,23 @@ export async function getTokens (req:Request, res:Response) {
       }
   }).then(response => {
     console.log("setting cookie")
-    res.cookie('access_token',response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: false });
-    res.redirect('http://localhost:3000/')
+    // res.cookie('access_token',response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: false });
+    req.session["access_token"] = response.data.access_token;
+    console.log(req.session["access_token"])
+    // req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
+    res.redirect('http://localhost:3000/');
   })
 }
 
 export async function checkAuth (req:Request, res:Response) {
-  console.log(JSON.stringify(req.cookies))
-  console.log('cookie: ', req.cookies); 
-  console.log(req.headers.cookie + "head")
-  console.log("CHECK AUTH TOKEN " + req.cookies.access_token)
-  console.log("check auth")
+  console.log("CHECK AUTH")
+  console.log("THIS IS THE TOKEN " + req.session["access_token"])
+  if(req.session["access_token"] != undefined){
+    console.log("YOU ARE authenticated")
+    console.log("THIS IS THE TOKEN " + req.session["access_token"])
+    res.send({"isAuthenticated" : true})
+  }else{
+    console.log("not authenticated")
+    res.send({"isAuthenticated" : false})
+  }
 }
