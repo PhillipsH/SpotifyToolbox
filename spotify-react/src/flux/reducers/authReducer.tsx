@@ -15,7 +15,6 @@ import {
       case CHECK_AUTHORIZE:
         return {
           ...state,
-          details: action.payload,
           isAuthenticated: action.payload,
           loading: false
         };

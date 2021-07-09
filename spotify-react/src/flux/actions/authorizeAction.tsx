@@ -13,12 +13,3 @@ export const checkAuthorize = () => (dispatch: Function) => {
     }
   );
 };
-
-// export const filterSwitchesName = (searchName) => dispatch => {
-//   console.log("filtering switches")
-//   dispatch(setItemsLoading());
-//   dispatch({
-//     type: FILTER_SWITCHES_NAME,
-//     payload: searchName
-//   })
-// };

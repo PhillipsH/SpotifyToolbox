@@ -47,7 +47,8 @@ function authenticateUser(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var scope;
         return __generator(this, function (_a) {
-            scope = 'user-read-private user-read-email user-library-read';
+            console.log("AUTHENTICATE USER");
+            scope = 'user-library-read playlist-read-private';
             res.redirect('https://accounts.spotify.com/authorize?' +
                 querystring.stringify({
                     response_type: 'code',
@@ -65,28 +66,25 @@ function getTokens(req, res) {
         var authURI;
         return __generator(this, function (_a) {
             authURI = 'https://accounts.spotify.com/api/token';
+            console.log("GETTING TOKENS");
             axios({
                 url: authURI,
                 method: 'post',
-                params: {
-                    grant_type: 'client_credentials',
-                    code: req.query.code
-                },
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
                 },
-                auth: {
-                    username: client_id,
-                    password: client_secret
+                params: {
+                    grant_type: 'authorization_code',
+                    code: req.query.code,
+                    redirect_uri: redirect_uri
                 }
             }).then(function (response) {
-                console.log("setting cookie");
-                // res.cookie('access_token',response.data.access_token, { maxAge: parseInt(response.data.expires_in) * 1000, httpOnly: false });
+                req.session["code"] = req.query.code;
                 req.session["access_token"] = response.data.access_token;
-                console.log(req.session["access_token"]);
-                // req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
+                req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
                 res.redirect('http://localhost:3000/');
+            }).catch(function (error) {
+                console.log(error);
             });
             return [2 /*return*/];
         });
@@ -97,14 +95,10 @@ function checkAuth(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             console.log("CHECK AUTH");
-            console.log("THIS IS THE TOKEN " + req.session["access_token"]);
             if (req.session["access_token"] != undefined) {
-                console.log("YOU ARE authenticated");
-                console.log("THIS IS THE TOKEN " + req.session["access_token"]);
                 res.send({ "isAuthenticated": true });
             }
             else {
-                console.log("not authenticated");
                 res.send({ "isAuthenticated": false });
             }
             return [2 /*return*/];

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import {checkAuthorize} from '../flux/actions/authorizeAction';
@@ -9,6 +9,9 @@ import SpotifyFunctions from './SpotifyFunctions'
 export const Main = (props)  => {
 
   // props.checkAuthorize();
+  useEffect(() => {
+    props.checkAuthorize();
+  }, [])
   const checkAuthentication = () =>{
     console.log(props.authenticated)
     props.checkAuthorize();
@@ -27,8 +30,8 @@ export const Main = (props)  => {
 return (
   <div>
     <h1>You are in Main</h1>
-    {mainContent}
     <Button onClick={checkAuthentication} color="success">check auth</Button><br></br>
+    {mainContent}
   </div>
   );
 }

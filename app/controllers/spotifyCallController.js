@@ -39,58 +39,160 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLikedSongs = void 0;
+exports.getPlaylistSongs = exports.getLikedSongs = void 0;
 var axios_1 = __importDefault(require("axios"));
 var querystring = require('querystring');
 var redirect_uri = 'http://localhost:3000/callback';
 var client_id = '300ac0b33203415b98bd63ec4146c74c';
 var client_secret = 'a78fd6a2e88a4d0282c4c8724771646f';
 var likedSongUri = 'https://api.spotify.com/v1/me/tracks';
+var START_LIKED_SONGS = 'https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US';
 //Function adds user to database then redirects user to the main page.
-// export async function getLikedSongs (req:Request, res:Response) {
-//     console.log("GETTING LIKED SONGS")
-//     // console.log(req.query.code)
-//     axios.get(likedSongUri, {
-//         params: {
-//             market: 'US',
-//             limit: '50',
-//             offset: '1'
-//         },
-//         headers: {
-//             Accept: "application/json",
-//             Authorization: "Bearer " + req.query.code,
-//             "Content-Type": "application/json"
-//         }
-//     }).then(response =>{console.log(response)}).catch((error)=>{
-//         console.log(error)
-//     })
-// }
 function getLikedSongs(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var authURI;
+        function recursiveSpotify(url) {
+            return __awaiter(this, void 0, void 0, function () {
+                var response, _a, _b, error_1;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            _c.trys.push([0, 3, , 4]);
+                            return [4 /*yield*/, axios_1.default.get(url, {
+                                    headers: {
+                                        Accept: "application/json",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
+                                    }
+                                })];
+                        case 1:
+                            response = _c.sent();
+                            if (response.data.next == null) {
+                                return [2 /*return*/, response.data.items];
+                            }
+                            console.log(response.data.next);
+                            _b = (_a = response.data.items).concat;
+                            return [4 /*yield*/, recursiveSpotify(response.data.next)];
+                        case 2: return [2 /*return*/, (_b.apply(_a, [_c.sent()]))];
+                        case 3:
+                            error_1 = _c.sent();
+                            switch (error_1.response.status) {
+                                case 429:
+                                    console.log("timeout error");
+                                    setTimeout(function () {
+                                    }, 5000);
+                                    return [2 /*return*/, (recursiveSpotify(url))];
+                                    break;
+                            }
+                            return [2 /*return*/, []];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        var totalLikedSongs;
         return __generator(this, function (_a) {
-            console.log("GETTING LIKED SONGS");
-            // console.log(req.query.code)
-            // console.log("NEW RAN")
-            console.log(req.query.code);
-            authURI = 'https://accounts.spotify.com/api/token';
-            axios_1.default({
-                url: authURI,
-                method: 'post',
-                params: {
-                    grant_type: 'client_credentials'
-                },
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                auth: {
-                    username: client_id,
-                    password: client_secret
-                }
-            }).then(function (response) { return console.log(response.data.access_token); });
-            return [2 /*return*/];
+            switch (_a.label) {
+                case 0:
+                    /*Possible to make function faster by getting the total amount of songs in the first url
+                    and using the total songs to calculate amount of requests needed to be done and asyncronously
+                    creating all requests.
+                    */
+                    console.log("GETTING LIKED SONGS");
+                    console.log(req.session["access_token"]);
+                    return [4 /*yield*/, recursiveSpotify(START_LIKED_SONGS)];
+                case 1:
+                    totalLikedSongs = _a.sent();
+                    console.log("completed");
+                    console.log(totalLikedSongs.length);
+                    res.send(totalLikedSongs);
+                    return [2 /*return*/];
+            }
         });
     });
 }
 exports.getLikedSongs = getLikedSongs;
+function getPlaylistSongs(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        function recursiveSpotify(url) {
+            return __awaiter(this, void 0, void 0, function () {
+                var response, _a, _b, error_2;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            _c.trys.push([0, 3, , 4]);
+                            return [4 /*yield*/, axios_1.default.get(url, {
+                                    headers: {
+                                        Accept: "application/json",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
+                                    }
+                                })];
+                        case 1:
+                            response = _c.sent();
+                            if (response.data.next == null) {
+                                return [2 /*return*/, response.data.items];
+                            }
+                            console.log(response.data.next);
+                            _b = (_a = response.data.items).concat;
+                            return [4 /*yield*/, recursiveSpotify(response.data.next)];
+                        case 2: return [2 /*return*/, (_b.apply(_a, [_c.sent()]))];
+                        case 3:
+                            error_2 = _c.sent();
+                            switch (error_2.response.status) {
+                                case 429:
+                                    console.log("timeout error");
+                                    setTimeout(function () {
+                                    }, 5000);
+                                    return [2 /*return*/, (recursiveSpotify(url))];
+                                    break;
+                            }
+                            return [2 /*return*/, []];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        var allPlaylistUrl, playlists, playlistIndex, combinedPlaylistPromise, playlistIndex, combinedPlaylists, uniqueTracks, playlistIndex, songIndex, uniqueTracksArr;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log("GETTING PLAYLIST SONGS");
+                    allPlaylistUrl = 'https://api.spotify.com/v1/me/playlists?limit=50';
+                    return [4 /*yield*/, recursiveSpotify(allPlaylistUrl)];
+                case 1:
+                    playlists = _a.sent();
+                    console.log(playlists.length);
+                    for (playlistIndex in playlists) {
+                        if (playlists[playlistIndex].owner.id != '12185463800') {
+                            playlists.splice(playlistIndex, 1);
+                        }
+                    }
+                    console.log(playlists.length);
+                    combinedPlaylistPromise = [];
+                    for (playlistIndex in playlists) {
+                        combinedPlaylistPromise.push(recursiveSpotify(playlists[playlistIndex].tracks.href));
+                    }
+                    return [4 /*yield*/, Promise.all(combinedPlaylistPromise)];
+                case 2:
+                    combinedPlaylists = _a.sent();
+                    uniqueTracks = {};
+                    for (playlistIndex in combinedPlaylists) {
+                        for (songIndex in combinedPlaylists[playlistIndex]) {
+                            try {
+                                uniqueTracks[combinedPlaylists[playlistIndex][songIndex].track.id] = combinedPlaylists[playlistIndex][songIndex];
+                            }
+                            catch (error) {
+                                console.log("not there");
+                                console.log(combinedPlaylists[playlistIndex][songIndex]);
+                            }
+                        }
+                    }
+                    uniqueTracksArr = [];
+                    uniqueTracksArr = Object.values(uniqueTracks);
+                    console.log(uniqueTracksArr.length);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getPlaylistSongs = getPlaylistSongs;
