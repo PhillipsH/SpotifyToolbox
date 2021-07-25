@@ -20,7 +20,6 @@ export async function authenticateUser (req:Request, res:Response) {
     scope: scope,
     redirect_uri: redirect_uri,
   }));
-    
 }
 
 export async function getTokens (req:Request, res:Response) {

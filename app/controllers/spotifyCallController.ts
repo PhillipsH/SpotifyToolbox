@@ -67,31 +67,70 @@ export async function getPlaylistSongs (req:Request, res:Response) {
             console.log(response.data.next)
             return(response.data.items.concat(await recursiveSpotify(response.data.next)))
         }catch(error){
+            console.log(error)
             switch(error.response.status){
                 case 429:
                     console.log("timeout error")
                     setTimeout(function () {
                     }, 5000);
                     return(recursiveSpotify(url))
-                break;
             }
             return[]
         }
     }
-    let playlists = await recursiveSpotify(allPlaylistUrl)
-    console.log(playlists.length)
-    for(let playlistIndex in playlists){
-        if(playlists[playlistIndex].owner.id != '12185463800'){
-            playlists.splice(playlistIndex,1)
+    async function recursivePlaylist (url:string, playlistName:string, playlistId:string){
+        try{
+            let response = await axios.get(url, {
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + req.session["access_token"],
+                    "Content-Type": "application/json"
+                }
+            })
+            for(let item in response.data.items){
+                response.data.items[item]["playlist_name"] = playlistName
+                response.data.items[item]["playlist_id"] = playlistId
+            }
+            if(response.data.next == null){
+                return response.data.items
+            }
+            console.log(response.data.next)
+            return(response.data.items.concat(await recursivePlaylist(response.data.next, playlistName, playlistId)))
+        }catch(error){
+            console.log(error)
+            switch(error.response.status){
+                case 429:
+                    console.log("timeout error")
+                    setTimeout(function () {
+                    }, 5000);
+                    return(recursivePlaylist(url, playlistName, playlistId))
+                default:
+                    console.log("OTHER ERROR PLEASE CHECK")
+                    return []
+
+            }
         }
     }
-    console.log(playlists.length)
-    let combinedPlaylistPromise: any = []
+    //Getting all the playlists
+    let playlists = await recursiveSpotify(allPlaylistUrl)
 
-    for(let playlistIndex in playlists){
-        combinedPlaylistPromise.push(recursiveSpotify(playlists[playlistIndex].tracks.href))
+    //Removing all playlits not created by current user
+    for(let i = 0; i < playlists.length; i++){
+        if(playlists[i].owner.id != '12185463800'){
+            playlists.splice(i,1)
+            i -= 1;
+        }
     }
+    // Combining all promises in one array
+    let combinedPlaylistPromise: any = []
+    for(let playlistIndex in playlists){
+        combinedPlaylistPromise.push(recursivePlaylist(playlists[playlistIndex].tracks.href, playlists[playlistIndex].name, playlists[playlistIndex].id))
+    }
+    //awaiting for all promises to be completed
     let combinedPlaylists:any = await Promise.all(combinedPlaylistPromise)
+    /*Taking only unique songs from playlists as when combining playlists there will be some songs that are the exact same
+    this is done using a json object so that we remove all duplicates efficiently.
+    */
     let uniqueTracks:any = {};
     for(let playlistIndex in combinedPlaylists){
         for(let songIndex in combinedPlaylists[playlistIndex]){
@@ -104,10 +143,11 @@ export async function getPlaylistSongs (req:Request, res:Response) {
     
         }
     }
+    //converting the object into an array
     let uniqueTracksArr = []
     uniqueTracksArr = Object.values(uniqueTracks);
+    res.send(uniqueTracksArr)
 
-    console.log(uniqueTracksArr.length)
 
 
     // async function recursiveAxios (url){

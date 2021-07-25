@@ -3,8 +3,6 @@ import { Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import {checkAuthorize} from '../flux/actions/authorizeAction';
 import {IAuthProps} from '../types/interfaces';
-import { useParams } from "react-router";
-import Axios from "axios"
 
 export const Authorizer = ({checkAuthorize})  => {
 

@@ -138,13 +138,13 @@ function getPlaylistSongs(req, res) {
                         case 2: return [2 /*return*/, (_b.apply(_a, [_c.sent()]))];
                         case 3:
                             error_2 = _c.sent();
+                            console.log(error_2);
                             switch (error_2.response.status) {
                                 case 429:
                                     console.log("timeout error");
                                     setTimeout(function () {
                                     }, 5000);
                                     return [2 /*return*/, (recursiveSpotify(url))];
-                                    break;
                             }
                             return [2 /*return*/, []];
                         case 4: return [2 /*return*/];
@@ -152,27 +152,79 @@ function getPlaylistSongs(req, res) {
                 });
             });
         }
-        var allPlaylistUrl, playlists, playlistIndex, combinedPlaylistPromise, playlistIndex, combinedPlaylists, uniqueTracks, playlistIndex, songIndex, uniqueTracksArr;
+        function recursivePlaylist(url, playlistName, playlistId) {
+            return __awaiter(this, void 0, void 0, function () {
+                var response, item, _a, _b, error_3;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            _c.trys.push([0, 3, , 4]);
+                            return [4 /*yield*/, axios_1.default.get(url, {
+                                    headers: {
+                                        Accept: "application/json",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
+                                    }
+                                })];
+                        case 1:
+                            response = _c.sent();
+                            for (item in response.data.items) {
+                                response.data.items[item]["playlist_name"] = playlistName;
+                                response.data.items[item]["playlist_id"] = playlistId;
+                            }
+                            if (response.data.next == null) {
+                                return [2 /*return*/, response.data.items];
+                            }
+                            console.log(response.data.next);
+                            _b = (_a = response.data.items).concat;
+                            return [4 /*yield*/, recursivePlaylist(response.data.next, playlistName, playlistId)];
+                        case 2: return [2 /*return*/, (_b.apply(_a, [_c.sent()]))];
+                        case 3:
+                            error_3 = _c.sent();
+                            console.log(error_3);
+                            switch (error_3.response.status) {
+                                case 429:
+                                    console.log("timeout error");
+                                    setTimeout(function () {
+                                    }, 5000);
+                                    return [2 /*return*/, (recursivePlaylist(url, playlistName, playlistId))];
+                                default:
+                                    console.log("OTHER ERROR PLEASE CHECK");
+                                    return [2 /*return*/, []];
+                            }
+                            return [3 /*break*/, 4];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        var allPlaylistUrl, playlists, i, combinedPlaylistPromise, playlistIndex, combinedPlaylists, uniqueTracks, playlistIndex, songIndex, uniqueTracksArr;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     console.log("GETTING PLAYLIST SONGS");
                     allPlaylistUrl = 'https://api.spotify.com/v1/me/playlists?limit=50';
-                    return [4 /*yield*/, recursiveSpotify(allPlaylistUrl)];
+                    return [4 /*yield*/, recursiveSpotify(allPlaylistUrl)
+                        //Removing all playlits not created by current user
+                    ];
                 case 1:
                     playlists = _a.sent();
-                    console.log(playlists.length);
-                    for (playlistIndex in playlists) {
-                        if (playlists[playlistIndex].owner.id != '12185463800') {
-                            playlists.splice(playlistIndex, 1);
+                    //Removing all playlits not created by current user
+                    for (i = 0; i < playlists.length; i++) {
+                        if (playlists[i].owner.id != '12185463800') {
+                            playlists.splice(i, 1);
+                            i -= 1;
                         }
                     }
-                    console.log(playlists.length);
                     combinedPlaylistPromise = [];
                     for (playlistIndex in playlists) {
-                        combinedPlaylistPromise.push(recursiveSpotify(playlists[playlistIndex].tracks.href));
+                        combinedPlaylistPromise.push(recursivePlaylist(playlists[playlistIndex].tracks.href, playlists[playlistIndex].name, playlists[playlistIndex].id));
                     }
-                    return [4 /*yield*/, Promise.all(combinedPlaylistPromise)];
+                    return [4 /*yield*/, Promise.all(combinedPlaylistPromise)
+                        /*Taking only unique songs from playlists as when combining playlists there will be some songs that are the exact same
+                        this is done using a json object so that we remove all duplicates efficiently.
+                        */
+                    ];
                 case 2:
                     combinedPlaylists = _a.sent();
                     uniqueTracks = {};
@@ -189,7 +241,7 @@ function getPlaylistSongs(req, res) {
                     }
                     uniqueTracksArr = [];
                     uniqueTracksArr = Object.values(uniqueTracks);
-                    console.log(uniqueTracksArr.length);
+                    res.send(uniqueTracksArr);
                     return [2 /*return*/];
             }
         });

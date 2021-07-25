@@ -12,10 +12,14 @@ export const Main = (props)  => {
   useEffect(() => {
     props.checkAuthorize();
   }, [])
-  const checkAuthentication = () =>{
-    console.log(props.authenticated)
-    props.checkAuthorize();
+  let mainBoard = {
+    marginTop:"150px",
+    marginBottom:"50px"
   }
+  // const checkAuthentication = () =>{
+  //   console.log(props.authenticated)
+  //   props.checkAuthorize();
+  // }
   let mainContent = (props.authenticated.isAuthenticated) 
   ? (
   <>
@@ -29,8 +33,9 @@ export const Main = (props)  => {
   
 return (
   <div>
-    <h1>You are in Main</h1>
-    <Button onClick={checkAuthentication} color="success">check auth</Button><br></br>
+    <div style={mainBoard}>
+      <h1>Welcome To Spotify Tools</h1>
+    </div>
     {mainContent}
   </div>
   );
