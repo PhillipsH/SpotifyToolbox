@@ -192,69 +192,19 @@ export const SpotifyFunctions = (props) => {
 
     props.setCurrentSongList(duplicateSongs, "DUPLICATE_SONGS");
   }
-
-  async function getNumArtists() {
-    let UniqueArtistsObj = {}
+  async function getDecadeSongs (){
+    let decadeObj = {}
     for(let index in props.likedSongs){
-      if(UniqueArtistsObj[props.likedSongs[index].track.artists[0].name] == undefined){
-        UniqueArtistsObj[props.likedSongs[index].track.artists[0].name] = props.likedSongs[index]
-        UniqueArtistsObj[props.likedSongs[index].track.artists[0].name]["count"] = 1
-      }else{
-        UniqueArtistsObj[props.likedSongs[index].track.artists[0].name]["count"]++;
-      }
-    }
-  }
-  async function getDecade() {
-    let likedSongsObj: any = {};
-    let duplicateObj: any = {};
-
-    //Create an object of props of all liked songs
-    for (let index in props.likedSongs) {
-      if (
-        likedSongsObj[
-          "" +
-            props.likedSongs[index].track.name +
-            props.likedSongs[index].track.artists[0].name
-        ] == undefined
-      ) {
-        likedSongsObj[
-          "" +
-            props.likedSongs[index].track.name +
-            props.likedSongs[index].track.artists[0].name
-        ] = props.likedSongs[index];
-      } else {
-        if (
-          duplicateObj[
-            "" +
-              props.likedSongs[index].track.name +
-              props.likedSongs[index].track.artists[0].name
-          ] == undefined
-        ) {
-          duplicateObj[
-            "" +
-              props.likedSongs[index].track.name +
-              props.likedSongs[index].track.artists[0].name
-          ] = [
-            likedSongsObj[
-              "" +
-                props.likedSongs[index].track.name +
-                props.likedSongs[index].track.artists[0].name
-            ],
-          ];
+        let date = new Date(props.likedSongs[index].track.album.release_date)
+        let year = date.getFullYear();
+        year = Math.floor(year / 10) * 10
+        if(decadeObj[year] == undefined){
+          decadeObj[year] = [props.likedSongs[index]]
+        }else{
+          decadeObj[year].push(props.likedSongs[index])
         }
-        duplicateObj[
-          "" +
-            props.likedSongs[index].track.name +
-            props.likedSongs[index].track.artists[0].name
-        ].push(props.likedSongs[index]);
-        // let bothSongs = [likedSongsObj["" + props.likedSongs[index].track.name + props.likedSongs[index].track.artists[0].name], props.likedSongs[index]]
-        // duplicateSongs.push(bothSongs)
-      }
     }
-    let duplicateSongs: any = Object.values(duplicateObj);
-    console.log(duplicateSongs.length);
-
-    props.setCurrentSongList(duplicateSongs, "DUPLICATE_SONGS");
+    console.log(decadeObj)
   }
 
   return (
@@ -290,10 +240,10 @@ export const SpotifyFunctions = (props) => {
         <div className="button-board">
           <Button
             className="function-button"
-            onClick={comparePlaylistToLiked}
+            onClick={getDecadeSongs}
             color="success"
           >
-            Find Songs in Playlist not in Liked
+            GET DECADE
           </Button>
           <br></br>
           <Button
