@@ -7,11 +7,10 @@ import {
   setCurrentSongList,
 } from "../flux/actions/spotifyActions";
 import Song from "./LikedSongs/LikedSong";
-import PlaylistSong from "./PlaylistSongs/PlaylistSong";
-import DuplicateSongs from "./DuplicateSongs/DuplicateSongs";
 import "./Styles/functionButton.css";
 import DuplicateSongsBoard from "./DuplicateSongs/DuplicateSongsBoard";
 import PlaylistSongsBoard from "./PlaylistSongs/PlaylistSongsBoard";
+import DecadeSongsBoard from "./DecadeSongs/DecadeSongsBoard";
 
 export const SpotifyFunctions = (props) => {
   useEffect(() => {
@@ -47,17 +46,6 @@ export const SpotifyFunctions = (props) => {
         break;
   
       case "PLAYLIST_UNIQUES_SONGS":
-        // songList = props.currentSongs.currentList.map((val, key) => (
-        //   <PlaylistSong
-        //     key={key}
-        //     id={val.track.id}
-        //     playlistName={val.playlist_name}
-        //     title={val.track.name}
-        //     artist={val.track.artists[0].name}
-        //     album={val.track.album.name}
-        //     date={val.added_at}
-        //   />
-        // ));
         songList = <PlaylistSongsBoard></PlaylistSongsBoard>
         break;
   
@@ -76,11 +64,11 @@ export const SpotifyFunctions = (props) => {
         break;
   
       case "DUPLICATE_SONGS":
-        console.log("LIKEDSONGS");
-        // songList = props.currentSongs.currentList.map((val, key) => (
-        //   <DuplicateSongs key={key} songs={val} />
-        // ));
         songList = <DuplicateSongsBoard></DuplicateSongsBoard>;
+        break;
+
+      case "DECADE_SONGS":
+        songList = <DecadeSongsBoard></DecadeSongsBoard>;
         break;
     }
     buttonStyle = "button-container"
@@ -204,6 +192,7 @@ export const SpotifyFunctions = (props) => {
           decadeObj[year].push(props.likedSongs[index])
         }
     }
+    props.setCurrentSongList(decadeObj, "DECADE_SONGS");
     console.log(decadeObj)
   }
 

@@ -22,9 +22,11 @@ const DuplicateSongsBoard = (props) => {
         <p>Remove ALL</p>
         <Button color="danger">Remove All</Button>
       </div>
-      {props.currentSongs.currentList.map((val, key) => (
-          <DuplicateSongs key={key} songs={val} />
-        ))
+      {props.currentSongs.currentList.map((val, key) => {
+        console.log(key)
+        return(
+          <DuplicateSongs currentSongIndex={key} songs={val} />
+        )})
       }     
     </div>
   );

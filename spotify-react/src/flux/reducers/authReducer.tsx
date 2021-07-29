@@ -1,6 +1,5 @@
 import {
     AUTHORIZE,
-    USER_LOADED,
     CHECK_AUTHORIZE
   } from '../actions/types';
   

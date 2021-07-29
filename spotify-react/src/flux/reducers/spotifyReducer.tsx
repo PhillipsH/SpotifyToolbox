@@ -1,5 +1,5 @@
 import {
-    GET_LIKED_SONGS,GET_PLAYLIST_SONGS,SET_CURRENT_LIST, ITEMS_LOADING
+    GET_LIKED_SONGS,GET_PLAYLIST_SONGS,SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS
   } from '../actions/types';
   
   const initialState = {
@@ -25,7 +25,11 @@ import {
           playlistSongs: action.payload,
           loading: false
       };
-      
+      case REMOVE_SONGS:
+        return{
+          ...state,
+          loading: false
+        };
       case SET_CURRENT_LIST:
         return {
           ...state,

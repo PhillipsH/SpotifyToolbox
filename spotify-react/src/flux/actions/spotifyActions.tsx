@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {GET_LIKED_SONGS, GET_PLAYLIST_SONGS, SET_CURRENT_LIST, ITEMS_LOADING} from './types';
+import {GET_LIKED_SONGS, GET_PLAYLIST_SONGS, SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS} from './types';
 import store from '../store';
 
 export const getLikedSongs = () => (dispatch: Function) => {
@@ -29,8 +29,17 @@ export const getPlaylistSongs = () => async(dispatch: Function) => {
     payload:res.data
   })
   console.log(store.getState())
-  return
+};
 
+export const removeSongs = (songs) => async(dispatch: Function) => {
+  console.log("removing Songs")
+  dispatch(setItemsLoading());
+  let res = await axios.get('http://localhost:5000/spotify/removeSongs', {withCredentials: true});
+  await dispatch({
+    type:REMOVE_SONGS,
+    payload:res.data
+  })
+  console.log(store.getState())
 };
 
 export const setCurrentSongList = (currentList, currentType) => (dispatch: Function) => {

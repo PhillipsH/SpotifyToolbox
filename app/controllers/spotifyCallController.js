@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPlaylistSongs = exports.getLikedSongs = void 0;
+exports.addToPlaylist = exports.removeSong = exports.getPlaylistSongs = exports.getLikedSongs = void 0;
 var axios_1 = __importDefault(require("axios"));
 var querystring = require('querystring');
 var redirect_uri = 'http://localhost:3000/callback';
@@ -248,3 +248,150 @@ function getPlaylistSongs(req, res) {
     });
 }
 exports.getPlaylistSongs = getPlaylistSongs;
+function removeSong(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        function deleteSpotify(url, songs) {
+            return __awaiter(this, void 0, void 0, function () {
+                var response, error_4;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, axios_1.default.delete(url, {
+                                    headers: {
+                                        Accept: "application/json",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
+                                    },
+                                    params: {
+                                        ids: songs
+                                    }
+                                })];
+                        case 1:
+                            response = _a.sent();
+                            return [2 /*return*/, (response.data.items)];
+                        case 2:
+                            error_4 = _a.sent();
+                            console.log(error_4);
+                            switch (error_4.response.status) {
+                                case 429:
+                                    console.log("timeout error");
+                                    setTimeout(function () {
+                                    }, 5000);
+                                    return [2 /*return*/, (deleteSpotify(url, songs))];
+                            }
+                            return [2 /*return*/, []];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        var url, songs;
+        return __generator(this, function (_a) {
+            url = "https://api.spotify.com/v1/me/tracks";
+            songs = req.body.songs;
+            while (songs > 0) {
+                deleteSpotify(url, songs.splice(0, 50));
+            }
+            return [2 /*return*/];
+        });
+    });
+}
+exports.removeSong = removeSong;
+function addToPlaylist(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        function createPlaylist(url) {
+            return __awaiter(this, void 0, void 0, function () {
+                var response, error_5;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, axios_1.default.post(url, {
+                                    headers: {
+                                        Accept: "application/json",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
+                                    },
+                                    data: {
+                                        body: {
+                                            "name": "New Playlist",
+                                            "description": "New playlist description",
+                                            "public": false
+                                        }
+                                    }
+                                })];
+                        case 1:
+                            response = _a.sent();
+                            return [2 /*return*/, (response.data.id)];
+                        case 2:
+                            error_5 = _a.sent();
+                            console.log(error_5);
+                            switch (error_5.response.status) {
+                                case 429:
+                                    console.log("timeout error");
+                                    setTimeout(function () {
+                                    }, 5000);
+                                    return [2 /*return*/, (createPlaylist(url))];
+                            }
+                            return [2 /*return*/, []];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        function addToPlaylist(url, playlistId, songs) {
+            return __awaiter(this, void 0, void 0, function () {
+                var response, error_6;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, axios_1.default.post(url, {
+                                    headers: {
+                                        Accept: "application/json",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
+                                    },
+                                    data: {
+                                        uris: songs
+                                    }
+                                })];
+                        case 1:
+                            response = _a.sent();
+                            return [2 /*return*/, (response.data.items)];
+                        case 2:
+                            error_6 = _a.sent();
+                            console.log(error_6);
+                            switch (error_6.response.status) {
+                                case 429:
+                                    console.log("timeout error");
+                                    setTimeout(function () {
+                                    }, 5000);
+                                    return [2 /*return*/, (addToPlaylist(url, playlistId, songs))];
+                            }
+                            return [2 /*return*/, []];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        var createPlaylistURL, addSongPlaylistURL, songs, playlistId;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    createPlaylistURL = "https://api.spotify.com/v1/users/12185463800/playlists";
+                    addSongPlaylistURL = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks";
+                    songs = req.body.songs;
+                    return [4 /*yield*/, createPlaylist(createPlaylistURL)];
+                case 1:
+                    playlistId = _a.sent();
+                    while (songs > 0) {
+                        addToPlaylist(addSongPlaylistURL, playlistId, songs.splice(0, 100));
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.addToPlaylist = addToPlaylist;
