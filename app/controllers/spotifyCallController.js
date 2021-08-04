@@ -39,14 +39,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addToPlaylist = exports.removeSong = exports.getPlaylistSongs = exports.getLikedSongs = void 0;
+exports.addToPlaylist = exports.removeLikedSongs = exports.getPlaylistSongs = exports.getLikedSongs = void 0;
 var axios_1 = __importDefault(require("axios"));
 var querystring = require('querystring');
 var redirect_uri = 'http://localhost:3000/callback';
 var client_id = '300ac0b33203415b98bd63ec4146c74c';
 var client_secret = 'a78fd6a2e88a4d0282c4c8724771646f';
 var likedSongUri = 'https://api.spotify.com/v1/me/tracks';
-var START_LIKED_SONGS = 'https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US';
 //Function adds user to database then redirects user to the main page.
 function getLikedSongs(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -89,14 +88,11 @@ function getLikedSongs(req, res) {
                 });
             });
         }
-        var totalLikedSongs;
+        var START_LIKED_SONGS, totalLikedSongs;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    /*Possible to make function faster by getting the total amount of songs in the first url
-                    and using the total songs to calculate amount of requests needed to be done and asyncronously
-                    creating all requests.
-                    */
+                    START_LIKED_SONGS = 'https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US';
                     console.log("GETTING LIKED SONGS");
                     console.log(req.session["access_token"]);
                     return [4 /*yield*/, recursiveSpotify(START_LIKED_SONGS)];
@@ -204,6 +200,7 @@ function getPlaylistSongs(req, res) {
                 case 0:
                     console.log("GETTING PLAYLIST SONGS");
                     allPlaylistUrl = 'https://api.spotify.com/v1/me/playlists?limit=50';
+                    console.log(req.session["access_token"]);
                     return [4 /*yield*/, recursiveSpotify(allPlaylistUrl)
                         //Removing all playlits not created by current user
                     ];
@@ -248,7 +245,7 @@ function getPlaylistSongs(req, res) {
     });
 }
 exports.getPlaylistSongs = getPlaylistSongs;
-function removeSong(req, res) {
+function removeLikedSongs(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         function deleteSpotify(url, songs) {
             return __awaiter(this, void 0, void 0, function () {
@@ -261,14 +258,15 @@ function removeSong(req, res) {
                                     headers: {
                                         Accept: "application/json",
                                         Authorization: "Bearer " + req.session["access_token"],
-                                        "Content-Type": "application/json"
+                                        "Content-Type": "application/json",
                                     },
-                                    params: {
+                                    data: {
                                         ids: songs
                                     }
                                 })];
                         case 1:
                             response = _a.sent();
+                            console.log(response);
                             return [2 /*return*/, (response.data.items)];
                         case 2:
                             error_4 = _a.sent();
@@ -286,20 +284,49 @@ function removeSong(req, res) {
                 });
             });
         }
-        var url, songs;
+        var url;
         return __generator(this, function (_a) {
             url = "https://api.spotify.com/v1/me/tracks";
-            songs = req.body.songs;
-            while (songs > 0) {
-                deleteSpotify(url, songs.splice(0, 50));
+            // let url = "https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US"
+            // let songs = req.body.songs
+            console.log(req.session["access_token"]);
+            while (req.body.songIds.length > 0) {
+                deleteSpotify(url, req.body.songIds.splice(0, 50));
             }
             return [2 /*return*/];
         });
     });
 }
-exports.removeSong = removeSong;
+exports.removeLikedSongs = removeLikedSongs;
 function addToPlaylist(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        // async function createPlaylist (url:string){
+        //     try{
+        //         let response = await axios.post(url, {
+        //             headers: {
+        //                 Accept: "application/json",
+        //                 Authorization: "Bearer " + req.session["access_token"],
+        //                 "Content-Type": "application/json"
+        //             },
+        //             data:{
+        //                 "name": "New Playlist",
+        //                 "description": "New playlist description",
+        //                 "public": false
+        //             }
+        //         })
+        //         return(response.data.id)
+        //     }catch(error){
+        //         console.log(error)
+        //         switch(error.response.status){
+        //             case 429:
+        //                 console.log("timeout error")
+        //                 setTimeout(function () {
+        //                 }, 5000);
+        //                 return(createPlaylist(url))
+        //         }
+        //         return[]
+        //     }
+        // }
         function createPlaylist(url) {
             return __awaiter(this, void 0, void 0, function () {
                 var response, error_5;
@@ -310,20 +337,17 @@ function addToPlaylist(req, res) {
                             return [4 /*yield*/, axios_1.default.post(url, {
                                     headers: {
                                         Accept: "application/json",
-                                        Authorization: "Bearer " + req.session["access_token"],
-                                        "Content-Type": "application/json"
+                                        Authorization: "Bearer " + "BQAKA_gXg4Lt2LbjyZLg_m9rv4gOFa86535Xj2rdnm6PzWS3-Fq6QU31pIdAulUV7YPGHVm49822TxhJzapdUvtghGUeKQk_HRX4-sZIYnRVcCpSkniEnEt9Ni64HsmC1KHLEQHwkOM7gqXpgXweNYMLJIhsfVyg4bR1i82OyPksfiXLXSmSP6YFxlRCLEzkFFYbZTZfkQMg9bjOwqFDLZN3qkaF_GKBfzkpm-JSA7bkAkI3D9bOr2Y8CYJOXc4w",
+                                        "Content-Type": "application/json",
                                     },
                                     data: {
-                                        body: {
-                                            "name": "New Playlist",
-                                            "description": "New playlist description",
-                                            "public": false
-                                        }
+                                        "name": "New Playlist",
                                     }
                                 })];
                         case 1:
                             response = _a.sent();
-                            return [2 /*return*/, (response.data.id)];
+                            console.log(response);
+                            return [2 /*return*/, (response.data.items)];
                         case 2:
                             error_5 = _a.sent();
                             console.log(error_5);
@@ -383,12 +407,11 @@ function addToPlaylist(req, res) {
                     createPlaylistURL = "https://api.spotify.com/v1/users/12185463800/playlists";
                     addSongPlaylistURL = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks";
                     songs = req.body.songs;
+                    console.log("token  = " + req.session["access_token"]);
                     return [4 /*yield*/, createPlaylist(createPlaylistURL)];
                 case 1:
                     playlistId = _a.sent();
-                    while (songs > 0) {
-                        addToPlaylist(addSongPlaylistURL, playlistId, songs.splice(0, 100));
-                    }
+                    console.log(playlistId);
                     return [2 /*return*/];
             }
         });

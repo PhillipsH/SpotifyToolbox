@@ -11,6 +11,9 @@ import "./Styles/functionButton.css";
 import DuplicateSongsBoard from "./DuplicateSongs/DuplicateSongsBoard";
 import PlaylistSongsBoard from "./PlaylistSongs/PlaylistSongsBoard";
 import DecadeSongsBoard from "./DecadeSongs/DecadeSongsBoard";
+import LikedSongsBoard from "./LikedSongs/LikedSongsBoard";
+
+import axios from 'axios'
 
 export const SpotifyFunctions = (props) => {
   useEffect(() => {
@@ -50,21 +53,13 @@ export const SpotifyFunctions = (props) => {
         break;
   
       case "LIKED_UNIQUE_SONGS":
-        songList = props.currentSongs.currentList.map((val, key) => (
-          <Song
-            key={key}
-            id={val.track.id}
-            title={val.track.name}
-            artist={val.track.artists[0].name}
-            album={val.track.album.name}
-            date={val.added_at}
-          />
-        ));
+        songList = <LikedSongsBoard></LikedSongsBoard>
         console.log("LIKEDSONGS");
         break;
   
       case "DUPLICATE_SONGS":
         songList = <DuplicateSongsBoard></DuplicateSongsBoard>;
+        console.log("DUPLICATE SONGS USEEFFECT")
         break;
 
       case "DECADE_SONGS":
@@ -195,9 +190,43 @@ export const SpotifyFunctions = (props) => {
     props.setCurrentSongList(decadeObj, "DECADE_SONGS");
     console.log(decadeObj)
   }
+  function addToPlaylist(){
+    console.log("trying to remove")
+    let songUris:string []= []
+    console.log(props.currentSongs)
+    //getting all songs
+    for(let songIndex in props.currentSongs.currentList){
+      songUris.push(props.currentSongs.currentList[songIndex].track.uri)
+    }
+    
+    // delete song from spotify through server api
+    // axios
+    // .post('http://localhost:5000/spotify/addToPlaylist', 
+    // {withCredentials: true,
+    // data : {
+    // }})
+    // .then(res =>{
+    //   console.log(res)
+    // });
+    axios
+    .get('http://localhost:5000/spotify/addToPlaylist', 
+    {withCredentials: true,
+    data : {
+    }})
+    .then(res =>{
+      console.log(res)
+    });
+  }
 
   return (
     <div>
+      <Button
+            className="function-button"
+            onClick={addToPlaylist}
+            color="success"
+          >
+            ADD TO PLAYLIST
+          </Button>
       <Container id={buttonStyle}>
         <div className="button-board">
           <Button
@@ -240,15 +269,7 @@ export const SpotifyFunctions = (props) => {
             onClick={compareLikedSongs}
             color="success"
           >
-            Find Songs in Liked not in Playlist
-          </Button>
-          <br></br>
-          <Button
-            className="function-button"
-            onClick={findDuplicates}
-            color="success"
-          >
-            Find Duplicates
+            Get Artist
           </Button>
           <br></br>
         </div>

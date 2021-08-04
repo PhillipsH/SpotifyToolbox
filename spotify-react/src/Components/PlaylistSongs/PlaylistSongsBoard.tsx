@@ -16,11 +16,17 @@ const style = {
 };
 
 const PlaylistSongsBoard = (props) => {
+  function addToPlaylist(){
+    let spotifyUris:string []= []
+    for(let songIndex in props.currentSongs){
+      spotifyUris.push(props.currentSongs[songIndex].track.uri)
+    }
+  }
   return (
     <div className ="song-board">
       <div>
         <p>Remove ALL</p>
-        <Button color="danger">Remove All</Button>
+        <Button color="success">Add to Playlist</Button>
       </div>
       {props.currentSongs.currentList.map((val, key) => (
           <PlaylistSong

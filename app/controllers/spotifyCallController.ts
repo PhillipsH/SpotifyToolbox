@@ -7,7 +7,6 @@ const redirect_uri:string = 'http://localhost:3000/callback'
 const client_id:string = '300ac0b33203415b98bd63ec4146c74c'
 const client_secret:string = 'a78fd6a2e88a4d0282c4c8724771646f'
 const likedSongUri:string = 'https://api.spotify.com/v1/me/tracks'
-const START_LIKED_SONGS = 'https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US'
 
 //Function adds user to database then redirects user to the main page.
 export async function getLikedSongs (req:Request, res:Response) {
@@ -15,6 +14,7 @@ export async function getLikedSongs (req:Request, res:Response) {
     and using the total songs to calculate amount of requests needed to be done and asyncronously 
     creating all requests.
     */
+    const START_LIKED_SONGS = 'https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US'
     console.log("GETTING LIKED SONGS")
     console.log(req.session["access_token"])
     async function recursiveSpotify (url:string){
@@ -53,6 +53,7 @@ export async function getLikedSongs (req:Request, res:Response) {
 export async function getPlaylistSongs (req:Request, res:Response) {
     console.log("GETTING PLAYLIST SONGS")
     const allPlaylistUrl:string = 'https://api.spotify.com/v1/me/playlists?limit=50'
+    console.log(req.session["access_token"])
 
     async function recursiveSpotify (url:string){
         try{
@@ -151,9 +152,11 @@ export async function getPlaylistSongs (req:Request, res:Response) {
     res.send(uniqueTracksArr)
 }
 
-export async function removeSong(req:Request, res:Response) {
+export async function removeLikedSongs(req:Request, res:Response) {
     let url = "https://api.spotify.com/v1/me/tracks"
-    let songs = req.body.songs
+    // let url = "https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US"
+    // let songs = req.body.songs
+    console.log(req.session["access_token"])
 
     async function deleteSpotify (url:string, songs){
         try{
@@ -161,12 +164,13 @@ export async function removeSong(req:Request, res:Response) {
                 headers: {
                     Accept: "application/json",
                     Authorization: "Bearer " + req.session["access_token"],
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
-                params: {
+                data: {
                   ids: songs
                 }
             })
+            console.log(response)
             return(response.data.items)
         }catch(error){
             console.log(error)
@@ -181,8 +185,8 @@ export async function removeSong(req:Request, res:Response) {
         }
     }
 
-    while (songs > 0){
-        deleteSpotify(url, songs.splice(0, 50))
+    while (req.body.songIds.length > 0){
+        deleteSpotify(url, req.body.songIds.splice(0, 50))
     }
 
 }
@@ -192,23 +196,49 @@ export async function addToPlaylist(req:Request, res:Response) {
     let addSongPlaylistURL = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
     let songs = req.body.songs
 
+    console.log("token  = "  + req.session["access_token"])
+
+    // async function createPlaylist (url:string){
+    //     try{
+    //         let response = await axios.post(url, {
+    //             headers: {
+    //                 Accept: "application/json",
+    //                 Authorization: "Bearer " + req.session["access_token"],
+    //                 "Content-Type": "application/json"
+    //             },
+    //             data:{
+    //                 "name": "New Playlist",
+    //                 "description": "New playlist description",
+    //                 "public": false
+    //             }
+    //         })
+    //         return(response.data.id)
+    //     }catch(error){
+    //         console.log(error)
+    //         switch(error.response.status){
+    //             case 429:
+    //                 console.log("timeout error")
+    //                 setTimeout(function () {
+    //                 }, 5000);
+    //                 return(createPlaylist(url))
+    //         }
+    //         return[]
+    //     }
+    // }
     async function createPlaylist (url:string){
         try{
             let response = await axios.post(url, {
                 headers: {
                     Accept: "application/json",
-                    Authorization: "Bearer " + req.session["access_token"],
-                    "Content-Type": "application/json"
+                    Authorization: "Bearer " + "BQAKA_gXg4Lt2LbjyZLg_m9rv4gOFa86535Xj2rdnm6PzWS3-Fq6QU31pIdAulUV7YPGHVm49822TxhJzapdUvtghGUeKQk_HRX4-sZIYnRVcCpSkniEnEt9Ni64HsmC1KHLEQHwkOM7gqXpgXweNYMLJIhsfVyg4bR1i82OyPksfiXLXSmSP6YFxlRCLEzkFFYbZTZfkQMg9bjOwqFDLZN3qkaF_GKBfzkpm-JSA7bkAkI3D9bOr2Y8CYJOXc4w",
+                    "Content-Type": "application/json",
                 },
                 data:{
-                    body:{
-                        "name": "New Playlist",
-                        "description": "New playlist description",
-                        "public": false
-                    }
+                    "name": "New Playlist",
                 }
             })
-            return(response.data.id)
+            console.log(response)
+            return(response.data.items)
         }catch(error){
             console.log(error)
             switch(error.response.status){
@@ -249,10 +279,10 @@ export async function addToPlaylist(req:Request, res:Response) {
     }
 
     let playlistId = await createPlaylist(createPlaylistURL)
+    console.log(playlistId)
 
-
-    while (songs > 0){
-        addToPlaylist(addSongPlaylistURL, playlistId, songs.splice(0, 100))
-    }
+    // while (songs > 0){
+    //     addToPlaylist(addSongPlaylistURL, playlistId, songs.splice(0, 100))
+    // }
 
 }
