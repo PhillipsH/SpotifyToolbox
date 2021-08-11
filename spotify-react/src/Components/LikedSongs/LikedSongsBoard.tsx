@@ -24,19 +24,19 @@ const LikedSongsBoard = (props) => {
     for(let songIndex in props.currentSongs.currentList){
       songUris.push(props.currentSongs.currentList[songIndex].track.uri)
     }
-    
+    let playlistData = {
+      songUris : songUris
+    }
     // delete song from spotify through server api
-    // axios
-    // .post('http://localhost:5000/spotify/addToPlaylist', 
-    // {withCredentials: true,
-    // data : {
-    //   songUris : songUris
-    // }})
-    // .then(res =>{
-    //   console.log(res)
-    // });
+    console.log(playlistData)
+    axios
+    .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
+    {withCredentials: true,})
+    .then(res =>{
+      console.log(res)
+    });
 
-    axios.get('http://localhost:5000/spotify/addToPlaylist', {withCredentials: true})
+    // axios.get('http://localhost:5000/spotify/addToPlaylist', {withCredentials: true})
 
 
     // let likedSongsNew = props.likedSongs.slice()
@@ -80,22 +80,24 @@ const LikedSongsBoard = (props) => {
 
   }
   return (
-    <div className ="song-board">
-      <div>
+    <div className="function-board">
+      <div className="toolbox">
         <Button onClick={addToPlaylist}color="success">Add to Playlist</Button>
         <Button color="success">Like All Songs</Button>
       </div>
-      {props.currentSongs.currentList.map((val, key) => (
-          <LikedSong
-            key={key}
-            id={val.track.id}
-            title={val.track.name}
-            artist={val.track.artists[0].name}
-            album={val.track.album.name}
-            date={val.added_at}
-          />
-        ))
-      }     
+      <div className="song-container">
+        {props.currentSongs.currentList.map((val, key) => (
+            <LikedSong
+              key={key}
+              id={val.track.id}
+              title={val.track.name}
+              artist={val.track.artists[0].name}
+              album={val.track.album.name}
+              date={val.added_at}
+            />
+          ))
+        } 
+      </div>
     </div>
   );
 };

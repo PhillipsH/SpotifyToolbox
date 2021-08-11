@@ -23,22 +23,24 @@ const PlaylistSongsBoard = (props) => {
     }
   }
   return (
-    <div className ="song-board">
-      <div>
+    <div className="function-board">
+      <div className="toolbox">
         <p>Remove ALL</p>
         <Button color="success">Add to Playlist</Button>
       </div>
-      {props.currentSongs.currentList.map((val, key) => (
-          <PlaylistSong
-            key={key}
-            id={val.track.id}
-            playlistName={val.playlist_name}
-            title={val.track.name}
-            artist={val.track.artists[0].name}
-            album={val.track.album.name}
-            date={val.added_at}
-          />
-        ))}     
+      <div className="song-container">
+        {props.currentSongs.currentList.map((val, key) => (
+            <PlaylistSong
+              key={key}
+              id={val.track.id}
+              playlistName={val.playlist_name}
+              title={val.track.name}
+              artist={val.track.artists[0].name}
+              album={val.track.album.name}
+              date={val.added_at}
+            />
+          ))}   
+      </div>  
     </div>
   );
 };

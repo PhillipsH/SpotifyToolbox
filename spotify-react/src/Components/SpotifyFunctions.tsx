@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Button, Spinner, Container, Row, Col } from "reactstrap";
+import { Button, Spinner, Container} from "reactstrap";
 import { connect } from "react-redux";
+
 import {
   getLikedSongs,
   getPlaylistSongs,
   setCurrentSongList,
+  setItemsLoading,
+  setPlaylistSongs
 } from "../flux/actions/spotifyActions";
-import Song from "./LikedSongs/LikedSong";
+
 import "./Styles/functionButton.css";
+import logo from "../Icons/copy-link.png";
+
+import Song from "./LikedSongs/LikedSong";
 import DuplicateSongsBoard from "./DuplicateSongs/DuplicateSongsBoard";
 import PlaylistSongsBoard from "./PlaylistSongs/PlaylistSongsBoard";
 import DecadeSongsBoard from "./DecadeSongs/DecadeSongsBoard";
@@ -59,7 +65,7 @@ export const SpotifyFunctions = (props) => {
   
       case "DUPLICATE_SONGS":
         songList = <DuplicateSongsBoard></DuplicateSongsBoard>;
-        console.log("DUPLICATE SONGS USEEFFECT")
+        console.log("DUPLICATE SONGS")
         break;
 
       case "DECADE_SONGS":
@@ -70,46 +76,55 @@ export const SpotifyFunctions = (props) => {
   }
 
   async function comparePlaylistToLiked() {
+    props.setItemsLoading();
     let likedSongsObj: any = {};
     let playlistUniqueSongs: any = [];
 
-    if (props.playlistSongs.length == 0) {
-      await props.getPlaylistSongs();
-    }
+    let playlistSongs = {}
 
-    console.log(props.playlistSongs);
+    if (props.playlistSongs.length == 0) {
+      let res = await axios.get('http://localhost:5000/spotify/getPlaylistSongs', {withCredentials: true});
+      playlistSongs = res.data
+    }else{
+      playlistSongs = props.playlistSongs
+    }
 
     //Create an object of props of all liked songs
     for (let index in props.likedSongs) {
       likedSongsObj[props.likedSongs[index].track.external_ids.isrc] =
         props.likedSongs[index];
     }
-    for (let index in props.playlistSongs) {
+    for (let index in playlistSongs) {
       if (
-        likedSongsObj[props.playlistSongs[index].track.external_ids.isrc] ==
+        likedSongsObj[playlistSongs[index].track.external_ids.isrc] ==
         undefined
       ) {
-        playlistUniqueSongs.push(props.playlistSongs[index]);
+        playlistUniqueSongs.push(playlistSongs[index]);
       }
     }
-    console.log(playlistUniqueSongs.length);
 
+    props.setPlaylistSongs(playlistSongs)
     props.setCurrentSongList(playlistUniqueSongs, "PLAYLIST_UNIQUES_SONGS");
   }
 
   async function compareLikedSongs() {
+    props.setItemsLoading();
     let playlistSongsObj: any = {};
     let uniqueLikedSongs: any = [];
 
+    let playlistSongs = {}
+
     if (props.playlistSongs.length == 0) {
-      await props.getPlaylistSongs();
+      let res = await axios.get('http://localhost:5000/spotify/getPlaylistSongs', {withCredentials: true});
+      playlistSongs = res.data
+    }else{
+      playlistSongs = props.playlistSongs
     }
 
-    console.log(props.playlistSongs);
     //Create an object of props of all liked songs
-    for (let index in props.playlistSongs) {
-      playlistSongsObj[props.playlistSongs[index].track.external_ids.isrc] =
-        props.playlistSongs[index];
+    for (let index in playlistSongs) {
+      playlistSongsObj[playlistSongs[index].track.external_ids.isrc] =
+      playlistSongs[index];
     }
     // for every song in your playlists, checks if that song is in liked songs
     for (let index in props.likedSongs) {
@@ -120,6 +135,7 @@ export const SpotifyFunctions = (props) => {
         uniqueLikedSongs.push(props.likedSongs[index]);
       }
     }
+    props.setPlaylistSongs(playlistSongs)
     props.setCurrentSongList(uniqueLikedSongs, "LIKED_UNIQUE_SONGS");
   }
 
@@ -176,16 +192,21 @@ export const SpotifyFunctions = (props) => {
     props.setCurrentSongList(duplicateSongs, "DUPLICATE_SONGS");
   }
   async function getDecadeSongs (){
-    let decadeObj = {}
+    let decadeObj = {
+      currentDecades:[],
+      currentSongList:[],
+      songDecadeList :{},
+    }
     for(let index in props.likedSongs){
         let date = new Date(props.likedSongs[index].track.album.release_date)
         let year = date.getFullYear();
         year = Math.floor(year / 10) * 10
-        if(decadeObj[year] == undefined){
-          decadeObj[year] = [props.likedSongs[index]]
+        if(decadeObj["songDecadeList"][year] == undefined){
+          decadeObj["songDecadeList"][year] = [props.likedSongs[index]]
         }else{
-          decadeObj[year].push(props.likedSongs[index])
+          decadeObj["songDecadeList"][year].push(props.likedSongs[index])
         }
+
     }
     props.setCurrentSongList(decadeObj, "DECADE_SONGS");
     console.log(decadeObj)
@@ -220,13 +241,6 @@ export const SpotifyFunctions = (props) => {
 
   return (
     <div>
-      <Button
-            className="function-button"
-            onClick={addToPlaylist}
-            color="success"
-          >
-            ADD TO PLAYLIST
-          </Button>
       <Container id={buttonStyle}>
         <div className="button-board">
           <Button
@@ -234,6 +248,7 @@ export const SpotifyFunctions = (props) => {
             onClick={comparePlaylistToLiked}
             color="success"
           >
+            <img src={logo} className="button-img"></img>
             Find Songs in Playlist not in Liked
           </Button>
           <br></br>
@@ -242,6 +257,7 @@ export const SpotifyFunctions = (props) => {
             onClick={compareLikedSongs}
             color="success"
           >
+            <img src={logo} className="button-img"></img>
             Find Songs in Liked not in Playlist
           </Button>
           <br></br>
@@ -250,6 +266,7 @@ export const SpotifyFunctions = (props) => {
             onClick={findDuplicates}
             color="success"
           >
+            <img src={logo} className="button-img"></img>
             Find Duplicates
           </Button>
           <br></br>
@@ -261,6 +278,7 @@ export const SpotifyFunctions = (props) => {
             onClick={getDecadeSongs}
             color="success"
           >
+            <img src={logo} className="button-img"></img>
             GET DECADE
           </Button>
           <br></br>
@@ -269,14 +287,15 @@ export const SpotifyFunctions = (props) => {
             onClick={compareLikedSongs}
             color="success"
           >
+            <img src={logo} className="button-img"></img>
             Get Artist
           </Button>
           <br></br>
         </div>
       </Container>
-      <div id="song-container">
-        {songList}
-      </div>
+
+      
+      {songList}
     </div>
   );
 };
@@ -292,4 +311,6 @@ export default connect(mapStateToProps, {
   getLikedSongs,
   getPlaylistSongs,
   setCurrentSongList,
+  setItemsLoading,
+  setPlaylistSongs,
 })(SpotifyFunctions);

@@ -115,16 +115,18 @@ const DuplicateSongsBoard = (props) => {
 
   }
   return (
-    <div className ="song-board">
-      <div>
+    <div className="function-board">
+      <div className="toolbox">
         <p>Remove ALL</p>
         <Button onClick={removeSingle} color="danger">Remove All</Button>
       </div>
-      {props.currentSongs.currentList.map((val, key) => {
-        return(
-          <DuplicateSongs key={key} currentSongIndex={key} dupeSongs={val} />
-        )})
-      }   
+      <div className="song-container">
+        {props.currentSongs.currentList.map((val, key) => {
+          return(
+            <DuplicateSongs key={key} currentSongIndex={key} dupeSongs={val} />
+          )})
+        }
+      </div>   
     </div>
   );
 };

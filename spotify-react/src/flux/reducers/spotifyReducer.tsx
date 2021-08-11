@@ -1,5 +1,5 @@
 import {
-    GET_LIKED_SONGS,GET_PLAYLIST_SONGS,SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS, SET_LIKED_SONGS
+    GET_LIKED_SONGS,GET_PLAYLIST_SONGS,SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS, SET_LIKED_SONGS, SET_PLAYLIST_SONGS
   } from '../actions/types';
   
   const initialState = {
@@ -11,7 +11,6 @@ import {
   export default function(state = initialState, action: any) {
     switch (action.type) {
       case GET_LIKED_SONGS:
-        console.log(action.payload)
         return {
           ...state,
           likedSongs: action.payload.currentList,
@@ -19,7 +18,6 @@ import {
           loading: false
       };
       case GET_PLAYLIST_SONGS:
-        console.log(action.payload)
         return {
           ...state,
           playlistSongs: action.payload,
@@ -28,12 +26,6 @@ import {
       case REMOVE_SONGS:
         return{
           ...state,
-          loading: false
-        };
-      case SET_CURRENT_LIST:
-        return {
-          ...state,
-          currentSongs: action.payload,
           loading: false
         };
       case ITEMS_LOADING:
@@ -48,6 +40,18 @@ import {
           likedSongs:action.payload,
           loading:false
         }
+      case SET_PLAYLIST_SONGS:
+        return{
+          ...state,
+          playlistSongs:action.payload,
+          loading:false
+        }
+      case SET_CURRENT_LIST:
+        return {
+          ...state,
+          currentSongs: action.payload,
+          loading: false
+        };
       default:
         return state;
     }
