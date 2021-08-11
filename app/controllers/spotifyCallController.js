@@ -300,33 +300,6 @@ function removeLikedSongs(req, res) {
 exports.removeLikedSongs = removeLikedSongs;
 function addToPlaylist(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        // async function createPlaylist (url:string){
-        //     try{
-        //         let response = await axios.post(url, {
-        //             headers: {
-        //                 Accept: "application/json",
-        //                 Authorization: "Bearer " + req.session["access_token"],
-        //                 "Content-Type": "application/json"
-        //             },
-        //             data:{
-        //                 "name": "New Playlist",
-        //                 "description": "New playlist description",
-        //                 "public": false
-        //             }
-        //         })
-        //         return(response.data.id)
-        //     }catch(error){
-        //         console.log(error)
-        //         switch(error.response.status){
-        //             case 429:
-        //                 console.log("timeout error")
-        //                 setTimeout(function () {
-        //                 }, 5000);
-        //                 return(createPlaylist(url))
-        //         }
-        //         return[]
-        //     }
-        // }
         function createPlaylist(url) {
             return __awaiter(this, void 0, void 0, function () {
                 var response, error_5;
@@ -334,20 +307,16 @@ function addToPlaylist(req, res) {
                     switch (_a.label) {
                         case 0:
                             _a.trys.push([0, 2, , 3]);
-                            return [4 /*yield*/, axios_1.default.post(url, {
+                            return [4 /*yield*/, axios_1.default.post(url, playlistData, {
                                     headers: {
                                         Accept: "application/json",
-                                        Authorization: "Bearer " + "BQAKA_gXg4Lt2LbjyZLg_m9rv4gOFa86535Xj2rdnm6PzWS3-Fq6QU31pIdAulUV7YPGHVm49822TxhJzapdUvtghGUeKQk_HRX4-sZIYnRVcCpSkniEnEt9Ni64HsmC1KHLEQHwkOM7gqXpgXweNYMLJIhsfVyg4bR1i82OyPksfiXLXSmSP6YFxlRCLEzkFFYbZTZfkQMg9bjOwqFDLZN3qkaF_GKBfzkpm-JSA7bkAkI3D9bOr2Y8CYJOXc4w",
-                                        "Content-Type": "application/json",
-                                    },
-                                    data: {
-                                        "name": "New Playlist",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
                                     }
                                 })];
                         case 1:
                             response = _a.sent();
-                            console.log(response);
-                            return [2 /*return*/, (response.data.items)];
+                            return [2 /*return*/, (response.data.id)];
                         case 2:
                             error_5 = _a.sent();
                             console.log(error_5);
@@ -366,25 +335,25 @@ function addToPlaylist(req, res) {
         }
         function addToPlaylist(url, playlistId, songs) {
             return __awaiter(this, void 0, void 0, function () {
-                var response, error_6;
+                var songObj, response, error_6;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            _a.trys.push([0, 2, , 3]);
-                            return [4 /*yield*/, axios_1.default.post(url, {
+                            songObj = { uris: songs };
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, axios_1.default.post(url, songObj, {
                                     headers: {
                                         Accept: "application/json",
                                         Authorization: "Bearer " + req.session["access_token"],
                                         "Content-Type": "application/json"
-                                    },
-                                    data: {
-                                        uris: songs
                                     }
                                 })];
-                        case 1:
+                        case 2:
                             response = _a.sent();
                             return [2 /*return*/, (response.data.items)];
-                        case 2:
+                        case 3:
                             error_6 = _a.sent();
                             console.log(error_6);
                             switch (error_6.response.status) {
@@ -395,23 +364,34 @@ function addToPlaylist(req, res) {
                                     return [2 /*return*/, (addToPlaylist(url, playlistId, songs))];
                             }
                             return [2 /*return*/, []];
-                        case 3: return [2 /*return*/];
+                        case 4: return [2 /*return*/];
                     }
                 });
             });
         }
-        var createPlaylistURL, addSongPlaylistURL, songs, playlistId;
+        var createPlaylistURL, songUris, playlistData, playlistId, addSongPlaylistURL;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     createPlaylistURL = "https://api.spotify.com/v1/users/12185463800/playlists";
-                    addSongPlaylistURL = "https://api.spotify.com/v1/playlists/{playlist_id}/tracks";
-                    songs = req.body.songs;
+                    songUris = req.body.songUris;
+                    console.log(req.body);
                     console.log("token  = " + req.session["access_token"]);
+                    playlistData = {
+                        "name": "Liked Songs Not in Playlist",
+                        "description": "Liked Songs that are not in a playlist",
+                        "public": false
+                    };
+                    console.log(songUris);
                     return [4 /*yield*/, createPlaylist(createPlaylistURL)];
                 case 1:
                     playlistId = _a.sent();
                     console.log(playlistId);
+                    addSongPlaylistURL = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
+                    while (songUris.length > 0) {
+                        console.log("running");
+                        addToPlaylist(addSongPlaylistURL, playlistId, songUris.splice(0, 100));
+                    }
                     return [2 /*return*/];
             }
         });
