@@ -17,6 +17,7 @@ export async function getLikedSongs (req:Request, res:Response) {
     const START_LIKED_SONGS = 'https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US'
     console.log("GETTING LIKED SONGS")
     console.log(req.session["access_token"])
+    console.log(req.session["profile_id"])
     async function recursiveSpotify (url:string){
         try{
             let response = await axios.get(url, {
@@ -119,7 +120,7 @@ export async function getPlaylistSongs (req:Request, res:Response) {
 
     //Removing all playlits not created by current user
     for(let i = 0; i < playlists.length; i++){
-        if(playlists[i].owner.id != '12185463800'){
+        if(playlists[i].owner.id != req.session["profile_id"]){
             playlists.splice(i,1)
             i -= 1;
         }
@@ -192,7 +193,7 @@ export async function removeLikedSongs(req:Request, res:Response) {
 }
 
 export async function addToPlaylist(req:Request, res:Response) {
-    let createPlaylistURL = "https://api.spotify.com/v1/users/12185463800/playlists"
+    let createPlaylistURL = "https://api.spotify.com/v1/users/" + req.session["profile_id"]+ "/playlists"
     let songUris = req.body.songUris
     console.log(req.body)
     console.log("token  = "  + req.session["access_token"])
@@ -224,7 +225,7 @@ export async function addToPlaylist(req:Request, res:Response) {
         }
     }
 
-    async function addToPlaylist (url:string, playlistId:string, songs){
+    async function addToPlaylistAxios (url:string, playlistId:string, songs){
         let songObj = {uris: songs}
         try{
             let response = await axios.post(url, songObj, {
@@ -242,7 +243,7 @@ export async function addToPlaylist(req:Request, res:Response) {
                     console.log("timeout error")
                     setTimeout(function () {
                     }, 5000);
-                    return(addToPlaylist(url,playlistId, songs))
+                    return(addToPlaylistAxios(url,playlistId, songs))
             }
             return[]
         }
@@ -254,7 +255,7 @@ export async function addToPlaylist(req:Request, res:Response) {
     let addSongPlaylistURL = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks"
     while (songUris.length > 0){
         console.log("running")
-        addToPlaylist(addSongPlaylistURL, playlistId, songUris.splice(0, 100))
+        addToPlaylistAxios(addSongPlaylistURL, playlistId, songUris.splice(0, 100))
     }
 
 }

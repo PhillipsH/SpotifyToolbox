@@ -24,6 +24,8 @@ export async function authenticateUser (req:Request, res:Response) {
 
 export async function getTokens (req:Request, res:Response) {
   const authURI = 'https://accounts.spotify.com/api/token'
+  const profileURI = 'https://api.spotify.com/v1/me'
+
   console.log("GETTING TOKENS")
   axios({
       url: authURI,
@@ -40,7 +42,16 @@ export async function getTokens (req:Request, res:Response) {
     req.session["code"] = req.query.code;
     req.session["access_token"] = response.data.access_token;
     req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
-    res.redirect('http://localhost:3000/');
+    axios.get(profileURI, {
+      headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + req.session["access_token"],
+          "Content-Type": "application/json"
+      }
+    }).then(response => {
+      req.session["profile_id"] = response.data.id
+      res.redirect('http://localhost:3000/');
+    })
   }).catch((error)=>{
     console.log(error)
   })

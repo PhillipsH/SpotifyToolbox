@@ -211,6 +211,19 @@ export const SpotifyFunctions = (props) => {
     props.setCurrentSongList(decadeObj, "DECADE_SONGS");
     console.log(decadeObj)
   }
+
+  async function getUnknownArtists (){
+    let artistsRanking = {}
+    for(let songIndex in props.likedSongs){
+      if(artistsRanking[props.likedSongs[songIndex].artists.name] == undefined){
+        let artistObj={
+
+        }
+        artistsRanking[props.likedSongs[songIndex].artists.name]
+      }
+    }
+  }
+
   function addToPlaylist(){
     console.log("trying to remove")
     let songUris:string []= []
@@ -294,8 +307,8 @@ export const SpotifyFunctions = (props) => {
         </div>
       </Container>
 
-      
       {songList}
+
     </div>
   );
 };

@@ -95,6 +95,7 @@ function getLikedSongs(req, res) {
                     START_LIKED_SONGS = 'https://api.spotify.com/v1/me/tracks?offset=0&limit=50&market=US';
                     console.log("GETTING LIKED SONGS");
                     console.log(req.session["access_token"]);
+                    console.log(req.session["profile_id"]);
                     return [4 /*yield*/, recursiveSpotify(START_LIKED_SONGS)];
                 case 1:
                     totalLikedSongs = _a.sent();
@@ -208,7 +209,7 @@ function getPlaylistSongs(req, res) {
                     playlists = _a.sent();
                     //Removing all playlits not created by current user
                     for (i = 0; i < playlists.length; i++) {
-                        if (playlists[i].owner.id != '12185463800') {
+                        if (playlists[i].owner.id != req.session["profile_id"]) {
                             playlists.splice(i, 1);
                             i -= 1;
                         }
@@ -333,7 +334,7 @@ function addToPlaylist(req, res) {
                 });
             });
         }
-        function addToPlaylist(url, playlistId, songs) {
+        function addToPlaylistAxios(url, playlistId, songs) {
             return __awaiter(this, void 0, void 0, function () {
                 var songObj, response, error_6;
                 return __generator(this, function (_a) {
@@ -361,7 +362,7 @@ function addToPlaylist(req, res) {
                                     console.log("timeout error");
                                     setTimeout(function () {
                                     }, 5000);
-                                    return [2 /*return*/, (addToPlaylist(url, playlistId, songs))];
+                                    return [2 /*return*/, (addToPlaylistAxios(url, playlistId, songs))];
                             }
                             return [2 /*return*/, []];
                         case 4: return [2 /*return*/];
@@ -373,7 +374,7 @@ function addToPlaylist(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    createPlaylistURL = "https://api.spotify.com/v1/users/12185463800/playlists";
+                    createPlaylistURL = "https://api.spotify.com/v1/users/" + req.session["profile_id"] + "/playlists";
                     songUris = req.body.songUris;
                     console.log(req.body);
                     console.log("token  = " + req.session["access_token"]);
@@ -390,7 +391,7 @@ function addToPlaylist(req, res) {
                     addSongPlaylistURL = "https://api.spotify.com/v1/playlists/" + playlistId + "/tracks";
                     while (songUris.length > 0) {
                         console.log("running");
-                        addToPlaylist(addSongPlaylistURL, playlistId, songUris.splice(0, 100));
+                        addToPlaylistAxios(addSongPlaylistURL, playlistId, songUris.splice(0, 100));
                     }
                     return [2 /*return*/];
             }

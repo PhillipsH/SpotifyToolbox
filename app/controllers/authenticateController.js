@@ -63,9 +63,10 @@ function authenticateUser(req, res) {
 exports.authenticateUser = authenticateUser;
 function getTokens(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var authURI;
+        var authURI, profileURI;
         return __generator(this, function (_a) {
             authURI = 'https://accounts.spotify.com/api/token';
+            profileURI = 'https://api.spotify.com/v1/me';
             console.log("GETTING TOKENS");
             axios({
                 url: authURI,
@@ -82,7 +83,16 @@ function getTokens(req, res) {
                 req.session["code"] = req.query.code;
                 req.session["access_token"] = response.data.access_token;
                 req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
-                res.redirect('http://localhost:3000/');
+                axios.get(profileURI, {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: "Bearer " + req.session["access_token"],
+                        "Content-Type": "application/json"
+                    }
+                }).then(function (response) {
+                    req.session["profile_id"] = response.data.id;
+                    res.redirect('http://localhost:3000/');
+                });
             }).catch(function (error) {
                 console.log(error);
             });
