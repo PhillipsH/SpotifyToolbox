@@ -18,6 +18,7 @@ import DuplicateSongsBoard from "./DuplicateSongs/DuplicateSongsBoard";
 import PlaylistSongsBoard from "./PlaylistSongs/PlaylistSongsBoard";
 import DecadeSongsBoard from "./DecadeSongs/DecadeSongsBoard";
 import LikedSongsBoard from "./LikedSongs/LikedSongsBoard";
+import ArtistBoard from "./Artists/ArtistBoard"
 
 import axios from 'axios'
 
@@ -70,6 +71,10 @@ export const SpotifyFunctions = (props) => {
 
       case "DECADE_SONGS":
         songList = <DecadeSongsBoard></DecadeSongsBoard>;
+        break;
+
+      case "ARTIST_RANK":
+        songList = <ArtistBoard></ArtistBoard>;
         break;
     }
     buttonStyle = "button-container"
@@ -215,13 +220,28 @@ export const SpotifyFunctions = (props) => {
   async function getUnknownArtists (){
     let artistsRanking = {}
     for(let songIndex in props.likedSongs){
-      if(artistsRanking[props.likedSongs[songIndex].artists.name] == undefined){
-        let artistObj={
-
-        }
-        artistsRanking[props.likedSongs[songIndex].artists.name]
+      if(artistsRanking[props.likedSongs[songIndex].track.artists[0].name] == undefined){
+        artistsRanking[props.likedSongs[songIndex].track.artists[0].name] = 1
+      }
+      else{
+        artistsRanking[props.likedSongs[songIndex].track.artists[0].name]++
       }
     }
+    let sortedArtistRank:any = []
+    for(let artist in artistsRanking){
+      let artistObj =
+      {
+        artistName :artist,
+        artistCounter: artistsRanking[artist]
+      }
+      sortedArtistRank.push(artistObj)
+    }
+
+    sortedArtistRank.sort(function(a:any, b:any){
+      return a.artistCounter - b.artistCounter
+    })
+    props.setCurrentSongList(sortedArtistRank, "ARTIST_RANK");
+    console.log(sortedArtistRank)
   }
 
   function addToPlaylist(){
@@ -297,7 +317,7 @@ export const SpotifyFunctions = (props) => {
           <br></br>
           <Button
             className="function-button"
-            onClick={compareLikedSongs}
+            onClick={getUnknownArtists}
             color="success"
           >
             <img src={logo} className="button-img"></img>
