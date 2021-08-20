@@ -3,87 +3,39 @@ import LikedSong from './LikedSong'
 import {Button} from "reactstrap";
 import { connect } from "react-redux";
 import axios from "axios"
-import {
-  getLikedSongs,
-  getPlaylistSongs,
-  setCurrentSongList,
-} from "../../flux/actions/spotifyActions";
+import { addToPlaylist } from "../Utility";
 
-const style = {
-  cardBody: {
-    width: "100%",
-    color: "black",
-  },
-};
 const LikedSongsBoard = (props) => {
-  function addToPlaylist(){
-    console.log("trying to remove")
-    let songUris:string []= []
-    console.log(props.currentSongs)
-    //getting all songs
-    for(let songIndex in props.currentSongs.currentList){
-      songUris.push(props.currentSongs.currentList[songIndex].track.uri)
-    }
-    let playlistData = {
-      songUris : songUris
-    }
-    // delete song from spotify through server api
-    console.log(playlistData)
-    axios
-    .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
-    {withCredentials: true,})
-    .then(res =>{
-      console.log(res)
-    });
+  // function addToPlaylist(){
+  //   console.log("trying to remove")
+  //   let songUris:string []= []
+  //   console.log(props.currentSongs)
+  //   //getting all songs
+  //   for(let songIndex in props.currentSongs.currentList){
+  //     songUris.push(props.currentSongs.currentList[songIndex].track.uri)
+  //   }
+  //   let playlistData = {
+  //     songUris : songUris
+  //   }
+  //   // delete song from spotify through server api
+  //   console.log(playlistData)
+  //   axios
+  //   .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
+  //   {withCredentials: true,})
+  //   .then(res =>{
+  //     console.log(res)
+  //   });
 
-    // axios.get('http://localhost:5000/spotify/addToPlaylist', {withCredentials: true})
-
-
-    // let likedSongsNew = props.likedSongs.slice()
-    // console.log(likedSongsNew)
-
-    //Find likedSong in state with the same id user deleted
-    // let index = 0;
-    // let found = false
-    
-    // for(let idIndex in removeSongs){
-    //   let index = 0;
-    //   let found = false;
-    //   while(index < likedSongsNew.length && found == false){
-    //     if (likedSongsNew[index].track.id == idIndex){
-    //       found = true;
-    //       likedSongsNew.splice(index, 1)
-    //       console.log("found")
-    //     }
-    //     index++
-    //   }
-    // }
-
-    // while(index < likedSongsNew.length && found == false){
-    //   if (likedSongsNew[index].track.id == props.currentSongs.currentList[props.currentSongIndex][props.currentPlacement].track.id){
-    //     found = true;
-    //     likedSongsNew.splice(index, 1)
-    //     console.log("found")
-    //   }
-    //   index++
-    // }
-
-    //Set the liked Songs
-    // console.log(likedSongsNew.length)
-    // props.setLikedSongs(likedSongsNew)
-
-    //Set current songs with deleted song
-    // let currentSongsNew = []
-
-    // props.setCurrentSongList(currentSongsNew, "DUPLICATE_SONGS" )
-
-
+  // }
+  function addSongsToPlaylist(){
+    addToPlaylist(props.currentSongs.currentList)
   }
   return (
     <div className="function-board">
+      <h1>Liked Songs</h1>
+      <h5>Number of Songs: {props.currentSongs.currentList.length}</h5>
       <div className="toolbox">
-        <Button onClick={addToPlaylist}color="success">Add to Playlist</Button>
-        <Button color="success">Like All Songs</Button>
+        <Button onClick={addSongsToPlaylist}color="success">Add to Playlist</Button>
       </div>
       <div className="song-container">
         {props.currentSongs.currentList.map((val, key) => (

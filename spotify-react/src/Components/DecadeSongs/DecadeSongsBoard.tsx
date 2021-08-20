@@ -1,68 +1,46 @@
 import React from "react";
 import axios from "axios";
-// import DuplicateSongs from './DuplicateSongs'
-import {Button, Input, Form, FormGroup, Label} from "reactstrap";
+import {Button} from "reactstrap";
 import { connect } from "react-redux";
-import {
-  getLikedSongs,
-  getPlaylistSongs,
-  setCurrentSongList,
-} from "../../flux/actions/spotifyActions";
 import DecadeCheckBox from "./DecadeCheckBox";
 import DecadeSong from "./DecadeSong";
-// import LikedSong from "../LikedSongs/LikedSong";
 
-const style = {
-  cardBody: {
-    width: "100%",
-    color: "black",
-  },
-};
-
-
+import { addToPlaylist } from "../Utility";
 
 const DecadeSongBoard = (props) => {
-  function checkProps(event){
-    // console.log(event)
-  }
   
-  // function changeCurrentList(){
-  //   let currentSongsList = []
-  //   for(let yearIndex in props.currentSongs.currentList.currentDecades){
-  //     currentSongsList = currentSongsList.concat(props.currentSongs.currentList.songDecadeList[props.currentSongs.currentList.currentDecades[yearIndex]])
-  //     console.log(props.currentSongs.currentList.songDecadeList[props.currentSongs.currentList.currentDecades[yearIndex]])
+  // function addToPlaylist(){
+  //   console.log("trying to remove")
+  //   let songUris:string []= []
+  //   console.log(props.currentSongs)
+  //   //getting all songs
+  //   for(let songIndex in props.currentSongs.currentList.currentSongList){
+  //     songUris.push(props.currentSongs.currentList.currentSongList[songIndex].track.uri)
   //   }
-  //   let currSongs = JSON.parse(JSON.stringify(props.currentSongs))
-  //   currSongs.currentList.currentSongList = currSongs;
-  //   props.setCurrentSongList(currSongs, "DECADE_SONGS");
+  //   let playlistData = {
+  //     songUris : songUris
+  //   }
+  //   // delete song from spotify through server api
+  //   console.log(playlistData)
+  //   axios
+  //   .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
+  //   {withCredentials: true,})
+  //   .then(res =>{
+  //     console.log(res)
+  //   });
   // }
-  function addToPlaylist(){
-    console.log("trying to remove")
-    let songUris:string []= []
-    console.log(props.currentSongs)
-    //getting all songs
-    for(let songIndex in props.currentSongs.currentList){
-      songUris.push(props.currentSongs.currentList[songIndex].track.uri)
-    }
-    let playlistData = {
-      songUris : songUris
-    }
-    // delete song from spotify through server api
-    console.log(playlistData)
-    axios
-    .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
-    {withCredentials: true,})
-    .then(res =>{
-      console.log(res)
-    });
+
+  function addSongsToPlaylist(){
+    addToPlaylist(props.currentSongs.currentList.currentSongList)
   }
 
   // changeCurrentList()
   return (
     <div className="function-board">
-       <div className="toolbox">
-        <Button onClick={addToPlaylist} color="success">Add to Playlist</Button>
-        <Button onClick={checkProps} color="success">Like All Songs</Button>
+      <h1>Decades</h1>
+      <h5>Number of Current Songs: {props.currentSongs.currentList.currentSongList.length}</h5>
+      <div className="toolbox">
+        <Button onClick={addSongsToPlaylist} color="success">Add to Playlist</Button>
       </div>
       <div id="decade-selector">
         {Object.keys(props.currentSongs.currentList.songDecadeList).map((key, i) => (

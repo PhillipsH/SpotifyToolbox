@@ -7,6 +7,7 @@ const redirect_uri:string = 'http://localhost:3000/callback'
 const client_id:string = '300ac0b33203415b98bd63ec4146c74c'
 const client_secret:string = 'a78fd6a2e88a4d0282c4c8724771646f'
 const likedSongUri:string = 'https://api.spotify.com/v1/me/tracks'
+const refreshTokenUri:string = 'https://accounts.spotify.com/api/token'
 
 //Function adds user to database then redirects user to the main page.
 export async function getLikedSongs (req:Request, res:Response) {
@@ -33,15 +34,32 @@ export async function getLikedSongs (req:Request, res:Response) {
             console.log(response.data.next)
             return(response.data.items.concat(await recursiveSpotify(response.data.next)))
         }catch(error){
+            if(error.response.status == undefined){
+                console.log(error)
+            }
             switch(error.response.status){
                 case 429:
                     console.log("timeout error")
                     setTimeout(function () {
-                    }, 5000);
+                    }, error.response.headers["retry-after"] * 1000);
                     return(recursiveSpotify(url))
-                break;
+                case 401:
+                    let authData = {
+                        grant_type: "refresh_token",
+                        refresh_token: req.session["refresh_token"],
+                    }
+                    let response = await axios.post(refreshTokenUri, authData,{
+                        headers: {
+                            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+                            },
+                    })
+                    console.log(response)
+                    req.session["access_token"] = response.data.access_token;
+                    return(recursiveSpotify(url))
+                default:
+                    console.log("OTHER ERROR PLEASE CHECK")
+                    return []
             }
-            return[]
         }
     }
     let totalLikedSongs = await recursiveSpotify(START_LIKED_SONGS)
@@ -71,15 +89,32 @@ export async function getPlaylistSongs (req:Request, res:Response) {
             console.log(response.data.next)
             return(response.data.items.concat(await recursiveSpotify(response.data.next)))
         }catch(error){
-            console.log(error)
+            if(error.response.status == undefined){
+                console.log(error)
+            }
             switch(error.response.status){
                 case 429:
                     console.log("timeout error")
                     setTimeout(function () {
                     }, 5000);
                     return(recursiveSpotify(url))
+                case 401:
+                    let authData = {
+                        grant_type: "refresh_token",
+                        refresh_token: req.session["refresh_token"],
+                    }
+                    let response = await axios.post(refreshTokenUri, authData,{
+                        headers: {
+                            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+                          },
+                    })
+                    console.log(response)
+                    req.session["access_token"] = response.data.access_token;
+                    return(recursiveSpotify(url))
+                default:
+                    console.log("OTHER ERROR PLEASE CHECK")
+                    return []
             }
-            return[]
         }
     }
     async function recursivePlaylist (url:string, playlistName:string, playlistId:string){
@@ -101,12 +136,26 @@ export async function getPlaylistSongs (req:Request, res:Response) {
             console.log(response.data.next)
             return(response.data.items.concat(await recursivePlaylist(response.data.next, playlistName, playlistId)))
         }catch(error){
-            console.log(error)
+            if(error.response.status == undefined){
+                console.log(error)
+            }
             switch(error.response.status){
                 case 429:
-                    console.log("timeout error")
                     setTimeout(function () {
-                    }, 5000);
+                    }, error.response.headers["retry-after"] * 1000);
+                    return(recursivePlaylist(url, playlistName, playlistId))
+                case 401:
+                    let authData = {
+                        grant_type: "refresh_token",
+                        refresh_token: req.session["refresh_token"],
+                    }
+                    let response = await axios.post(refreshTokenUri, authData,{
+                        headers: {
+                            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+                            },
+                    })
+                    console.log(response)
+                    req.session["access_token"] = response.data.access_token;
                     return(recursivePlaylist(url, playlistName, playlistId))
                 default:
                     console.log("OTHER ERROR PLEASE CHECK")
@@ -174,15 +223,32 @@ export async function removeLikedSongs(req:Request, res:Response) {
             console.log(response)
             return(response.data.items)
         }catch(error){
-            console.log(error)
+            if(error.response.status == undefined){
+                console.log(error)
+            }
             switch(error.response.status){
                 case 429:
                     console.log("timeout error")
                     setTimeout(function () {
-                    }, 5000);
+                    }, error.response.headers["retry-after"] * 1000);
                     return(deleteSpotify(url, songs))
+                case 401:
+                    let authData = {
+                        grant_type: "refresh_token",
+                        refresh_token: req.session["refresh_token"],
+                    }
+                    let response = await axios.post(refreshTokenUri, authData,{
+                        headers: {
+                            'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+                            },
+                    })
+                    console.log(response)
+                    req.session["access_token"] = response.data.access_token;
+                    return(deleteSpotify(url, songs))
+                default:
+                    console.log("OTHER ERROR PLEASE CHECK")
+                    return []
             }
-            return[]
         }
     }
 
@@ -190,6 +256,19 @@ export async function removeLikedSongs(req:Request, res:Response) {
         deleteSpotify(url, req.body.songIds.splice(0, 50))
     }
 
+}
+
+export async function getProfile(req:Request, res:Response){
+    const profileURI = 'https://api.spotify.com/v1/me'
+    axios.get(profileURI, {
+        headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + req.session["access_token"],
+            "Content-Type": "application/json"
+        }
+    }).then(response => {
+        res.send(response.data)
+    })
 }
 
 export async function addToPlaylist(req:Request, res:Response) {
@@ -213,7 +292,9 @@ export async function addToPlaylist(req:Request, res:Response) {
             })
             return(response.data.id)
         }catch(error){
-            console.log(error)
+            if(error.response.status == undefined){
+                console.log(error)
+            }
             switch(error.response.status){
                 case 429:
                     console.log("timeout error")
@@ -237,7 +318,9 @@ export async function addToPlaylist(req:Request, res:Response) {
             })
             return(response.data.items)
         }catch(error){
-            console.log(error)
+            if(error.response.status == undefined){
+                console.log(error)
+            }
             switch(error.response.status){
                 case 429:
                     console.log("timeout error")

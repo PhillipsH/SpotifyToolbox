@@ -9,16 +9,19 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 function App() {
   return (
+    // <div className="App">
+
+    // </div>
     <Provider store={store}>
       <BrowserRouter>
         <div className="App">
-          <header className="App-header">
+          {/* <header className="App-header">
+          </header> */}
           <Switch>
             <Route exact path="/" component={Main}/>
             <Route exact path="/login" component={Authorizer}/>
-            <Authorizer></Authorizer>
+            {/* <Authorizer></Authorizer> */}
           </Switch>
-          </header>
         </div>
       </BrowserRouter>
     </Provider>

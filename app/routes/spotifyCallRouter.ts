@@ -8,5 +8,6 @@ router.get('/getPlaylistSongs', spotifyCallController.getPlaylistSongs);
 router.delete('/removeLikedSongs', spotifyCallController.removeLikedSongs);
 router.post('/addToPlaylist', spotifyCallController.addToPlaylist);
 router.get('/addToPlaylist', spotifyCallController.addToPlaylist);
+router.get('/getProfile', spotifyCallController.getProfile);
 
 export default router;

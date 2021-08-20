@@ -47,7 +47,6 @@ function authenticateUser(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var scope;
         return __generator(this, function (_a) {
-            console.log("AUTHENTICATE USER");
             scope = 'user-library-read user-library-modify playlist-read-private playlist-modify-private playlist-modify-public user-read-private user-read-email';
             res.redirect('https://accounts.spotify.com/authorize?' +
                 querystring.stringify({
@@ -67,7 +66,6 @@ function getTokens(req, res) {
         return __generator(this, function (_a) {
             authURI = 'https://accounts.spotify.com/api/token';
             profileURI = 'https://api.spotify.com/v1/me';
-            console.log("GETTING TOKENS");
             axios({
                 url: authURI,
                 method: 'post',
@@ -82,6 +80,7 @@ function getTokens(req, res) {
             }).then(function (response) {
                 req.session["code"] = req.query.code;
                 req.session["access_token"] = response.data.access_token;
+                req.session["refresh_token"] = response.data.refresh_token;
                 req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
                 axios.get(profileURI, {
                     headers: {
@@ -104,7 +103,6 @@ exports.getTokens = getTokens;
 function checkAuth(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            console.log("CHECK AUTH");
             if (req.session["access_token"] != undefined) {
                 res.send({ "isAuthenticated": true });
             }

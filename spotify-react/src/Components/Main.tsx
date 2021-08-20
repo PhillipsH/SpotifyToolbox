@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from 'reactstrap';
+import React, {useEffect } from 'react';
 import { connect } from 'react-redux';
 import {checkAuthorize} from '../flux/actions/authorizeAction';
 import {IAuthProps} from '../types/interfaces';
 import Authorizer from './Authorizer';
-import SpotifyFunctions from './SpotifyFunctions'
+import SpotifyFunctions from './Dashboard'
 
 export const Main = (props)  => {
 
-  // props.checkAuthorize();
   useEffect(() => {
     props.checkAuthorize();
   }, [])
   let mainBoard = {
     marginTop:"150px",
-    marginBottom:"50px"
+    marginBottom:"50px",
+    width:"100%"
   }
-  // const checkAuthentication = () =>{
-  //   console.log(props.authenticated)
-  //   props.checkAuthorize();
-  // }
   let mainContent = (props.authenticated.isAuthenticated) 
   ? (
   <>
@@ -33,9 +28,6 @@ export const Main = (props)  => {
   
 return (
   <div>
-    <div style={mainBoard}>
-      <h1>Welcome To Spotify Tools</h1>
-    </div>
     {mainContent}
   </div>
   );

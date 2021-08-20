@@ -1,39 +1,180 @@
+html, body{
+  height:100%;
+}
+#root{
+  height:100%;
+}
 .App {
+  height:100%;
+  background-color:#F4F4F2;
+}
+
+#dashboard-div{
+  height:100%;
+  background-color:#F4F4F2;
+  text-align:left;
+  margin-right: 350px; /* Same as the width of the sidebar */
+  padding: 80px;
+}
+
+.background-img{
+  height:100vh;
+  width:100%;
+  color:white;
   text-align: center;
+  padding-top: 400px;
+  background-image: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url("./Icons/music-image.jpg");
+  background-repeat: no-repeat;
+  background-size:cover;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* The sidebar menu */
+.sidenav div{
+  margin-bottom:50px;
+}
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 350px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  right: 0px;
+  background-color: #E8E8E8; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding: 25px;
+  padding-top:50px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* The navigation menu links */
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav-footer{
+  position:absolute;
+  bottom:0px;
+}
+.side-img{
+  width:40px;
+  height:40px;
+  margin-right:5px;
+  float:left;
+}
+.contact-img{
+  width:25px;
+  height:25px;
+  float:left;
+}
+.sidenav-footer a{
+  float:right;
+}
+.user-img{
+  width:50px;
+  height:50px;
+  object-fit:cover;
+  border-radius:50%;
+  display: block;
+  float:right;
+  margin-right:5px;
+}
+.user-name{
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+.card-container {
+  width: 100%;
+  color: black;
+  padding: 2px;
+}
+
+#decade-selector{
+  width:100%;
+  display:flex;
+  flex-wrap:wrap;
+  text-align:center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+}
+.decade{
+  margin-right:25px;
+  /* background:blue; */
+}
+.button-board{
+  width:100%;
+  display: flex;
+  justify-content: center;
+}
+#button-container-hidden{
+  visibility: hidden;
+  /* display:none; */
+  /* pointer-events: none; */
+}
+.function-button{
+  height:250px;
+  width:225px;
+  margin:20px;
+  background-color:white;
+  border-radius:15%;
+  color: #818181;
+  border:none;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+
+}
+.button-img{
+  width:50px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom:5px;
+
 }
 
-.App-link {
-  color: #61dafb;
+.function-board{
+  width:100%;
+  margin:auto;
+  /* height:850px; */
+  /* min-height:100vh; */
+  overflow: hidden;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.song-container{
+  height:1000px;
+  max-height:1000px;
+  overflow:scroll;
+  -ms-overflow-style: none;  /*IE and Edge*/
+  scrollbar-width: none;  /*Firefox */
+  /* background:blue; */
 }
-
+.card:nth-child(even) {
+  background: #E8E8E8;
+}
+.duplicate-song-container{
+  display:grid;
+  grid-template-columns: 3fr 1fr;
+  padding:0;
+  padding-left:30px;
+  margin-top:0;
+  margin-bottom:0;
+}
+h3{
+  color: #818181;
+}

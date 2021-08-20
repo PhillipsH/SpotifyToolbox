@@ -1,12 +1,10 @@
 import axios from "axios"
 
-export function addToPlaylist(currentSongs){
-  console.log("trying to remove")
+export function addToPlaylist(playlistSongs){
   let songUris:string []= []
-  console.log(currentSongs)
   //getting all songs
-  for(let songIndex in currentSongs.currentList){
-    songUris.push(currentSongs.currentList[songIndex].track.uri)
+  for(let songIndex in playlistSongs){
+    songUris.push(playlistSongs[songIndex].track.uri)
   }
   let playlistData = {
     songUris : songUris
@@ -20,6 +18,49 @@ export function addToPlaylist(currentSongs){
     console.log(res)
   });
 }
+
+
+// function removeAllSongs(removeSongs, likedSongs){
+//   console.log("trying to remove")
+  
+//   axios
+//   .delete('http://localhost:5000/spotify/removeLikedSongs', 
+//   {withCredentials: true,
+//   data : {
+//     songIds : removeSongs
+//   }})
+//   .then(res =>{
+//     console.log(res)
+//   });
+
+//   // let likedSongsNew = props.likedSongs.slice()
+//   console.log(likedSongsNew)
+
+//   //Find likedSong in state with the same id user deleted
+  
+//   for(let idIndex in dupeIds){
+//     console.log(dupeIds[idIndex])
+//     let index = 0;
+//     let found = false;
+//     while(index < likedSongsNew.length && found == false){
+//       if (likedSongsNew[index].track.id == dupeIds[idIndex]){
+//         found = true;
+//         likedSongsNew.splice(index, 1)
+//       }
+//       index++
+//     }
+//   }
+
+//   //Set the liked Songs
+//   console.log(likedSongsNew.length)
+//   // props.setLikedSongs(likedSongsNew)
+
+//   //Set current songs with deleted song
+//   let currentSongsNew = []
+
+//   // props.setCurrentSongList(currentSongsNew, "DUPLICATE_SONGS" )
+
+// }
 
 export function findDuplicates(likedSongs) {
   let likedSongsObj: any = {};

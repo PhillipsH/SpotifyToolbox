@@ -11,7 +11,6 @@ const querystring = require('querystring');
 
 //Function adds user to database then redirects user to the main page.
 export async function authenticateUser (req:Request, res:Response) {
-  console.log("AUTHENTICATE USER")
   var scope:string = 'user-library-read user-library-modify playlist-read-private playlist-modify-private playlist-modify-public user-read-private user-read-email';
   res.redirect('https://accounts.spotify.com/authorize?' +
   querystring.stringify({
@@ -26,7 +25,6 @@ export async function getTokens (req:Request, res:Response) {
   const authURI = 'https://accounts.spotify.com/api/token'
   const profileURI = 'https://api.spotify.com/v1/me'
 
-  console.log("GETTING TOKENS")
   axios({
       url: authURI,
       method: 'post',
@@ -41,6 +39,7 @@ export async function getTokens (req:Request, res:Response) {
   }).then(response => {
     req.session["code"] = req.query.code;
     req.session["access_token"] = response.data.access_token;
+    req.session["refresh_token"] = response.data.refresh_token;
     req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
     axios.get(profileURI, {
       headers: {
@@ -58,7 +57,6 @@ export async function getTokens (req:Request, res:Response) {
 }
 
 export async function checkAuth (req:Request, res:Response) {
-  console.log("CHECK AUTH")
   if(req.session["access_token"] != undefined){
     res.send({"isAuthenticated" : true})
   }else{

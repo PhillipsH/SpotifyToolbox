@@ -1,14 +1,10 @@
 import React from "react";
-import axios from "axios";
-// import DuplicateSongs from './DuplicateSongs'
-import {Button, Input, Form, FormGroup, Label} from "reactstrap";
+import {Label} from "reactstrap";
 import { connect } from "react-redux";
 import {
   setCurrentSongList,
   
 } from "../../flux/actions/spotifyActions";
-
-//props.year, props
 
 const DecadeCheckBox = (props) => {
 
@@ -28,15 +24,12 @@ const DecadeCheckBox = (props) => {
       }
     }
 
-    // let currentSongsList = []
     currentSongsClone.currentList.currentSongList = []
     for(let yearIndex in currentSongsClone.currentList.currentDecades){
       currentSongsClone.currentList.currentSongList = currentSongsClone.currentList.currentSongList.concat(currentSongsClone.currentList.songDecadeList[currentSongsClone.currentList.currentDecades[yearIndex]])
       console.log(currentSongsClone.currentList.songDecadeList[props.currentSongs.currentList.currentDecades[yearIndex]])
     }
-    // let currSongs = JSON.parse(JSON.stringify(props.currentSongs))
-    // currSongs.currentList.currentSongList = currSongs;
-    // props.setCurrentSongList(currSongs, "DECADE_SONGS");
+
     console.log(currentSongsClone)
     props.setCurrentSongList(currentSongsClone.currentList, "DECADE_SONGS");
   }
@@ -45,8 +38,7 @@ const DecadeCheckBox = (props) => {
         <div className="decade" onChange={assessChecked}>
             <Label check>
                 <input type="checkbox" name={props.year} value={props.year}/>
-                {/* <Label>Scales</Label> */}
-                {props.year}
+                <h5>{props.year}</h5>
             </Label>
         </div>
   )

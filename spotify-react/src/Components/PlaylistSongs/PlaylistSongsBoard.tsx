@@ -2,31 +2,17 @@ import React from "react";
 import PlaylistSong from './PlaylistSong'
 import {Button} from "reactstrap";
 import { connect } from "react-redux";
-import {
-  getLikedSongs,
-  getPlaylistSongs,
-  setCurrentSongList,
-} from "../../flux/actions/spotifyActions";
-
-const style = {
-  cardBody: {
-    width: "100%",
-    color: "black",
-  },
-};
+import { addToPlaylist } from "../Utility";
 
 const PlaylistSongsBoard = (props) => {
-  function addToPlaylist(){
-    let spotifyUris:string []= []
-    for(let songIndex in props.currentSongs){
-      spotifyUris.push(props.currentSongs[songIndex].track.uri)
-    }
+  function addSongsToPlaylist(){
+    addToPlaylist(props.currentSongs.currentList)
   }
   return (
     <div className="function-board">
+      <h5>Playlist Songs: {props.currentSongs.currentList.length}</h5>
       <div className="toolbox">
-        <p>Remove ALL</p>
-        <Button color="success">Add to Playlist</Button>
+        <Button color="success" onClick={addSongsToPlaylist}>Add to Playlist</Button>
       </div>
       <div className="song-container">
         {props.currentSongs.currentList.map((val, key) => (
