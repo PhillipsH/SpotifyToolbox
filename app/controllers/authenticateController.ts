@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import request from 'request'
 
 const axios = require("axios");
+require('dotenv').config();
 
 const redirect_uri:string = 'http://localhost:5000/authenticate/getTokens'
-const client_id : string = '300ac0b33203415b98bd63ec4146c74c'
-const client_secret : string = 'a78fd6a2e88a4d0282c4c8724771646f'
+const client_id:string|undefined = process.env.CLIENT_ID
+const client_secret:string|undefined  = process.env.CLIENT_SECRET
 const querystring = require('querystring');
 
 

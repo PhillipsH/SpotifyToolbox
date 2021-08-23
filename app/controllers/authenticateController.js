@@ -38,9 +38,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
 var axios = require("axios");
+require('dotenv').config();
 var redirect_uri = 'http://localhost:5000/authenticate/getTokens';
-var client_id = '300ac0b33203415b98bd63ec4146c74c';
-var client_secret = 'a78fd6a2e88a4d0282c4c8724771646f';
+var client_id = process.env.CLIENT_ID;
+var client_secret = process.env.CLIENT_SECRET;
 var querystring = require('querystring');
 //Function adds user to database then redirects user to the main page.
 function authenticateUser(req, res) {

@@ -41,11 +41,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addToPlaylist = exports.getProfile = exports.removeLikedSongs = exports.getPlaylistSongs = exports.getLikedSongs = void 0;
 var axios_1 = __importDefault(require("axios"));
-var querystring = require('querystring');
+require('dotenv').config();
 var redirect_uri = 'http://localhost:3000/callback';
-var client_id = '300ac0b33203415b98bd63ec4146c74c';
-var client_secret = 'a78fd6a2e88a4d0282c4c8724771646f';
-var likedSongUri = 'https://api.spotify.com/v1/me/tracks';
+var client_id = process.env.CLIENT_ID;
+var client_secret = process.env.CLIENT_SECRET;
 var refreshTokenUri = 'https://accounts.spotify.com/api/token';
 //Function adds user to database then redirects user to the main page.
 function getLikedSongs(req, res) {

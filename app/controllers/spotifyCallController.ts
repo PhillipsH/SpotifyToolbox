@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 
 import axios from 'axios';
-const querystring = require('querystring');
+require('dotenv').config();
 
 const redirect_uri:string = 'http://localhost:3000/callback'
-const client_id:string = '300ac0b33203415b98bd63ec4146c74c'
-const client_secret:string = 'a78fd6a2e88a4d0282c4c8724771646f'
-const likedSongUri:string = 'https://api.spotify.com/v1/me/tracks'
+const client_id:string|undefined = process.env.CLIENT_ID
+const client_secret:string|undefined  = process.env.CLIENT_SECRET
+
 const refreshTokenUri:string = 'https://accounts.spotify.com/api/token'
 
 //Function adds user to database then redirects user to the main page.
