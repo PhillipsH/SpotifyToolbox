@@ -3,7 +3,6 @@ import {Label} from "reactstrap";
 import { connect } from "react-redux";
 import {
   setCurrentSongList,
-  
 } from "../../flux/actions/spotifyActions";
 
 const DecadeCheckBox = (props) => {
