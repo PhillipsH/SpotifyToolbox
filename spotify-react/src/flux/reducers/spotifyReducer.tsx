@@ -1,10 +1,12 @@
 import {
-    GET_LIKED_SONGS,GET_PLAYLIST_SONGS,SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS, SET_LIKED_SONGS, SET_PLAYLIST_SONGS, GET_PROFILE
+    GET_LIKED_SONGS,GET_LIKED_ISONGS, GET_PLAYLIST_SONGS,SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS, SET_LIKED_SONGS, SET_PLAYLIST_SONGS, GET_PROFILE, SET_ARTISTS
   } from '../actions/types';
   
   const initialState = {
+    likedSongsList: [],
     likedSongs: [],
     playlistSongs : [],
+    artist: {},
     currentSongs : {currentType : "LIKED_SONGS", currentList:[]},
     profile:{},
     loading: false
@@ -21,6 +23,13 @@ import {
         return {
           ...state,
           likedSongs: action.payload.currentList,
+          currentSongs: action.payload,
+          loading: false
+      };
+      case GET_LIKED_ISONGS:
+        return {
+          ...state,
+          likedSongsList: action.payload.currentList,
           currentSongs: action.payload,
           loading: false
       };
@@ -57,6 +66,12 @@ import {
         return {
           ...state,
           currentSongs: action.payload,
+          loading: false
+        };
+      case SET_ARTISTS:
+        return {
+          ...state,
+          artists: action.payload,
           loading: false
         };
       default:

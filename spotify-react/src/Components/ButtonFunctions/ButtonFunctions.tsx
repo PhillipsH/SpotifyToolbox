@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-// import DuplicateSongs from './DuplicateSongs'
 import { Button} from "reactstrap";
 import { connect } from "react-redux";
 import {
@@ -15,7 +14,7 @@ import decadeImg from "../../Icons/age.png";
 import arrowImg from "../../Icons/transfer-arrows.png";
 import artistImg from "../../Icons/users.png";
 
-//props.year, props
+import {IArtist} from "../../types/interfaces"
 
 const ButtonFunctions = (props) => {
   let buttonStyle = "button-container";
@@ -215,6 +214,97 @@ const ButtonFunctions = (props) => {
     };
     props.setCurrentSongList(artistObj, "ARTIST_RANK");
   }
+  async function getGenres() {
+    const GET_GENRE_URI = 'http://localhost:5000/spotify/getGenre'
+    let songList = JSON.parse(JSON.stringify(props.likedSongsList))
+    let promiseArray:any[] = []
+
+    let artists = {}
+    let artistArr: string[] = []
+
+    for(let i in props.likedSongs){
+      if(!(props.likedSongs[i].track.artists[0].id in artists)){
+        artists[props.likedSongs[i].track.artists[0].id] = props.likedSongs[i].artists
+        artistArr.push(props.likedSongs[i].track.artists[0].id)
+      }
+    }
+    let promiseArr: any = [];
+
+    let artistData = await axios.get(GET_GENRE_URI,
+    {
+      params:{
+        artists: artistArr.splice(0, 50)
+      }
+    })
+    console.log(artistData)
+
+
+
+  }
+  // async function getGenres() {
+  //   const GET_GENRE_URI = 'http://localhost:5000/spotify/addGenre'
+  //   let songList = JSON.parse(JSON.stringify(props.likedSongsList))
+  //   let promiseArray:any[] = []
+
+  //   let artists = {}
+  //   let artistArr: string[] = []
+
+  //   for(let i in props.likedSongs){
+  //     if(!(props.likedSongs[i].artists[0].id in artists)){
+  //       artists[props.likedSongs[i].artists[0].id] = props.likedSongs[i].artists
+  //       artistArr.push(props.likedSongs[i].artists[0].id)
+  //     }
+  //   }
+  //   let promiseArr: any = [];
+
+  //   while(artistArr.length <= 0){
+  //     // axios.get(GET_GENRE_URI,)
+  //     promiseArr.push(axios.get(GET_GENRE_URI,
+  //       {
+  //         params:{
+  //           artists: artistArr.splice(0, 50)
+  //         }
+  //       }))
+  //   }
+
+  //   let artistGenres:any = await Promise.all(promiseArr)
+
+  //   for(let i in artistGenres){
+  //     for(let artistId in artistGenres[i]){
+  //       if(artistId in artists){
+  //         artists[artistId].genres = artistGenres[i].artistId.genres
+  //       }
+  //     }
+  //   }
+
+
+  //   props.setArtists(artists)
+  //   props.setCurrentSongList(artists, "ARTIST_RANK");
+
+  //   console.log(songList.length)
+  //   while (songList.length > 0){
+  //     promiseArray.push(axios.post(GET_GENRE_URI, {songList:songList.splice(0, 50)},{
+  //       headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json"
+  //       }
+  //     }))
+  //   }
+
+  //   let values = await Promise.all(promiseArray)
+    
+  //   console.log(values)
+
+  //   // let trackArtistNameList:any[] = []
+  //   // for(let i in props.likedSongs){
+  //   //   let currentTrackArtist = {
+  //   //     track_name : props.likedSongs[i].name,
+  //   //     artist_name : props.likedSongs[i].artists[0].name
+  //   //   }
+  //   //   trackArtistNameList.push(currentTrackArtist)
+  //   // }
+
+  // }
 
   return (
     <div id={buttonStyle}>
@@ -257,6 +347,7 @@ const ButtonFunctions = (props) => {
           <h6>Decade</h6>
         </Button>
         <br></br>
+
         <Button
           className="function-button"
           onClick={getArtists}
@@ -266,12 +357,24 @@ const ButtonFunctions = (props) => {
           <h6>Get Artist</h6>
         </Button>
         <br></br>
+
+        <Button
+          className="function-button"
+          onClick={getGenres}
+          color="danger"
+        >
+          <img src={artistImg} alt="artist" className="button-img"></img>
+          <h6>Get Genre</h6>
+        </Button>
+        <br></br>
+
       </div>
     </div>
   );
 };
 const mapStateToProps = (state: any) => ({
   likedSongs: state.spotify.likedSongs,
+  likedSongsList: state.spotify.likedSongsList,
   playlistSongs: state.spotify.playlistSongs,
   currentSongs: state.spotify.currentSongs,
   loading: state.spotify.loading,

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {GET_LIKED_SONGS, GET_PLAYLIST_SONGS, SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS, SET_LIKED_SONGS, SET_PLAYLIST_SONGS, GET_PROFILE} from './types';
-
+import {GET_LIKED_SONGS, GET_LIKED_ISONGS, GET_PLAYLIST_SONGS, SET_CURRENT_LIST, ITEMS_LOADING, REMOVE_SONGS, SET_LIKED_SONGS, SET_PLAYLIST_SONGS, GET_PROFILE, SET_ARTISTS} from './types';
+import { ITrack, IAlbum, IArtist } from '../../types/interfaces';
 export const getLikedSongs = () => (dispatch: Function) => {
   dispatch(setItemsLoading());
   
@@ -11,10 +11,46 @@ export const getLikedSongs = () => (dispatch: Function) => {
         currentType: "LIKED_SONGS",
         currentList: res.data
       }
+      let trackList : ITrack[] = []
+      for(let i in res.data){
+        let currentArtist: IArtist = {
+          artist_id : res.data[i].track.artists[0].id,
+          artist_name : res.data[i].track.artists[0].name,
+        }
+        let currentAlbum: IAlbum = {
+          album_id: res.data[i].track.album.id,
+          album_name : res.data[i].track.album.name,
+          artist : currentArtist,
+        }
+        let currentTrack: ITrack = {
+          track_id: res.data[i].track.id,
+          track_name: res.data[i].track.name,
+          track_uri : res.data[i].track.uri,
+          artist: currentArtist,
+          album: currentAlbum,
+          release_date: res.data[i].id,
+          added_at: res.data[i].id,
+          popularity: res.data[i].id,
+          linked_from_id: res.data[i].track.linked_from != undefined ? res.data[i].track.linked_from.id : undefined,
+        }
+        trackList.push(currentTrack)
+
+      }
+
+      let currentISongs = {
+        currentType: "LIKED_ISONGS",
+        currentList: trackList
+      }
+
       dispatch({
         type:GET_LIKED_SONGS,
         payload:currentSongs
       })
+      dispatch({
+        type:GET_LIKED_ISONGS,
+        payload:currentISongs
+      })
+
     }  
   );
 };
@@ -71,6 +107,14 @@ export const setLikedSongs = (likedSongsNew) => (dispatch: Function) => {
   dispatch({
     type:SET_LIKED_SONGS,
     payload:likedSongsNew
+  })
+};
+
+export const setArtists = (artists) => (dispatch: Function) => {
+  dispatch(setItemsLoading());
+  dispatch({
+    type:SET_ARTISTS,
+    payload: artists
   })
 };
 

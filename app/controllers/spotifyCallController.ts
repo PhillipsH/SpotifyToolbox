@@ -33,7 +33,7 @@ export async function getLikedSongs (req:Request, res:Response) {
             }
             console.log(response.data.next)
             return(response.data.items.concat(await recursiveSpotify(response.data.next)))
-        }catch(error){
+        }catch(error:any){
             if(error.response.status == undefined){
                 console.log(error)
             }
@@ -88,7 +88,7 @@ export async function getPlaylistSongs (req:Request, res:Response) {
             }
             console.log(response.data.next)
             return(response.data.items.concat(await recursiveSpotify(response.data.next)))
-        }catch(error){
+        }catch(error:any){
             if(error.response.status == undefined){
                 console.log(error)
             }
@@ -135,7 +135,7 @@ export async function getPlaylistSongs (req:Request, res:Response) {
             }
             console.log(response.data.next)
             return(response.data.items.concat(await recursivePlaylist(response.data.next, playlistName, playlistId)))
-        }catch(error){
+        }catch(error:any){
             if(error.response.status == undefined){
                 console.log(error)
             }
@@ -222,7 +222,7 @@ export async function removeLikedSongs(req:Request, res:Response) {
             })
             console.log(response)
             return(response.data.items)
-        }catch(error){
+        }catch(error:any){
             if(error.response.status == undefined){
                 console.log(error)
             }
@@ -291,7 +291,7 @@ export async function addToPlaylist(req:Request, res:Response) {
                 }
             })
             return(response.data.id)
-        }catch(error){
+        }catch(error:any){
             if(error.response.status == undefined){
                 console.log(error)
             }
@@ -317,7 +317,7 @@ export async function addToPlaylist(req:Request, res:Response) {
                 }
             })
             return(response.data.items)
-        }catch(error){
+        }catch(error:any){
             if(error.response.status == undefined){
                 console.log(error)
             }
@@ -341,4 +341,79 @@ export async function addToPlaylist(req:Request, res:Response) {
         addToPlaylistAxios(addSongPlaylistURL, playlistId, songUris.splice(0, 100))
     }
 
+}
+export async function getGenre(req:Request, res:Response) {
+    console.log(req.query.artists)
+    console.log(typeof req.query.artists)
+    if(req.query.artists == undefined) throw 'undefined'
+    if(req.query.artists > 50) throw 'songList is too large'
+    const API_KEY = '57ee3318536b23ee81d6b27e36997cde'
+
+    let idsString = ""
+    for(let i=0; i<req.query.artists - 1; i++){
+        idsString += req.query.artists[i] + "%"
+    }
+    idsString += req.query.artists[req.query.artists.length - 1]
+    const GENRE_API = `https://api.spotify.com/v1/artists`
+    
+    try{
+        let response = await axios.get(GENRE_API,{
+            headers: {
+                Accept: "application/json",
+                Authorization: "Bearer " + req.session["access_token"],
+                "Content-Type": "application/json"
+            },
+            params:{
+                ids: idsString
+            }
+        })
+        if(response.data.error != undefined) throw response
+        console.log(response)
+        return song
+    }catch(error:any){
+        switch(error.data.error){
+            case 29:
+                console.log("timeout error")
+                setTimeout(function () {
+                }, 5000);
+                return(addGenre(song))
+                
+        }
+    }
+    // async function addGenre(song){
+    //     try{
+    //         let response = await axios.get(GENRE_API,{
+    //             headers: {
+    //                 Accept: "application/json",
+    //                 Authorization: "Bearer " + req.session["access_token"],
+    //                 "Content-Type": "application/json"
+    //             },
+    //             params:{
+    //                 ids: idsString
+    //             }
+    //         })
+    //         if(response.data.error != undefined) throw response
+    //         console.log(response)
+    //         return song
+    //     }catch(error:any){
+    //         switch(error.data.error){
+    //             case 29:
+    //                 console.log("timeout error")
+    //                 setTimeout(function () {
+    //                 }, 5000);
+    //                 return(addGenre(song))
+                    
+    //         }
+    //     }
+    // }
+
+    let promiseList:any[] = []
+
+    for(let i in req.body.songList){
+        promiseList.push(addGenre(req.body.songList[i]))
+    }
+    let combinedGenres:any = await Promise.all(promiseList)
+
+    res.send(combinedGenres)
+    
 }
