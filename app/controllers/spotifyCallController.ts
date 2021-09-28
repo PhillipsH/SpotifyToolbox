@@ -343,77 +343,57 @@ export async function addToPlaylist(req:Request, res:Response) {
 
 }
 export async function getGenre(req:Request, res:Response) {
+    const GENRE_API = `https://api.spotify.com/v1/artists`
+    console.log("THIS IS THE TOKEN" + req.session["access_token"])
     console.log(req.query.artists)
     console.log(typeof req.query.artists)
+    let artists;
     if(req.query.artists == undefined) throw 'undefined'
-    if(req.query.artists > 50) throw 'songList is too large'
-    const API_KEY = '57ee3318536b23ee81d6b27e36997cde'
+    if(!Array.isArray(req.query.artists)) throw 'sent data is not an array'
+
+    artists = req.query.artists
+    if(artists > 50) throw 'songList is too large'
+    // const API_KEY = '57ee3318536b23ee81d6b27e36997cde'
 
     let idsString = ""
-    for(let i=0; i<req.query.artists - 1; i++){
+    // for(let i=0; i<artists.length - 1; i++){
+    //     console.log(req.query.artists[i])
+    //     idsString += req.query.artists[i] + "%"
+    // }
+    for(let i=0; i< 4; i++){
+        console.log(req.query.artists[i])
         idsString += req.query.artists[i] + "%"
     }
-    idsString += req.query.artists[req.query.artists.length - 1]
-    const GENRE_API = `https://api.spotify.com/v1/artists`
-    
-    try{
-        let response = await axios.get(GENRE_API,{
-            headers: {
-                Accept: "application/json",
-                Authorization: "Bearer " + req.session["access_token"],
-                "Content-Type": "application/json"
-            },
-            params:{
-                ids: idsString
+    idsString += artists[artists.length - 1]
+    console.log(idsString)
+    async function addGenre(idsString){
+        try{
+            let response = await axios.get(GENRE_API,{
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + req.session["access_token"],
+                    "Content-Type": "application/json"
+                },
+                params:{
+                    ids: "2CIMQHirSU0MQqyYHq0eOx%2C57dN52uHvrHOxijzpIgu3E%2C1vCWHaC5f2uS3yhpwWbIA6"
+                }
+            })
+            if(response.data.error != undefined) throw response
+            console.log(response.data)
+            return response.data
+        }catch(error:any){
+            console.log(error)
+            switch(error.data.error){
+                case 29:
+                    console.log("timeout error")
+                    setTimeout(function () {
+                    }, 5000);
+                    return(addGenre(artists))
+                    
             }
-        })
-        if(response.data.error != undefined) throw response
-        console.log(response)
-        return song
-    }catch(error:any){
-        switch(error.data.error){
-            case 29:
-                console.log("timeout error")
-                setTimeout(function () {
-                }, 5000);
-                return(addGenre(song))
-                
         }
     }
-    // async function addGenre(song){
-    //     try{
-    //         let response = await axios.get(GENRE_API,{
-    //             headers: {
-    //                 Accept: "application/json",
-    //                 Authorization: "Bearer " + req.session["access_token"],
-    //                 "Content-Type": "application/json"
-    //             },
-    //             params:{
-    //                 ids: idsString
-    //             }
-    //         })
-    //         if(response.data.error != undefined) throw response
-    //         console.log(response)
-    //         return song
-    //     }catch(error:any){
-    //         switch(error.data.error){
-    //             case 29:
-    //                 console.log("timeout error")
-    //                 setTimeout(function () {
-    //                 }, 5000);
-    //                 return(addGenre(song))
-                    
-    //         }
-    //     }
-    // }
 
-    let promiseList:any[] = []
-
-    for(let i in req.body.songList){
-        promiseList.push(addGenre(req.body.songList[i]))
-    }
-    let combinedGenres:any = await Promise.all(promiseList)
-
-    res.send(combinedGenres)
+    res.send(await addGenre(idsString))
     
 }

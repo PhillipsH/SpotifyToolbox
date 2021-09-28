@@ -516,61 +516,75 @@ function addToPlaylist(req, res) {
 exports.addToPlaylist = addToPlaylist;
 function getGenre(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var API_KEY, idsString, i, GENRE_API, response, error_7, promiseList, i, combinedGenres;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        function addGenre(idsString) {
+            return __awaiter(this, void 0, void 0, function () {
+                var response, error_7;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, axios_1.default.get(GENRE_API, {
+                                    headers: {
+                                        Accept: "application/json",
+                                        Authorization: "Bearer " + req.session["access_token"],
+                                        "Content-Type": "application/json"
+                                    },
+                                    params: {
+                                        ids: "2CIMQHirSU0MQqyYHq0eOx%2C57dN52uHvrHOxijzpIgu3E%2C1vCWHaC5f2uS3yhpwWbIA6"
+                                    }
+                                })];
+                        case 1:
+                            response = _a.sent();
+                            if (response.data.error != undefined)
+                                throw response;
+                            console.log(response.data);
+                            return [2 /*return*/, response.data];
+                        case 2:
+                            error_7 = _a.sent();
+                            console.log(error_7);
+                            switch (error_7.data.error) {
+                                case 29:
+                                    console.log("timeout error");
+                                    setTimeout(function () {
+                                    }, 5000);
+                                    return [2 /*return*/, (addGenre(artists))];
+                            }
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        var GENRE_API, artists, idsString, i, _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
+                    GENRE_API = "https://api.spotify.com/v1/artists";
+                    console.log("THIS IS THE TOKEN" + req.session["access_token"]);
                     console.log(req.query.artists);
                     console.log(typeof req.query.artists);
                     if (req.query.artists == undefined)
                         throw 'undefined';
-                    if (req.query.artists > 50)
+                    if (!Array.isArray(req.query.artists))
+                        throw 'sent data is not an array';
+                    artists = req.query.artists;
+                    if (artists > 50)
                         throw 'songList is too large';
-                    API_KEY = '57ee3318536b23ee81d6b27e36997cde';
                     idsString = "";
-                    for (i = 0; i < req.query.artists - 1; i++) {
+                    // for(let i=0; i<artists.length - 1; i++){
+                    //     console.log(req.query.artists[i])
+                    //     idsString += req.query.artists[i] + "%"
+                    // }
+                    for (i = 0; i < 4; i++) {
+                        console.log(req.query.artists[i]);
                         idsString += req.query.artists[i] + "%";
                     }
-                    idsString += req.query.artists[req.query.artists.length - 1];
-                    GENRE_API = "https://api.spotify.com/v1/artists";
-                    _a.label = 1;
+                    idsString += artists[artists.length - 1];
+                    console.log(idsString);
+                    _b = (_a = res).send;
+                    return [4 /*yield*/, addGenre(idsString)];
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, axios_1.default.get(GENRE_API, {
-                            headers: {
-                                Accept: "application/json",
-                                Authorization: "Bearer " + req.session["access_token"],
-                                "Content-Type": "application/json"
-                            },
-                            params: {
-                                ids: idsString
-                            }
-                        })];
-                case 2:
-                    response = _a.sent();
-                    if (response.data.error != undefined)
-                        throw response;
-                    console.log(response);
-                    return [2 /*return*/, song];
-                case 3:
-                    error_7 = _a.sent();
-                    switch (error_7.data.error) {
-                        case 29:
-                            console.log("timeout error");
-                            setTimeout(function () {
-                            }, 5000);
-                            return [2 /*return*/, (addGenre(song))];
-                    }
-                    return [3 /*break*/, 4];
-                case 4:
-                    promiseList = [];
-                    for (i in req.body.songList) {
-                        promiseList.push(addGenre(req.body.songList[i]));
-                    }
-                    return [4 /*yield*/, Promise.all(promiseList)];
-                case 5:
-                    combinedGenres = _a.sent();
-                    res.send(combinedGenres);
+                    _b.apply(_a, [_c.sent()]);
                     return [2 /*return*/];
             }
         });

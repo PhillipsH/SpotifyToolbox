@@ -229,9 +229,20 @@ const ButtonFunctions = (props) => {
       }
     }
     let promiseArr: any = [];
+    // let res = await axios.get(
+    //   "http://localhost:5000/spotify/getPlaylistSongs",
+    //   { withCredentials: true }
+    // );
+
+
+    // let res = await axios.get(
+    //   GET_GENRE_URI,
+    //   { withCredentials: true }
+    // );
 
     let artistData = await axios.get(GET_GENRE_URI,
     {
+      withCredentials: true,
       params:{
         artists: artistArr.splice(0, 50)
       }
