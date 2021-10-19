@@ -3,22 +3,18 @@ import { connect } from 'react-redux';
 import {checkAuthorize} from '../flux/actions/authorizeAction';
 import {IAuthProps} from '../types/interfaces';
 import Authorizer from './Authorizer';
-import SpotifyFunctions from './Dashboard'
+import Dashboard from './Dashboard'
 
 export const Main = (props)  => {
 
   useEffect(() => {
     props.checkAuthorize();
   }, [])
-  let mainBoard = {
-    marginTop:"150px",
-    marginBottom:"50px",
-    width:"100%"
-  }
+  
   let mainContent = (props.authenticated.isAuthenticated) 
   ? (
   <>
-    <SpotifyFunctions/>
+    <Dashboard/>
   </>
   )
   : (

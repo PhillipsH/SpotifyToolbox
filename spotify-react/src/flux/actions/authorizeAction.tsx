@@ -1,6 +1,5 @@
 import axios from 'axios';
-import {AUTHORIZE, CHECK_AUTHORIZE} from './types';
-import Cookies from 'react-cookie';
+import {CHECK_AUTHORIZE} from './types';
 
 export const checkAuthorize = () => (dispatch: Function) => {
   axios

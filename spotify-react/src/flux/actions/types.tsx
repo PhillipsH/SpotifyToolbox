@@ -10,3 +10,29 @@ export const SET_LIKED_SONGS = 'SET_LIKED_SONGS';
 export const SET_PLAYLIST_SONGS = 'SET_PLAYLIST_SONGS';
 export const GET_PROFILE = 'GET_PROFILE';
 export const SET_ARTISTS = 'SET_ARTISTS';
+
+export const ADD_LOADING = 'ADD_LOADING';
+export const REMOVE_LOADING = 'REMOVE_LOADING';
+export const COMPLETE_SETUP = 'COMPLETE_SETUP';
+export const START_SETUP = 'START_SETUP';
+
+export const SET_BOARD = "SET_BOARD;"
+
+export enum LoadingTypes {
+    LikedSongs = "LIKED_SONGS",
+    Profile = "PROFILE",
+    PlaylistSongs = "PLAYLIST_SONGS",
+    Artists = "ARTISTS"
+}
+
+export enum BoardTypes{
+    Saved = "SAVED_BOARD",
+    Artist = "ARTIST_BOARD",
+    Genre = "GENRE_BOARD", 
+    Decade = "DECADE_BOARD",
+    PlaylistUnique = "PLAYLIST_UNIQUE_BOARD",
+    SavedUnique = "SAVED_UNIQUE_BOARD",
+    Duplicates = "DUPLICATE_BOARD",
+    Uninitilized = "UNINITIALIZED_BOARD"
+
+}

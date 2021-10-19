@@ -10,7 +10,7 @@ export const Sidenav = (props) => {
 
     let displayName = 'user'
     let profilePic = 'user'
-    let followerCount = '3'
+    let followerCount = '-'
     let profileUrl = 'https://www.spotify.com'
     
     if(props.profile.display_name != undefined){
@@ -30,11 +30,11 @@ export const Sidenav = (props) => {
                 <h3>Stats</h3>
                 <div>
                     <img className='side-img' src={likedImg}></img>
-                    <h4>Liked Songs: <span>{props.likedSongs.length}</span></h4>
+                    <h4>Liked Songs: <span>{props.likedSongs.list.length}</span></h4>
                 </div>
                 <div>
                 <img className='side-img' src={playlistImg}></img>
-                    <h4>Playlist Songs: <span>{props.playlistSongs.length}</span></h4>
+                    <h4>Playlist Songs: <span>{props.playlistSongs.list.length}</span></h4>
                 </div>
                 <div>
                     <img className='side-img' src={followersImg}></img>
@@ -60,7 +60,6 @@ const mapStateToProps = (state: any) => ({
     likedSongs: state.spotify.likedSongs,
     playlistSongs: state.spotify.playlistSongs,
     profile: state.spotify.profile,
-    loading: state.spotify.loading,
 });
   
 export default connect(mapStateToProps, {})(Sidenav);
