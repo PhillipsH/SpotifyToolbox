@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addToPlaylist = exports.removeLikedSongs = exports.getProfile = exports.getGenre = exports.getPlaylistSongs = exports.getLikedSongs = void 0;
+exports.addToPlaylist = exports.removeLikedSongs = exports.getProfile = exports.getGenre = exports.getPlaylistSongs = exports.getPlaylists = exports.getSongsFromPlaylist = exports.getLikedSongs = void 0;
 var axios_1 = __importDefault(require("axios"));
 require('dotenv').config();
 var redirect_uri = 'http://localhost:3000/callback';
@@ -147,6 +147,22 @@ function getLikedSongs(req, res) {
     });
 }
 exports.getLikedSongs = getLikedSongs;
+function getSongsFromPlaylist(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/];
+        });
+    });
+}
+exports.getSongsFromPlaylist = getSongsFromPlaylist;
+function getPlaylists(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/];
+        });
+    });
+}
+exports.getPlaylists = getPlaylists;
 function getPlaylistSongs(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         function recursiveSpotify(url) {

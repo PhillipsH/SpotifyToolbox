@@ -4,11 +4,13 @@ import {Button} from "reactstrap";
 import { connect } from "react-redux";
 import { getPlaylistSongs } from "../../flux/actions/spotifyActions";
 import { addToPlaylist } from "../Utility";
+import { addLoading } from '../../flux/actions/uiAction';
+import { LoadingTypes } from '../../flux/actions/types';
 
 const SavedUniqueBoard = (props) => {
   useEffect(() => {
     if(props.playlistSongs.initialized == false){
-      props.getPlaylistSongs()
+      addLoading([LoadingTypes.PlaylistSongs])
     }
   }, []);
 
@@ -34,22 +36,41 @@ const SavedUniqueBoard = (props) => {
   }
   return (
     <div className="function-board">
-      <h1>Liked Songs</h1>
+      <div className="cards-container">
+        <div className="card-info">
+
+        </div>
+        <div className="card-info">
+          <h1>Liked Songs</h1>
+        </div>
+        <div className="card-info">
+
+        </div>
+      </div>
       <h5>Number of Songs: {uniqueLikedSongs.length}</h5>
       <div className="toolbox">
         <Button onClick={addSongsToPlaylist}color="success">Add to Playlist</Button>
       </div>
       <div className="song-container">
-        {uniqueLikedSongs.map((val, key) => (
+        <div className="song-features">
+          <span>Title</span>
+          <span>Album</span>
+          <span>Date Added</span>
+        </div>
+        {uniqueLikedSongs.map((val, key) => {
+        let album_image = val.album.album_images[2] ?? "" 
+
+        return(
             <SavedUniqueSong
               key={key}
               id={val.track_id}
               title={val.track_name}
               artist={val.artist.artist_name}
               album={val.album.album_name}
+              image={album_image.url}
               date={val.added_at}
             />
-          ))
+          )})
         } 
       </div>
     </div>

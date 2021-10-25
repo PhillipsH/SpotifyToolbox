@@ -21,6 +21,7 @@ export interface IAlbum {
   album_id: string,
   album_name: string,
   artist: IArtist,
+  album_images: any[]
   genres?: string[]
 }
 

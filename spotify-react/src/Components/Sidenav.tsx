@@ -1,65 +1,139 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import gitImg from "../Icons/github.png";
+import React from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import likedImg from "../Icons/like.png";
-import playlistImg from "../Icons/playlist.png";
-import followersImg from "../Icons/followers.png";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faCopy,
+  faMicrophone,
+  faRecordVinyl,
+  faTrophy,
+  faListAlt,
+  faNotEqual,
+  faAddressCard,
+  faSignOutAlt,
+  faAddressBook,
+  faDonate,
+  faMusic
+
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faGithub
+} from "@fortawesome/free-brands-svg-icons";
 
 export const Sidenav = (props) => {
-
-    let displayName = 'user'
-    let profilePic = 'user'
-    let followerCount = '-'
-    let profileUrl = 'https://www.spotify.com'
-    
-    if(props.profile.display_name != undefined){
-        displayName = props.profile.display_name
-        profilePic = props.profile.images[0].url
-        followerCount = props.profile.followers.total
-        profileUrl = props.profile.external_urls.spotify
-    }
-    return (
-        <div className="sidenav">
-            <div className='user-div'>
-                <h2>SpotifyTools</h2>
-                <img className="user-img" src={profilePic}></img>
-                <h4 className="user-name">{displayName}</h4>
-            </div>
+  return (
+    <div className="sidenav">
+      <h2 className="nav-title"><FontAwesomeIcon icon={faRecordVinyl} /> SpotifyTools</h2>
+      <div className="nav-tools">
+        <span>Tools</span>
+        <Link to="/Decade">
+          <div className="nav-selection">
             <div>
-                <h3>Stats</h3>
-                <div>
-                    <img className='side-img' src={likedImg}></img>
-                    <h4>Liked Songs: <span>{props.likedSongs.list.length}</span></h4>
-                </div>
-                <div>
-                <img className='side-img' src={playlistImg}></img>
-                    <h4>Playlist Songs: <span>{props.playlistSongs.list.length}</span></h4>
-                </div>
-                <div>
-                    <img className='side-img' src={followersImg}></img>
-                    <h4>Followers: {followerCount}</h4>
-                </div>
-                <div>
-                    <h3>Pages</h3>
-                    <a href={profileUrl}>Spotify Profile</a>
-                    <a href="#">How to Use</a>
-                </div>
-                <div className="sidenav-footer">
-                    <img className='contact-img' src={gitImg}></img>
-                    <a href="#">
-                    <h6>Github Repo</h6>
-                    </a>
-                </div>
+              <FontAwesomeIcon icon={faCalendarAlt} className="nav-icon"/>
+              <span>Decade</span>
             </div>
+          </div>
+        </Link>
+        <Link to="/Duplicates">
+          <div className="nav-selection">
+            <div>
+              <FontAwesomeIcon icon={faCopy} className="nav-icon"/>
+              <span>Duplicates</span>
+            </div>
+          </div>
+        </Link>
+        <Link to="/Genre">
+          <div className="nav-selection">
+            <div>
+              <FontAwesomeIcon icon={faMicrophone} className="nav-icon"/>
+              <span>Genre</span>
+            </div>
+          </div>
+        </Link>
+        <Link to="/Top">
+          <div className="nav-selection">
+            <div>
+              <FontAwesomeIcon icon={faTrophy} className="nav-icon"/>
+              <span>Top Ranking</span>
+            </div>
+          </div>
+        </Link>
+        <Link to="/UniqueSaved">
+          <div className="nav-selection">
+            <div>
+              <FontAwesomeIcon icon={faNotEqual} className="nav-icon"/>
+              <span>Unique Saved</span>
+            </div>
+          </div>
+        </Link>
+        <Link to="/UniquePlaylist">
+          <div className="nav-selection">
+            <div>
+              <FontAwesomeIcon icon={faNotEqual} className="nav-icon"/>
+              <span> Unique Playlist</span>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      <div className="nav-tools">
+        <span>Library</span>
+        <Link to="/">
+          <div className="nav-selection">
+            <div>
+              <FontAwesomeIcon icon={faMusic} className="nav-icon"/>
+              <span>Liked Songs</span>
+            </div>
+          </div>
+        </Link>
+        <Link to="/Playlists">
+          <div className="nav-selection">
+            <div>
+              <FontAwesomeIcon icon={faListAlt} className="nav-icon"/>
+              <span>Playlists</span>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      <div className="nav-tools">
+        <span>General</span>
+        <div className="nav-selection">
+          <div>
+            <FontAwesomeIcon icon={faAddressCard} className="nav-icon"/>
+            <span>Spotify Profile</span>
+          </div>
         </div>
-    );
-}
+        <div className="nav-selection">
+          <div>
+            <FontAwesomeIcon icon={faGithub} className="nav-icon"/>
+            <span>Github Repo</span>
+          </div>
+        </div>
+        <div className="nav-selection">
+          <div>
+            <FontAwesomeIcon icon={faDonate} className="nav-icon"/>
+            <span>Donate</span>
+          </div>
+        </div>
+        <div className="nav-selection">
+          <div>
+            <FontAwesomeIcon icon={faSignOutAlt} className="nav-icon"/>
+            <span>Log Out</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const mapStateToProps = (state: any) => ({
-    likedSongs: state.spotify.likedSongs,
-    playlistSongs: state.spotify.playlistSongs,
-    profile: state.spotify.profile,
+  likedSongs: state.spotify.likedSongs,
+  playlistSongs: state.spotify.playlistSongs,
+  profile: state.spotify.profile,
 });
-  
+
 export default connect(mapStateToProps, {})(Sidenav);

@@ -1,27 +1,28 @@
 import React from 'react';
 
-const style={
-  cardBody: {
-    width: '100%',
-    color: 'black',
-  }
-}
-
 const Song = ({
   id,
   title,
   artist,
   album,
+  image,
   date,
 }) => {
   var readable_date = new Date(date).toDateString();
   return ( 
     <div className="card card-container">
       <div className="card-body">
-        <h5 className="song_title">{title}</h5>
-        <h6 className="artist">Artist: {artist}</h6>
-        <h6 className="album">Album: {album}</h6>
-        <h6 className="date">Date: {readable_date}</h6>
+        <div className="title-body">
+          <div className="image-div">
+            <img src={image} alt="Album Image"></img>
+          </div>
+          <div>
+            <h5 className="song_title">{title}</h5>
+            <h6 className="artist">{artist}</h6>
+          </div>
+        </div>
+        <h6 className="album">{album}</h6>
+        <h6 className="date">{readable_date}</h6>
       </div>
     </div>
    );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Spinner} from "reactstrap";
 import { connect } from "react-redux";
+import {BrowserRouter, Route, Switch, Link} from "react-router-dom"
 
 import {
   getLikedSongs,
@@ -17,9 +18,11 @@ import SavedUniqueBoard from "./SavedUnique/SavedUniqueBoard";
 import ArtistBoard from "./Artists/ArtistBoard"
 import GenreBoard from "./Genre/GenreBoard"
 import ButtonFunctions from "./ButtonFunctions/ButtonFunctions"
-import Sidenav  from "./Sidenav";
+import Sidebar  from "./Sidebar";
+import Sidenav from "./Sidenav";
 import SongBoard from "./Saved/SavedBoard"
 import { BoardTypes, LoadingTypes } from "../flux/actions/types";
+import SavedBoard from "./Saved/SavedBoard";
 
 
 
@@ -27,7 +30,6 @@ export const Dashboard = (props) => {
   useEffect(() => {
     async function fetchData(){
       props.startSetup()
-      console.log("yo")
       await props.getProfile()
       props.getPlaylistSongs()
     }
@@ -38,7 +40,6 @@ export const Dashboard = (props) => {
 
   let songList = <></>;
   let mainContent = <></>;
-  console.log(props.loading)
   if(props.loading.includes(LoadingTypes.LikedSongs)){
     mainContent = (
       <div className="loading">
@@ -53,53 +54,85 @@ export const Dashboard = (props) => {
         <h2>Current Loading your Playlist Songs</h2>
       </div>
     );
-  }else{
-    switch (props.boardType) {
-      case BoardTypes.Saved:
-        songList = <SongBoard></SongBoard>
-        break;
-      case BoardTypes.PlaylistUnique:
-        songList = <PlaylistSongsBoard></PlaylistSongsBoard>
-        break;
-      case BoardTypes.SavedUnique:
-        songList = <SavedUniqueBoard></SavedUniqueBoard>
-        break;
-  
-      case BoardTypes.Duplicates:
-        songList = <DuplicateSongsBoard></DuplicateSongsBoard>;
-        break;
-
-      case BoardTypes.Decade:
-        songList = <DecadeSongsBoard></DecadeSongsBoard>;
-        break;
-
-      case BoardTypes.Artist:
-        songList = <ArtistBoard></ArtistBoard>;
-        break;
-      case BoardTypes.Genre:
-        songList = <GenreBoard></GenreBoard>;
-        break;
-    }
-    mainContent = (
-      <>
-        <h3>Song Functions</h3>
-        <ButtonFunctions></ButtonFunctions>
-        <h3>Current Songs</h3>
-        {songList}
-      </>
-    )
   }
+  else{
+    mainContent =(
+    // <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+          <SavedBoard></SavedBoard>
+        </Route>
+        <Route exact path="/duplicates">
+          <DuplicateSongsBoard></DuplicateSongsBoard>
+        </Route>
+        <Route exact path="/decade">
+          <DecadeSongsBoard></DecadeSongsBoard>
+        </Route>
+        <Route exact path="/genre">
+          <GenreBoard></GenreBoard>
+        </Route>
+        <Route exact path="/uniqueSaved">
+          <SavedUniqueBoard></SavedUniqueBoard>
+        </Route>
+        <Route exact path="/uniquePlaylist">
+          <PlaylistSongsBoard></PlaylistSongsBoard>
+        </Route>
+      </Switch>
+    // </BrowserRouter>
+    );
+  }
+  // else{
+  //   switch (props.boardType) {
+  //     case BoardTypes.Saved:
+  //       songList = <SongBoard></SongBoard>
+  //       break;
+  //     case BoardTypes.PlaylistUnique:
+  //       songList = <PlaylistSongsBoard></PlaylistSongsBoard>
+  //       break;
+  //     case BoardTypes.SavedUnique:
+  //       songList = <SavedUniqueBoard></SavedUniqueBoard>
+  //       break;
+  
+  //     case BoardTypes.Duplicates:
+  //       songList = <DuplicateSongsBoard></DuplicateSongsBoard>;
+  //       break;
+
+  //     case BoardTypes.Decade:
+  //       songList = <DecadeSongsBoard></DecadeSongsBoard>;
+  //       break;
+
+  //     case BoardTypes.Artist:
+  //       songList = <ArtistBoard></ArtistBoard>;
+  //       break;
+  //     case BoardTypes.Genre:
+  //       songList = <GenreBoard></GenreBoard>;
+  //       break;
+  //   }
+  //   mainContent = (
+  //     <>
+  //       {/* <h3>Song Functions</h3> */}
+  //       <ButtonFunctions></ButtonFunctions>
+  //       {/* <h3>Current Songs</h3> */}
+  //       {songList}
+  //     </>
+  //   )
+  // }
 
 
   return (
     <div>
-      <Sidenav></Sidenav>
-      <div id="dashboard-div">
-        <header className="App-header">
-          <h1>Spotify Dashboard</h1>
-        </header>
-        {mainContent}
-      </div>
+      <BrowserRouter>
+        <Sidenav></Sidenav>
+
+        <div id="dashboard-div">
+          <header className="App-header">
+            <h1>Spotify Dashboard</h1>
+          </header>
+          {mainContent}
+
+        </div>
+        <Sidebar></Sidebar>
+      </BrowserRouter>
     </div>
   );
 };

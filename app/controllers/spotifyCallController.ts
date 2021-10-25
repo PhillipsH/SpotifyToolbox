@@ -89,7 +89,10 @@ export async function getLikedSongs (req:Request, res:Response) {
     res.send(totalLikedSongs)
 
 }
-
+export async function getSongsFromPlaylist (req:Request, res:Response) {
+}
+export async function getPlaylists (req:Request, res:Response) {
+}
 export async function getPlaylistSongs (req:Request, res:Response) {
     console.log("GETTING PLAYLIST SONGS")
     const allPlaylistUrl:string = 'https://api.spotify.com/v1/me/playlists?limit=50'

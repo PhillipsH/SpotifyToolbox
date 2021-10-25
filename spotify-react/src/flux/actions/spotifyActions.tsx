@@ -11,6 +11,9 @@ async function getSavedTracks(){
   let trackList : ITrack[] = []
 
   for(let i in res.data){
+    if(res.data[i] == undefined){
+      console.log(res.data)
+    }
     let currentArtist: IArtist = {
       artist_id : res.data[i].track.artists[0].id,
       artist_name : res.data[i].track.artists[0].name,
@@ -18,6 +21,7 @@ async function getSavedTracks(){
     let currentAlbum: IAlbum = {
       album_id: res.data[i].track.album.id,
       album_name : res.data[i].track.album.name,
+      album_images: res.data[i].track.album.images,
       artist : currentArtist,
     }
     let currentTrack: ITrack = {
@@ -49,6 +53,7 @@ export const getPlaylistsTracks = async () => {
     let currentAlbum: IAlbum = {
       album_id: res.data[i].track.album.id,
       album_name : res.data[i].track.album.name,
+      album_images: res.data[i].track.album.images,
       artist : currentArtist,
     }
     let currentTrack: IPlaylistTrack = {
@@ -173,6 +178,7 @@ export const getLikedSongs = () => (dispatch: Function) => {
         let currentAlbum: IAlbum = {
           album_id: res.data[i].track.album.id,
           album_name : res.data[i].track.album.name,
+          album_images: res.data[i].track.album.images,
           artist : currentArtist,
         }
         let currentTrack: ITrack = {
@@ -215,6 +221,7 @@ export const getPlaylistSongs = () => async(dispatch: Function) => {
     let currentAlbum: IAlbum = {
       album_id: res.data[i].track.album.id,
       album_name : res.data[i].track.album.name,
+      album_images: res.data[i].track.album.images,
       artist : currentArtist,
     }
     let currentTrack: IPlaylistTrack = {
