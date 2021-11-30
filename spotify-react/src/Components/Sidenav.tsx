@@ -36,9 +36,8 @@ export const Sidenav = (props) => {
   console.log(useLocation().pathname);
   return (
     <div
-      className={`${MainStyle.sidenav} ${
-        props.sidenavTheme ? MainStyle.closedBar : ""
-      }`}
+      className={`${MainStyle.sidenav} ${props.sidenavTheme ? MainStyle.closedBar : ""
+        }`}
     >
       <div className={MainStyle.navHeader}>
         <div className={`${MainStyle.toggleSidebar}`}>
@@ -61,7 +60,8 @@ export const Sidenav = (props) => {
       <div className={MainStyle.navTools}>
         <span>Library</span>
         <ul>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon icon={faMusic} className={MainStyle.navIcon} />
               <span className={MainStyle.navName}>Liked Songs</span>
@@ -79,7 +79,8 @@ export const Sidenav = (props) => {
       <div className={MainStyle.navTools}>
         <span>Tools</span>
         <ul>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/decade') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/decade" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon
                 icon={faCalendarAlt}
@@ -88,13 +89,15 @@ export const Sidenav = (props) => {
               <span className={MainStyle.navName}>Decade</span>
             </Link>
           </li>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/duplicates') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/duplicates" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon icon={faCopy} className={MainStyle.navIcon} />
               <span className={MainStyle.navName}>Duplicates</span>
             </Link>
           </li>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/genre') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/genre" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon
                 icon={faMicrophone}
@@ -103,19 +106,22 @@ export const Sidenav = (props) => {
               <span className={MainStyle.navName}>Genre</span>
             </Link>
           </li>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/top/songs') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/top/songs" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon icon={faTrophy} className={MainStyle.navIcon} />
               <span className={MainStyle.navName}>Top Songs</span>
             </Link>
           </li>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/top/artists') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/top/artists" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon icon={faTrophy} className={MainStyle.navIcon} />
               <span className={MainStyle.navName}>Top Artists</span>
             </Link>
           </li>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/uniqueSaved') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/uniqueSaved" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon
                 icon={faNotEqual}
@@ -124,7 +130,8 @@ export const Sidenav = (props) => {
               <span className={MainStyle.navName}>Unique Saved</span>
             </Link>
           </li>
-          <li className={MainStyle.navSelection}>
+          <li className={`${MainStyle.navSelection} ${(useLocation().pathname == '/uniquePlaylists') ? MainStyle.navSelected : ""
+            }`}>
             <Link to="/uniquePlaylist" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon
                 icon={faNotEqual}

@@ -54,11 +54,21 @@
   width: 125px;
   height: 125px;
 }
+// .num{
+//   text-align:center;
+//   background:red;
+// }
 .artistRank {
-  width: 10px;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  font-weight: bold;
+  font-size:larger;
+  text-align:center;
   height: 100%;
   margin: auto;
-  background: blue;
+  // background: blue;
 }
 // END OF ARTIST
 

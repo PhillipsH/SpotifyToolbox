@@ -4,7 +4,7 @@ import {
   faListAlt,
   faMicrophone,
   faMusic,
-  faUserFriends,
+  // faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import { ITrack } from "../types/interfaces";
@@ -79,7 +79,7 @@ export const Sidebar = (props) => {
           while (
             index > 0 &&
             props.likedSongs.list[i].popularity >
-              popularFiveSongs[index - 1].popularity
+            popularFiveSongs[index - 1].popularity
           ) {
             index--;
           }
@@ -125,8 +125,11 @@ export const Sidebar = (props) => {
               size={"2x"}
             />
           </div>
-          <span>Liked Songs: </span>
-          <span>{props.likedSongs.list.length}</span>
+          <div className={MainStyle.statDetails}>
+            <span>Liked Songs </span>
+            <br></br>
+            <span className={MainStyle.secondaryTextColor}>{props.likedSongs.list.length}</span>
+          </div>
         </div>
         <div className={MainStyle.stat}>
           <div className={`${MainStyle.sidebarIcon} ${MainStyle.blueColor}`}>
@@ -136,8 +139,12 @@ export const Sidebar = (props) => {
               size={"2x"}
             />
           </div>
-          <span>Playlist Songs: </span>
-          <span>{props.playlistSongs.list.length}</span>
+          <div className={MainStyle.statDetails}>
+            <span>Playlist Songs </span>
+            <br></br>
+            <span className={MainStyle.secondaryTextColor}>{props.playlistSongs.list.length}</span>
+          </div>
+
         </div>
         <div className={MainStyle.stat}>
           <div className={`${MainStyle.sidebarIcon} ${MainStyle.redColor}`}>
@@ -147,10 +154,14 @@ export const Sidebar = (props) => {
               size={"2x"}
             />
           </div>
-          <span>Unique Artists: </span>
-          <span>{props.artists.list.length}</span>
+          <div className={MainStyle.statDetails}>
+            <span>Unique Artists </span>
+            <br></br>
+            <span className={MainStyle.secondaryTextColor}>{props.artists.list.length}</span>
+          </div>
+
         </div>
-        <div className={MainStyle.stat}>
+        {/* <div className={MainStyle.stat}>
           <div className={`${MainStyle.sidebarIcon} ${MainStyle.yellowColor}`}>
             <FontAwesomeIcon
               className={MainStyle.statIcon}
@@ -160,7 +171,7 @@ export const Sidebar = (props) => {
           </div>
           <span>Followers: </span>
           <span>{followerCount}</span>
-        </div>
+        </div> */}
       </div>
 
       <h5>Your Most Popular Songs</h5>

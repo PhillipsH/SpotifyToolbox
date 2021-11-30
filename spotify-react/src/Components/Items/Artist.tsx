@@ -33,7 +33,7 @@ const Artist = ({
   return (
     <div className={ItemStyles.artistItem} style={style}>
       <div>
-        <div className={ItemStyles.artistRank}>{index}</div>
+        <div className={ItemStyles.artistRank}><span className={ItemStyles.num}>{index}.</span></div>
       </div>
       <div className="title-body">
         <div className={ItemStyles.imageDiv}>

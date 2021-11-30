@@ -6,9 +6,12 @@ $primary-color: #fffafa;
 $green-color: #50d0bc;
 $red-color: #ff7782;
 $blue-color: #45bfff;
-$bluer-color: #717eee;
+$bluer-color: #1b9dfe;
 $yellow-color: #ffbb55;
 $purple-color: #717eee;
+
+$primary-text-color: white;
+$secondary-text-color: #818181;
 // $secondary-color:
 .greenColor {
   background-color: $green-color;
@@ -33,6 +36,10 @@ $purple-color: #717eee;
 .purpleColor {
   background-color: $purple-color;
   color:white;
+}
+
+.secondaryTextColor{
+  color: $secondary-text-color;
 }
 
 .backgroundImg {
@@ -112,8 +119,8 @@ $purple-color: #717eee;
 }
 .popularSong img {
   border-radius: 10px;
-  width: 80px;
-  height: 80px;
+  width: 65px;
+  height: 65px;
 }
 
 .likedArtistContainer {
@@ -132,8 +139,8 @@ $purple-color: #717eee;
   border-radius: 10px;
   margin-left: 5px;
   margin-right: 5px;
-  width: 80px;
-  height: 80px;
+  width: 65px;
+  height: 65px;
 }
 
 .statsContainer {
@@ -152,7 +159,12 @@ $purple-color: #717eee;
   border-radius: 15px;
   text-align: center;
   line-height: 55px;
+  margin-right: 5px;
   color: white;
+}
+.statDetails{
+  display:block;
+  // background:red;
 }
 .statIcon {
   // margin-right: 5px;
@@ -213,7 +225,7 @@ ul {
   margin-top: 50px;
 }
 .navSelection {
-  color: #818181;
+  color:#818181;
   display: flex;
   justify-content: center;
   align-content: center;
@@ -224,8 +236,12 @@ ul {
   padding-left: 10px;
   width: 80%;
 }
+.navSelected{
+  background-color:$bluer-color;
+  color:white;
+}
 .navLink{
-  color:#818181;
+  color: inherit; 
 }
 .navIcon {
   margin-right: 10px;
