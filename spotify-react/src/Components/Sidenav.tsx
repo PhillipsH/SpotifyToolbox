@@ -1,7 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
-import likedImg from "../Icons/like.png";
+import MainStyle from "./Styles/Components/Main.module.scss";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,123 +16,170 @@ import {
   faSignOutAlt,
   faAddressBook,
   faDonate,
-  faMusic
-
+  faMusic,
+  faBars,
+  faPodcast,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faGithub
-} from "@fortawesome/free-brands-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 export const Sidenav = (props) => {
+  useEffect(() => {
+    if ("external_urls" in props.profile) {
+      setProfileUrl(props.profile.external_urls.spotify);
+    }
+  }, [props.profile]);
+
+  const [profileUrl, setProfileUrl]: any = useState();
+  function toggleNav(event) {
+    event.preventDefault();
+  }
+  console.log(useLocation().pathname);
   return (
-    <div className="sidenav">
-      <h2 className="nav-title"><FontAwesomeIcon icon={faRecordVinyl} /> SpotifyTools</h2>
-      <div className="nav-tools">
-        <span>Tools</span>
-        <Link to="/Decade">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faCalendarAlt} className="nav-icon"/>
-              <span>Decade</span>
-            </div>
-          </div>
-        </Link>
-        <Link to="/Duplicates">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faCopy} className="nav-icon"/>
-              <span>Duplicates</span>
-            </div>
-          </div>
-        </Link>
-        <Link to="/Genre">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faMicrophone} className="nav-icon"/>
-              <span>Genre</span>
-            </div>
-          </div>
-        </Link>
-        <Link to="/Top">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faTrophy} className="nav-icon"/>
-              <span>Top Ranking</span>
-            </div>
-          </div>
-        </Link>
-        <Link to="/UniqueSaved">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faNotEqual} className="nav-icon"/>
-              <span>Unique Saved</span>
-            </div>
-          </div>
-        </Link>
-        <Link to="/UniquePlaylist">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faNotEqual} className="nav-icon"/>
-              <span> Unique Playlist</span>
-            </div>
-          </div>
-        </Link>
+    <div
+      className={`${MainStyle.sidenav} ${
+        props.sidenavTheme ? MainStyle.closedBar : ""
+      }`}
+    >
+      <div className={MainStyle.navHeader}>
+        <div className={`${MainStyle.toggleSidebar}`}>
+          <a
+            href="#"
+            onClick={(event) => {
+              event.preventDefault();
+              props.setSidenavTheme(!props.sidenavTheme);
+            }}
+          >
+            <FontAwesomeIcon icon={faBars} className={MainStyle.navIcon} />
+          </a>
+        </div>
+        <div className={`${MainStyle.titleLogo}`}>
+          <FontAwesomeIcon icon={faPodcast} className={``} />
+          <span>SpotifyTools</span>
+        </div>
       </div>
 
-      <div className="nav-tools">
+      <div className={MainStyle.navTools}>
         <span>Library</span>
-        <Link to="/">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faMusic} className="nav-icon"/>
-              <span>Liked Songs</span>
-            </div>
-          </div>
-        </Link>
-        <Link to="/Playlists">
-          <div className="nav-selection">
-            <div>
-              <FontAwesomeIcon icon={faListAlt} className="nav-icon"/>
-              <span>Playlists</span>
-            </div>
-          </div>
-        </Link>
+        <ul>
+          <li className={MainStyle.navSelection}>
+            <Link to="/" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon icon={faMusic} className={MainStyle.navIcon} />
+              <span className={MainStyle.navName}>Liked Songs</span>
+            </Link>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <Link to="/Playlists" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon icon={faListAlt} className={MainStyle.navIcon} />
+              <span className={MainStyle.navName}>Playlists</span>
+            </Link>
+          </li>
+        </ul>
       </div>
 
-      <div className="nav-tools">
+      <div className={MainStyle.navTools}>
+        <span>Tools</span>
+        <ul>
+          <li className={MainStyle.navSelection}>
+            <Link to="/decade" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon
+                icon={faCalendarAlt}
+                className={MainStyle.navIcon}
+              />
+              <span className={MainStyle.navName}>Decade</span>
+            </Link>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <Link to="/duplicates" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon icon={faCopy} className={MainStyle.navIcon} />
+              <span className={MainStyle.navName}>Duplicates</span>
+            </Link>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <Link to="/genre" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon
+                icon={faMicrophone}
+                className={MainStyle.navIcon}
+              />
+              <span className={MainStyle.navName}>Genre</span>
+            </Link>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <Link to="/top/songs" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon icon={faTrophy} className={MainStyle.navIcon} />
+              <span className={MainStyle.navName}>Top Songs</span>
+            </Link>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <Link to="/top/artists" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon icon={faTrophy} className={MainStyle.navIcon} />
+              <span className={MainStyle.navName}>Top Artists</span>
+            </Link>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <Link to="/uniqueSaved" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon
+                icon={faNotEqual}
+                className={MainStyle.navIcon}
+              />
+              <span className={MainStyle.navName}>Unique Saved</span>
+            </Link>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <Link to="/uniquePlaylist" className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon
+                icon={faNotEqual}
+                className={MainStyle.navIcon}
+              />
+              <span className={MainStyle.navName}>Unique Playlist</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+
+      <div className={MainStyle.navTools}>
         <span>General</span>
-        <div className="nav-selection">
-          <div>
-            <FontAwesomeIcon icon={faAddressCard} className="nav-icon"/>
-            <span>Spotify Profile</span>
-          </div>
-        </div>
-        <div className="nav-selection">
-          <div>
-            <FontAwesomeIcon icon={faGithub} className="nav-icon"/>
-            <span>Github Repo</span>
-          </div>
-        </div>
-        <div className="nav-selection">
-          <div>
-            <FontAwesomeIcon icon={faDonate} className="nav-icon"/>
-            <span>Donate</span>
-          </div>
-        </div>
-        <div className="nav-selection">
-          <div>
-            <FontAwesomeIcon icon={faSignOutAlt} className="nav-icon"/>
-            <span>Log Out</span>
-          </div>
-        </div>
+        <ul>
+          <li className={MainStyle.navSelection}>
+            <a href={profileUrl} className={`${MainStyle.navLink} ${''}`}>
+              <FontAwesomeIcon
+                icon={faAddressCard}
+                className={MainStyle.navIcon}
+              />
+              <span className={MainStyle.navName}>Spotify Profile</span>
+            </a>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <a
+              href={"#"}
+              onClick={toggleNav}
+              className={`${MainStyle.navLink} ${""}`}
+            >
+              <FontAwesomeIcon icon={faGithub} className={MainStyle.navIcon} />
+              <span className={MainStyle.navName}>Github Repo</span>
+            </a>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <a href={"#"} className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon icon={faDonate} className={MainStyle.navIcon} />
+              <span className={MainStyle.navName}>Donate</span>
+            </a>
+          </li>
+          <li className={MainStyle.navSelection}>
+            <a href={"#"} className={`${MainStyle.navLink} ${""}`}>
+              <FontAwesomeIcon
+                icon={faSignOutAlt}
+                className={MainStyle.navIcon}
+              />
+              <span className={MainStyle.navName}>Log Out</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   );
 };
 
 const mapStateToProps = (state: any) => ({
-  likedSongs: state.spotify.likedSongs,
-  playlistSongs: state.spotify.playlistSongs,
   profile: state.spotify.profile,
 });
 

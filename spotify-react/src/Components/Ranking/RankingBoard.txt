@@ -1,0 +1,63 @@
+// import React, { useState, useEffect } from "react";
+// import SavedSong from "../Songs/SavedSong";
+// import InfoCards from "../InfoCards/InfoCards";
+// import { Button, Input, Modal } from "reactstrap";
+// import { connect } from "react-redux";
+// import { getTop } from "../../flux/actions/spotifyActions";
+// import { ITrack } from "../../types/interfaces";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+// import { List, AutoSizer } from "react-virtualized";
+// import Toolbox from "../Toolbox/Toolbox";
+// import SongFeatures from "../SongFeatures/SongFeatures";
+// import PlaylistModal from "../Modal/PlaylistModal";
+
+// import {
+//   BrowserRouter,
+//   Route,
+//   Switch,
+//   Link,
+//   withRouter,
+// } from "react-router-dom";
+// import Axios from "axios";
+// import ArtistRanking from "./TopArtistsBoard";
+// import SongRanking from "./TopSongsBoard";
+
+// const RankingBoard = (props) => {
+//   useEffect(() => {}, []);
+
+//   return (
+//     <div className="function-board">
+//       <div className="rank-selection-container">
+//         <Link to="/Top/Artists">
+//           <div className="rank-selection">
+//             <div>
+//               <span className="rank-selection-text">Artists</span>
+//             </div>
+//           </div>
+//         </Link>
+//         <Link to="/Top/Songs">
+//           <div className="rank-selection">
+//             <div>
+//               <span className="rank-selection">Songs</span>
+//             </div>
+//           </div>
+//         </Link>
+//       </div>
+//       <Switch>
+//         <Route exact path="/top/artists">
+//           <ArtistRanking> </ArtistRanking>
+//         </Route>
+//         <Route exact path="/top/songs">
+//           <SongRanking></SongRanking>
+//         </Route>
+//       </Switch>
+//     </div>
+//   );
+// };
+
+// const mapStateToProps = (state: any) => ({
+//   topRanking: state.spotify.topRanking,
+// });
+
+// export default connect(mapStateToProps, { getTop })(withRouter(RankingBoard));

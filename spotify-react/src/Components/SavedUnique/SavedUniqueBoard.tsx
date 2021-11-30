@@ -1,85 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import SavedUniqueSong from './SavedUniqueSong'
-import {Button} from "reactstrap";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { getPlaylistSongs } from "../../flux/actions/spotifyActions";
-import { addToPlaylist } from "../Utility";
-import { addLoading } from '../../flux/actions/uiAction';
-import { LoadingTypes } from '../../flux/actions/types';
+import { addLoading } from "../../flux/actions/uiAction";
+import { LoadingTypes } from "../../flux/actions/types";
+import InfoCards from "../InfoCards/InfoCards";
+import { List, AutoSizer } from "react-virtualized";
+import Toolbox from "../Toolbox/Toolbox";
+import SavedSong from "../Items/SavedSong";
+import SongFeatures from "../SongFeatures/SongFeatures";
+import BoardStyle from "../Styles/Components/Boards/Board.module.scss"
 
 const SavedUniqueBoard = (props) => {
+  const [masterSongs, setMasterSongs]: any = useState([]);
+  const [currentSongs, setCurrentSongs]: any = useState([]);
+  const [selectedSongs, setSelectedSongs]: any = useState({});
+
   useEffect(() => {
-    if(props.playlistSongs.initialized == false){
-      addLoading([LoadingTypes.PlaylistSongs])
+    if (props.playlistSongs.initialized == false) {
+      addLoading([LoadingTypes.PlaylistSongs]);
     }
   }, []);
 
-  let playlistSongsObj: any = {};
-  let uniqueLikedSongs: any = [];
+  useEffect(() => {
+    let playlistDictName: any = {};
+    let playlistDictId: any = {};
+    let currentList: any = [];
 
-  //Create a dictionary of props of all liked songs
-  for (let index in props.playlistSongs.list) {
-    playlistSongsObj[props.playlistSongs.list[index].track_id] =
-      props.playlistSongs.list[index];
-  }
-  // for every song in your playlists, checks if that song is in liked songs
-  for (let index in props.likedSongs.list) {
-    if (
-      playlistSongsObj[props.likedSongs.list[index].track_id] === undefined
-    ) {
-      uniqueLikedSongs.push(props.likedSongs.list[index]);
+    //Create a dictionary of props of all liked songs
+    for (let index in props.playlistSongs.list) {
+      let id: string =
+        props.playlistSongs.list[index].linked_from_id ??
+        props.playlistSongs.list[index].track_id;
+
+      playlistDictId[id] = props.playlistSongs.list[index];
+
+      playlistDictName[
+        props.playlistSongs.list[index].track_name +
+          props.playlistSongs.list[index].artist.artist_name
+      ] = props.playlistSongs.list[index];
+      // playlistSongsObj[props.playlistSongs.list[index].track_id] =
+      //   props.playlistSongs.list[index];
     }
+    // for every song in your playlists, checks if that song is in liked songs
+    for (let index in props.likedSongs.list) {
+      let id: string =
+        props.likedSongs.list[index].linked_from_id ??
+        props.likedSongs.list[index].track_id;
+
+      if (
+        playlistDictName[
+          props.likedSongs.list[index].track_name +
+            props.likedSongs.list[index].artist.artist_name
+        ] === undefined &&
+        playlistDictId[id] === undefined
+        // && likedSongsObj[props.playlistSongs.list[index].track.external_ids.isrc] === undefined
+      ) {
+        currentList.push(props.likedSongs.list[index]);
+      }
+    }
+    console.log(currentList);
+    setCurrentSongs(currentList);
+    setMasterSongs(currentList);
+  }, [props.likedSongs, props.playlistSongs]);
+
+  function selectSong(index) {
+    const newSelectedSongs = JSON.parse(JSON.stringify(selectedSongs));
+    const id =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
+    if (id in newSelectedSongs) {
+      delete newSelectedSongs[id];
+    } else {
+      newSelectedSongs[id] = currentSongs[index];
+    }
+    setSelectedSongs(newSelectedSongs);
   }
-  
-  function addSongsToPlaylist(){
-    addToPlaylist(props.currentSongs.currentList)
-  }
+
+  let renderRow = ({ index, key, style }) => {
+    let currentId =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
+    let album_image = currentSongs[index].album.album_images[2] ?? "";
+
+    return (
+      <SavedSong
+        key={key}
+        id={currentSongs[index].track_id}
+        title={currentSongs[index].track_name}
+        artist={currentSongs[index].artist.artist_name}
+        album={currentSongs[index].album.album_name}
+        image={album_image.url}
+        date={currentSongs[index].added_at}
+        style={style}
+        index={index}
+        selectSong={selectSong}
+        isSelected={currentId in selectedSongs}
+      />
+    );
+  };
+
   return (
-    <div className="function-board">
-      <div className="cards-container">
-        <div className="card-info">
+    <div className={BoardStyle.functionBoard}>
+      <InfoCards
+        selectedSongsLength={Object.keys(selectedSongs).length}
+        currentSongsLength={currentSongs.length}
+        currentBoard={"Liked Songs"}
+      />
 
-        </div>
-        <div className="card-info">
-          <h1>Liked Songs</h1>
-        </div>
-        <div className="card-info">
+      <Toolbox
+        masterSongs={masterSongs}
+        currentSongs={currentSongs}
+        setCurrentSongs={setCurrentSongs}
+        selectedSongs={selectedSongs}
+        setSelectedSongs={setSelectedSongs}
+      />
+      <SongFeatures
+        setCurrentSongs={setCurrentSongs}
+        currentSongs={currentSongs}
+        setSelectedSongs={setSelectedSongs}
+      />
 
-        </div>
-      </div>
-      <h5>Number of Songs: {uniqueLikedSongs.length}</h5>
-      <div className="toolbox">
-        <Button onClick={addSongsToPlaylist}color="success">Add to Playlist</Button>
-      </div>
-      <div className="song-container">
-        <div className="song-features">
-          <span>Title</span>
-          <span>Album</span>
-          <span>Date Added</span>
-        </div>
-        {uniqueLikedSongs.map((val, key) => {
-        let album_image = val.album.album_images[2] ?? "" 
-
-        return(
-            <SavedUniqueSong
-              key={key}
-              id={val.track_id}
-              title={val.track_name}
-              artist={val.artist.artist_name}
-              album={val.album.album_name}
-              image={album_image.url}
-              date={val.added_at}
+      <div className={BoardStyle.songContainer}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              height={height}
+              rowCount={currentSongs.length}
+              rowHeight={80}
+              rowRenderer={renderRow}
+              width={width}
             />
-          )})
-        } 
+          )}
+        </AutoSizer>
       </div>
     </div>
   );
 };
 const mapStateToProps = (state: any) => ({
   playlistSongs: state.spotify.playlistSongs,
-  likedSongs: state.spotify.likedSongs
+  likedSongs: state.spotify.likedSongs,
 });
 
-export default connect(mapStateToProps, {getPlaylistSongs})(SavedUniqueBoard);
-
+export default connect(mapStateToProps, { getPlaylistSongs })(SavedUniqueBoard);

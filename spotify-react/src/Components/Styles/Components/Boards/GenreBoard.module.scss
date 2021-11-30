@@ -1,0 +1,58 @@
+.genreButtonContainer {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-evenly;
+  // display:grid;
+  // grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin-top:25px;
+  // background:green;
+  // width:auto;
+  // padding:auto;
+  // padding:50px;
+  // width:auto;
+  
+}
+.genreButton {
+  margin-top:15px;
+  width: 150px;
+  height: 150px;
+  border: none;
+  margin-left:25px;
+  margin-right:25px;
+  // margin:auto;
+  // width:auto;
+}
+.popButton {
+  background-color: #db81f0;
+  background-image: -webkit-linear-gradient(150deg, #db81f0 50%, #7f2f91 50%);
+}
+.rapButton {
+  background-image: -webkit-linear-gradient(150deg, #32de84 50%, #17b169 50%);
+}
+.rockButton {
+  background-image: -webkit-linear-gradient(150deg, #ac25d9 50%, #6c15c4 50%);
+}
+.punkButton {
+  background-image: -webkit-linear-gradient(150deg, #fd5c63 50%, #d2122e 50%);
+}
+.indieButton {
+  background-image: -webkit-linear-gradient(150deg, #61edfc 50%, #1fb8fc 50%);
+}
+.kPopButton {
+  background-image: -webkit-linear-gradient(150deg, #ffaa00 50%, #ff8800 50%);
+}
+.rNBButton {
+  background-image: -webkit-linear-gradient(150deg, #89fc7b 50%, #6def82 50%);
+}
+.electronicButton {
+  background-image: -webkit-linear-gradient(150deg, #013a6b 50%, #004e95 50%);
+}
+.yo{
+  background:red;
+  display:flex;
+
+
+  // margin:auto;
+  // width:50%;
+  // padding:300px;
+}

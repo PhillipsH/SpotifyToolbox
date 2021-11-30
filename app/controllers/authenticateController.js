@@ -38,20 +38,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
 var axios = require("axios");
-require('dotenv').config();
-var redirect_uri = 'http://localhost:5000/authenticate/getTokens';
+require("dotenv").config();
+var redirect_uri = "http://localhost:5000/authenticate/getTokens";
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
-var querystring = require('querystring');
+var querystring = require("querystring");
 //Function adds user to database then redirects user to the main page.
 function authenticateUser(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var scope;
         return __generator(this, function (_a) {
-            scope = 'user-library-read user-library-modify playlist-read-private playlist-modify-private playlist-modify-public user-read-private user-read-email';
-            res.redirect('https://accounts.spotify.com/authorize?' +
+            scope = "user-library-read user-library-modify playlist-read-private playlist-modify-private playlist-modify-public user-read-private user-read-email user-top-read";
+            res.redirect("https://accounts.spotify.com/authorize?" +
                 querystring.stringify({
-                    response_type: 'code',
+                    response_type: "code",
                     client_id: client_id,
                     scope: scope,
                     redirect_uri: redirect_uri,
@@ -65,35 +65,40 @@ function getTokens(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var authURI, profileURI;
         return __generator(this, function (_a) {
-            authURI = 'https://accounts.spotify.com/api/token';
-            profileURI = 'https://api.spotify.com/v1/me';
+            authURI = "https://accounts.spotify.com/api/token";
+            profileURI = "https://api.spotify.com/v1/me";
             axios({
                 url: authURI,
-                method: 'post',
+                method: "post",
                 headers: {
-                    'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+                    Authorization: "Basic " +
+                        new Buffer(client_id + ":" + client_secret).toString("base64"),
                 },
                 params: {
-                    grant_type: 'authorization_code',
+                    grant_type: "authorization_code",
                     code: req.query.code,
-                    redirect_uri: redirect_uri
-                }
-            }).then(function (response) {
+                    redirect_uri: redirect_uri,
+                },
+            })
+                .then(function (response) {
                 req.session["code"] = req.query.code;
                 req.session["access_token"] = response.data.access_token;
                 req.session["refresh_token"] = response.data.refresh_token;
                 req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
-                axios.get(profileURI, {
+                axios
+                    .get(profileURI, {
                     headers: {
                         Accept: "application/json",
                         Authorization: "Bearer " + req.session["access_token"],
-                        "Content-Type": "application/json"
-                    }
-                }).then(function (response) {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then(function (response) {
                     req.session["profile_id"] = response.data.id;
-                    res.redirect('http://localhost:3000/');
+                    res.redirect("http://localhost:3000/");
                 });
-            }).catch(function (error) {
+            })
+                .catch(function (error) {
                 console.log(error);
             });
             return [2 /*return*/];
@@ -105,10 +110,10 @@ function checkAuth(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (req.session["access_token"] != undefined) {
-                res.send({ "isAuthenticated": true });
+                res.send({ isAuthenticated: true });
             }
             else {
-                res.send({ "isAuthenticated": false });
+                res.send({ isAuthenticated: false });
             }
             return [2 /*return*/];
         });

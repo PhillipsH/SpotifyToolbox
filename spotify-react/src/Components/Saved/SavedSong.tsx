@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {Label} from "reactstrap";
 const Song = ({
   id,
   title,
@@ -7,11 +7,11 @@ const Song = ({
   album,
   image,
   date,
+  style
 }) => {
   var readable_date = new Date(date).toDateString();
-  return ( 
-    <div className="card card-container">
-      <div className="card-body">
+    return ( 
+    <div className="song-item" style={style}>
         <div className="title-body">
           <div className="image-div">
             <img src={image} alt="Album Image"></img>
@@ -23,7 +23,7 @@ const Song = ({
         </div>
         <h6 className="album">{album}</h6>
         <h6 className="date">{readable_date}</h6>
-      </div>
+        <input type="checkbox"/>
     </div>
    );
 }

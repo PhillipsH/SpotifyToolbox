@@ -1,32 +1,87 @@
 import React, { useEffect, useState } from "react";
-import GenreSong from './GenreSong'
-import {Button} from "reactstrap";
+import { Button } from "reactstrap";
 import { connect } from "react-redux";
 import { addToPlaylist } from "../Utility";
+import InfoCards from "../InfoCards/InfoCards";
+import Toolbox from "../Toolbox/Toolbox";
 import { ITrack } from "../../types/interfaces";
-
+import SavedSong from "../Items/SavedSong";
+import { List, AutoSizer } from "react-virtualized";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngry,
+  faCalendarAlt,
+  faDrum,
+  faFlag,
+  faFlagUsa,
+  faMicrophone,
+  faPeace,
+  faPen,
+  faPepperHot,
+  faRobot,
+} from "@fortawesome/free-solid-svg-icons";
+import SongFeatures from "../SongFeatures/SongFeatures";
+import BoardStyles from "../Styles/Components/Boards/Board.module.scss";
+import GenreBoardStyles from "../Styles/Components/Boards/GenreBoard.module.scss";
 const GenreBoard = (props) => {
-  const [genres, setGenres]:any = useState([]);
-  const [currentSongs, setCurrentSongs]:any = useState([])
+  const [genres, setGenres]: any = useState([]);
+  const [currentSongs, setCurrentSongs]: any = useState([]);
+  const [masterSongs, setMasterSongs]: any = useState([]);
+  const [selectedSongs, setSelectedSongs]: any = useState({});
 
   useEffect(() => {
-    let currentGenres = {}
-    for(let i in props.likedSongs.list){
-      for(let genre in props.likedSongs.list){
-        if(currentGenres[props.likedSongs.list[i].genres[genre]] == undefined){
-          currentGenres[props.likedSongs.list[i].genres[genre]] = {}
+    let currentGenres = {};
+    for (let i in props.likedSongs.list) {
+      for (let genre in props.likedSongs.list) {
+        if (
+          currentGenres[props.likedSongs.list[i].genres[genre]] == undefined
+        ) {
+          currentGenres[props.likedSongs.list[i].genres[genre]] = {};
         }
-        currentGenres[props.likedSongs.list[i].genres[genre]][props.likedSongs.list[i].track_id] = props.likedSongs.list[i]
+        currentGenres[props.likedSongs.list[i].genres[genre]][
+          props.likedSongs.list[i].track_id
+        ] = props.likedSongs.list[i];
       }
     }
-    setGenres(currentGenres)
-    
+    setGenres(currentGenres);
   }, []);
-  for(let genre in genres){
-    console.log(genre)
+
+  function selectSong(index) {
+    const newSelectedSongs = JSON.parse(JSON.stringify(selectedSongs));
+    const id =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
+    if (id in newSelectedSongs) {
+      delete newSelectedSongs[id];
+    } else {
+      newSelectedSongs[id] = currentSongs[index];
+    }
+    setSelectedSongs(newSelectedSongs);
   }
-  function getPop(){
-    let currentPop = {}
+
+  let renderRow = ({ index, key, style }) => {
+    let currentId =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
+    let album_image = currentSongs[index].album.album_images[2] ?? "";
+
+    return (
+      <SavedSong
+        key={key}
+        id={currentSongs[index].track_id}
+        title={currentSongs[index].track_name}
+        artist={currentSongs[index].artist.artist_name}
+        album={currentSongs[index].album.album_name}
+        image={album_image.url}
+        date={currentSongs[index].added_at}
+        style={style}
+        index={index}
+        selectSong={selectSong}
+        isSelected={currentId in selectedSongs}
+      />
+    );
+  };
+
+  function getPop() {
+    let currentPop = {};
     Object.assign(currentPop, genres["pop"]);
     Object.assign(currentPop, genres["post-teen pop"]);
     Object.assign(currentPop, genres["electropop"]);
@@ -57,12 +112,13 @@ const GenreBoard = (props) => {
     Object.assign(currentPop, genres["columbian pop"]);
     Object.assign(currentPop, genres["danish pop"]);
     Object.assign(currentPop, genres["dream pop"]);
-    setCurrentSongs(Object.values(currentPop))
+    setCurrentSongs(Object.values(currentPop));
+    setMasterSongs(Object.values(currentPop));
 
-    console.log(currentPop)
+    console.log(currentPop);
   }
-  function getHipHop(){
-    let currentHipHop = {}
+  function getHipHop() {
+    let currentHipHop = {};
 
     //general hip hop
     Object.assign(currentHipHop, genres["hip hop"]);
@@ -133,14 +189,15 @@ const GenreBoard = (props) => {
     // Object.assign(currentHipHop, genres["desi hip hop"]);
     // Object.assign(currentHipHop, genres["chinese hip hop"]);
     // Object.assign(currentHipHop, genres["korean old school hip hop"]);
-    
+
     //
     // Object.assign(currentHipHop, genres["latin hip hop"]);
-    
-    setCurrentSongs(Object.values(currentHipHop))
+
+    setCurrentSongs(Object.values(currentHipHop));
+    setMasterSongs(Object.values(currentHipHop));
   }
-  function getRock(){
-    let currentRock = {}
+  function getRock() {
+    let currentRock = {};
     Object.assign(currentRock, genres["rock"]);
     Object.assign(currentRock, genres["album rock"]);
     Object.assign(currentRock, genres["classic rock"]);
@@ -158,11 +215,11 @@ const GenreBoard = (props) => {
     Object.assign(currentRock, genres["modern alternative rock"]);
     Object.assign(currentRock, genres["glam rock"]);
     Object.assign(currentRock, genres["indie rock"]);
-    setCurrentSongs(Object.values(currentRock))
-
+    setCurrentSongs(Object.values(currentRock));
+    setMasterSongs(Object.values(currentRock));
   }
-  function getRNB(){
-    let currentRNB = {}
+  function getRNB() {
+    let currentRNB = {};
     Object.assign(currentRNB, genres["r&b"]);
     Object.assign(currentRNB, genres["urban contemporary"]);
     Object.assign(currentRNB, genres["new jack swing"]);
@@ -172,10 +229,11 @@ const GenreBoard = (props) => {
     Object.assign(currentRNB, genres["chill r&b"]);
     Object.assign(currentRNB, genres["indie r&b"]);
 
-    setCurrentSongs(Object.values(currentRNB))
+    setCurrentSongs(Object.values(currentRNB));
+    setMasterSongs(Object.values(currentRNB));
   }
-  function getPunk(){
-    let currentPunk = {}
+  function getPunk() {
+    let currentPunk = {};
     Object.assign(currentPunk, genres["punk"]);
     Object.assign(currentPunk, genres["pop punk"]);
     Object.assign(currentPunk, genres["skate punk"]);
@@ -190,11 +248,11 @@ const GenreBoard = (props) => {
     Object.assign(currentPunk, genres["canadian pop punk"]);
     Object.assign(currentPunk, genres["uk pop punk"]);
     Object.assign(currentPunk, genres["modern alternative rock"]);
-    setCurrentSongs(Object.values(currentPunk))
-
+    setCurrentSongs(Object.values(currentPunk));
+    setMasterSongs(Object.values(currentPunk));
   }
-  function getIndie(){
-    let currentIndie = {}
+  function getIndie() {
+    let currentIndie = {};
     Object.assign(currentIndie, genres["indie pop"]);
     Object.assign(currentIndie, genres["indie rock"]);
     Object.assign(currentIndie, genres["indie folk"]);
@@ -202,10 +260,11 @@ const GenreBoard = (props) => {
     Object.assign(currentIndie, genres["indie r&b"]);
     Object.assign(currentIndie, genres["indie garage rock"]);
 
-    setCurrentSongs(Object.values(currentIndie))
+    setCurrentSongs(Object.values(currentIndie));
+    setMasterSongs(Object.values(currentIndie));
   }
-  function getChristian(){
-    let currentChristian = {}
+  function getChristian() {
+    let currentChristian = {};
     Object.assign(currentChristian, genres["christian music"]);
     Object.assign(currentChristian, genres["woriship"]);
     Object.assign(currentChristian, genres["christian alternative rock"]);
@@ -216,10 +275,11 @@ const GenreBoard = (props) => {
     Object.assign(currentChristian, genres["christian pop"]);
     Object.assign(currentChristian, genres["christian ccm"]);
     Object.assign(currentChristian, genres["deep christian rock"]);
-    setCurrentSongs(Object.values(currentChristian))
+    setCurrentSongs(Object.values(currentChristian));
+    setMasterSongs(Object.values(currentChristian));
   }
-  function getKPop(){
-    let currentKPop = {}
+  function getKPop() {
+    let currentKPop = {};
     Object.assign(currentKPop, genres["k-pop"]);
     Object.assign(currentKPop, genres["k-pop boy group"]);
     Object.assign(currentKPop, genres["k-pop girl group"]);
@@ -229,10 +289,11 @@ const GenreBoard = (props) => {
     Object.assign(currentKPop, genres["k-indie"]);
     Object.assign(currentKPop, genres["classic k-pop"]);
 
-    setCurrentSongs(Object.values(currentKPop))
+    setCurrentSongs(Object.values(currentKPop));
+    setMasterSongs(Object.values(currentKPop));
   }
-  function getElectronic(){
-    let currentElectronic = {}
+  function getElectronic() {
+    let currentElectronic = {};
     Object.assign(currentElectronic, genres["edm"]);
     Object.assign(currentElectronic, genres["electro house"]);
     Object.assign(currentElectronic, genres["pop edm"]);
@@ -242,39 +303,114 @@ const GenreBoard = (props) => {
     Object.assign(currentElectronic, genres["canadian electronic"]);
     Object.assign(currentElectronic, genres["gaming edm"]);
 
-    setCurrentSongs(Object.values(currentElectronic))
+    setCurrentSongs(Object.values(currentElectronic));
+    setMasterSongs(Object.values(currentElectronic));
   }
 
-  function addSongsToPlaylist(){
-    addToPlaylist(props.currentSongs.currentList)
-  }
   return (
-    <div className="function-board">
-      <h5>Genre Songs: {currentSongs.length}</h5>
-      <div className="toolbox">
-        <Button color="success" onClick={addSongsToPlaylist}>Add to Playlist</Button>
+    <div className={BoardStyles.functionBoard}>
+      <InfoCards
+        selectedSongsLength={Object.keys(selectedSongs).length}
+        currentSongsLength={currentSongs.length}
+        currentBoard={"Liked Songs"}
+      />
+      <div className={GenreBoardStyles.genreButtonContainer}>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.popButton}`}
+          onClick={getPop}
+        >
+          Pop
+          <FontAwesomeIcon icon={faMicrophone} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.rapButton}`}
+          onClick={getHipHop}
+        >
+          HipHop
+          <FontAwesomeIcon icon={faPen} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.rockButton}`}
+          onClick={getRock}
+        >
+          Rock
+          <FontAwesomeIcon icon={faPepperHot} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.rNBButton}`}
+          onClick={getRNB}
+        >
+          R&B
+          <FontAwesomeIcon icon={faDrum} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.punkButton}`}
+          onClick={getPunk}
+        >
+          Punk
+          <FontAwesomeIcon icon={faAngry} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.indieButton}`}
+          onClick={getIndie}
+        >
+          Indie
+          <FontAwesomeIcon icon={faPeace} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.kPopButton}`}
+          onClick={getKPop}
+        >
+          K-Pop
+          <FontAwesomeIcon icon={faFlag} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton}`}
+          onClick={getChristian}
+        >
+          Christian
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.electronicButton}`}
+          onClick={getElectronic}
+        >
+          <span>Electronic</span>
+          <FontAwesomeIcon icon={faRobot} />
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.electronicButton}`}
+          onClick={getElectronic}
+        >
+          Country
+          <FontAwesomeIcon icon={faFlagUsa} />
+        </Button>
       </div>
-      <Button color="success" onClick={getPop}>Pop</Button>
-      <Button color="success" onClick={getHipHop}>HipHop</Button>
-      <Button color="success" onClick={getRock}>Rock</Button>
-      <Button color="success" onClick={getRNB}>R&B</Button>
-      <Button color="success" onClick={getPunk}>Punk</Button>
-      <Button color="success" onClick={getIndie}>Indie</Button>
-      <Button color="success" onClick={getKPop}>K-Pop</Button>
-      <Button color="success" onClick={getChristian}>Christian</Button>
-      <Button color="success" onClick={getElectronic}>Electronic</Button>
-      <div className="song-container">
-        {currentSongs.map((val, key) => (
-            <GenreSong
-              key={key}
-              id={val.track_id}
-              title={val.track_name}
-              artist={val.artist.artist_name}
-              album={val.album.album_name}
-              date={val.added_at}
+
+      <Toolbox
+        masterSongs={masterSongs}
+        currentSongs={currentSongs}
+        setCurrentSongs={setCurrentSongs}
+        selectedSongs={selectedSongs}
+        setSelectedSongs={setSelectedSongs}
+      />
+      <SongFeatures
+        setCurrentSongs={setCurrentSongs}
+        currentSongs={currentSongs}
+        setSelectedSongs={setSelectedSongs}
+      />
+      <div className={BoardStyles.songContainer}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              height={height}
+              rowCount={currentSongs.length}
+              rowHeight={80}
+              rowRenderer={renderRow}
+              width={width}
             />
-          ))}   
-      </div>  
+          )}
+        </AutoSizer>
+      </div>
     </div>
   );
 };
@@ -285,4 +421,3 @@ const mapStateToProps = (state: any) => ({
 });
 
 export default connect(mapStateToProps, {})(GenreBoard);
-

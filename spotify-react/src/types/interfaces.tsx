@@ -2,19 +2,20 @@ export interface IAuthProps {
   auth: { isAuthenticated: boolean };
 }
 
-export interface IAlbum {
-  album_id: string,
-  album_name: string,
-  artist: IArtist,
-}
+// export interface IAlbum {
+//   album_id: string,
+//   album_name: string,
+//   artist: IArtist,
+// }
 
 export interface IArtist {
   artist_id: string,
   artist_name: string,
   followers?: number,
-  images?: string,
+  images?: any[],
   popularity?: number,
-  genres?: string[]
+  genres?: string[],
+  counter: number,
 }
 
 export interface IAlbum {
@@ -31,9 +32,9 @@ export interface ITrack {
   track_name: string,
   album: IAlbum,
   artist: IArtist,
-  release_date: string,
-  added_at: string,
-  popularity: string,
+  release_date?: string,
+  popularity: number,
+  added_at?: string,
   genres?: string[], 
   listeners?: string,
   play_count?: string,
@@ -42,23 +43,23 @@ export interface ITrack {
 
 export interface IPlaylistTrack extends ITrack{
   playlist_name: string,
-  playlist_id: string,
+  playlist_id: string
 }
 
-export interface IPlaylistTrack {
-  track_id: string,
-  track_uri: string,
-  track_name: string,
-  album: IAlbum,
-  artist: IArtist,
-  release_date: string,
-  added_at: string,
-  popularity: string,
-  genres?: string[],
-  listeners?: string,
-  play_count?: string,
-  linked_from_id?: string,
-}
+// export interface IPlaylistTrack {
+//   track_id: string,
+//   track_uri: string,
+//   track_name: string,
+//   album: IAlbum,
+//   artist: IArtist,
+//   release_date: string,
+//   added_at: string,
+//   popularity: number,
+//   genres?: string[],
+//   listeners?: string,
+//   play_count?: string,
+//   linked_from_id?: string,
+// }
 export interface IArtistHash {
   [artist_id:string]:IArtist
 }

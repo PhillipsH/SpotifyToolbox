@@ -1,63 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { Spinner} from "reactstrap";
+import { Spinner } from "reactstrap";
 import { connect } from "react-redux";
-import {BrowserRouter, Route, Switch, Link} from "react-router-dom"
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import {
   getLikedSongs,
   getPlaylistSongs,
   getProfile,
-  startSetup
+  startSetup,
 } from "../flux/actions/spotifyActions";
 
-// import Song from "./LikedSongs/LikedSong";
 import DuplicateSongsBoard from "./DuplicateSongs/DuplicateSongsBoard";
 import PlaylistSongsBoard from "./PlaylistSongs/PlaylistSongsBoard";
 import DecadeSongsBoard from "./DecadeSongs/DecadeSongsBoard";
 import SavedUniqueBoard from "./SavedUnique/SavedUniqueBoard";
-import ArtistBoard from "./Artists/ArtistBoard"
-import GenreBoard from "./Genre/GenreBoard"
-import ButtonFunctions from "./ButtonFunctions/ButtonFunctions"
-import Sidebar  from "./Sidebar";
+import TopArtistsBoard from "./Ranking/TopArtistsBoard";
+import TopSongsBoard from "./Ranking/TopSongsBoard";
+import GenreBoard from "./Genre/GenreBoard";
+import Sidebar from "./Sidebar";
 import Sidenav from "./Sidenav";
-import SongBoard from "./Saved/SavedBoard"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faPodcast } from "@fortawesome/free-solid-svg-icons";
 import { BoardTypes, LoadingTypes } from "../flux/actions/types";
 import SavedBoard from "./Saved/SavedBoard";
-
-
+import MainStyle from "./Styles/Components/Main.module.scss";
+import Topbar from "./Topbar";
 
 export const Dashboard = (props) => {
+  const [sidenavTheme, setSidenavTheme]: any = useState(false);
+
   useEffect(() => {
-    async function fetchData(){
-      props.startSetup()
-      await props.getProfile()
-      props.getPlaylistSongs()
+    async function fetchData() {
+      props.startSetup();
+      await props.getProfile();
+      props.getPlaylistSongs();
     }
-    if (props.boardType == 'uninitialized') {
-      fetchData()
+    if (props.boardType == "uninitialized") {
+      fetchData();
     }
   }, []);
 
   let songList = <></>;
   let mainContent = <></>;
-  if(props.loading.includes(LoadingTypes.LikedSongs)){
+  if (props.loading.includes(LoadingTypes.LikedSongs)) {
     mainContent = (
-      <div className="loading">
-        <Spinner color="success"/>
+      <div>
+        <Spinner color="success" />
         <h2>Currently Loading Songs... May take a minute.</h2>
       </div>
     );
-  }else if(props.loading.includes(LoadingTypes.PlaylistSongs)){
+  } else if (props.loading.includes(LoadingTypes.PlaylistSongs)) {
     mainContent = (
-      <div className="loading">
-        <Spinner color="success"/>
+      <div>
+        <Spinner color="success" />
         <h2>Current Loading your Playlist Songs</h2>
       </div>
     );
-  }
-  else{
-    mainContent =(
-    // <BrowserRouter>
+  } else {
+    mainContent = (
       <Switch>
         <Route exact path="/">
           <SavedBoard></SavedBoard>
@@ -71,6 +71,12 @@ export const Dashboard = (props) => {
         <Route exact path="/genre">
           <GenreBoard></GenreBoard>
         </Route>
+        <Route path="/top/songs">
+          <TopSongsBoard></TopSongsBoard>
+        </Route>
+        <Route path="/top/artists">
+          <TopArtistsBoard></TopArtistsBoard>
+        </Route>
         <Route exact path="/uniqueSaved">
           <SavedUniqueBoard></SavedUniqueBoard>
         </Route>
@@ -78,62 +84,66 @@ export const Dashboard = (props) => {
           <PlaylistSongsBoard></PlaylistSongsBoard>
         </Route>
       </Switch>
-    // </BrowserRouter>
     );
   }
-  // else{
-  //   switch (props.boardType) {
-  //     case BoardTypes.Saved:
-  //       songList = <SongBoard></SongBoard>
-  //       break;
-  //     case BoardTypes.PlaylistUnique:
-  //       songList = <PlaylistSongsBoard></PlaylistSongsBoard>
-  //       break;
-  //     case BoardTypes.SavedUnique:
-  //       songList = <SavedUniqueBoard></SavedUniqueBoard>
-  //       break;
-  
-  //     case BoardTypes.Duplicates:
-  //       songList = <DuplicateSongsBoard></DuplicateSongsBoard>;
-  //       break;
-
-  //     case BoardTypes.Decade:
-  //       songList = <DecadeSongsBoard></DecadeSongsBoard>;
-  //       break;
-
-  //     case BoardTypes.Artist:
-  //       songList = <ArtistBoard></ArtistBoard>;
-  //       break;
-  //     case BoardTypes.Genre:
-  //       songList = <GenreBoard></GenreBoard>;
-  //       break;
-  //   }
-  //   mainContent = (
-  //     <>
-  //       {/* <h3>Song Functions</h3> */}
-  //       <ButtonFunctions></ButtonFunctions>
-  //       {/* <h3>Current Songs</h3> */}
-  //       {songList}
-  //     </>
-  //   )
-  // }
-
 
   return (
-    <div>
+    <>
       <BrowserRouter>
-        <Sidenav></Sidenav>
-
-        <div id="dashboard-div">
-          <header className="App-header">
-            <h1>Spotify Dashboard</h1>
-          </header>
+      {
+        sidenavTheme ? (<div className={`${MainStyle.fixedToggle}`}>
+        <a
+          href="#"
+          onClick={(event) => {
+            event.preventDefault();
+            setSidenavTheme(!sidenavTheme);
+          }}
+        >
+          <FontAwesomeIcon icon={faBars} className={MainStyle.toggleIcon} />
+        </a>
+      </div>) : (<></>)
+      }
+        <Sidenav
+          sidenavTheme={sidenavTheme}
+          setSidenavTheme={setSidenavTheme}
+        ></Sidenav>
+        {/* <div className={MainStyle.dashboardToggleTitle}>
+          <div
+            className={`${MainStyle.dashboardNavToggle} ${
+              !sidenavTheme ? MainStyle.hidden : ""
+            }`}
+          >
+            <a
+              href="#"
+              onClick={(event) => {
+                event.preventDefault();
+                setSidenavTheme(!sidenavTheme);
+              }}
+            >
+              <FontAwesomeIcon icon={faBars} className={MainStyle.navIcon} />
+            </a>
+          </div>
+          <div
+            className={`${MainStyle.dashboardTitleLogo} ${
+              !sidenavTheme ? MainStyle.hidden : ""
+            }`}
+          >
+            <FontAwesomeIcon icon={faPodcast} className={MainStyle.navIcon} />
+            <span className={MainStyle.navTitle}>SpotifyTools</span>
+          </div>
+        </div> */}
+        <div
+          className={`${MainStyle.dashboardDiv} ${
+            sidenavTheme ? MainStyle.largeDashboard : ""
+          }`}
+        >
+          <h1 className={MainStyle.dashboardTitle}>Spotify Dashboard</h1>
           {mainContent}
-
         </div>
         <Sidebar></Sidebar>
+        {/* <Topbar setSidenavTheme={setSidenavTheme} sidenavTheme={sidenavTheme}></Topbar> */}
       </BrowserRouter>
-    </div>
+    </>
   );
 };
 
@@ -148,5 +158,5 @@ export default connect(mapStateToProps, {
   getLikedSongs,
   getPlaylistSongs,
   getProfile,
-  startSetup
+  startSetup,
 })(Dashboard);

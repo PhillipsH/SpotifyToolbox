@@ -23,9 +23,9 @@ export const Main = (props)  => {
     
   
 return (
-  <div>
+  <>
     {mainContent}
-  </div>
+  </>
   );
 }
 

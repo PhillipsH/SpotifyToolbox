@@ -1,0 +1,15 @@
+.duplicateSongContainer {
+  overflow: scroll;
+}
+.duplicateSongsContainer {
+  border-bottom: 3px solid #e8e8e8;
+}
+
+.duplicateSong {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  padding: 0;
+  padding-left: 30px;
+  margin-top: 0;
+  margin-bottom: 0;
+}

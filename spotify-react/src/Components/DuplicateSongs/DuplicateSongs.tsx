@@ -1,18 +1,26 @@
 import React from "react";
-
 import DuplicateSongSingle from "./DuplicateSongSingle";
+import ItemStyles from '../Styles/Components/Items/Items.module.scss'
 
 const DuplicateSongs = ({ dupeSongs, currentSongIndex}) => {
 
   return (
-    <div className="card card-container">
-      <div className="card-body">
-        <h5 className="song_title">{dupeSongs[0].track_name}</h5>
-        <h6 className="artist">Artist: {dupeSongs[0].artist.artist_name}</h6>
+    <div className={ItemStyles.duplicateSongsContainer}>
+      <div className={ItemStyles.cardBody}>
+        <div className="title-body">
+          <div className="image-div">
+            <img className={ItemStyles.songImg} src={dupeSongs.image} alt="Album Image"></img>
+          </div>
+          <div>
+            <h5 className="song_title">{dupeSongs.track_name}</h5>
+            <h6 className="artist">{dupeSongs.artist.artist_name}</h6>
+          </div>
+        </div>
       </div>
       
-      {dupeSongs.map((val, index) => {
+      {dupeSongs.list.map((val, index) => {
         var date = new Date(val.added_at).toDateString();
+        // console.log(val.track_id + val.linked_from_id)
         return (
           <DuplicateSongSingle 
             trackName={val.track_name}

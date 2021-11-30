@@ -1,100 +1,100 @@
-import React from "react";
-import DuplicateSongs from './DuplicateSongs'
-import {Button} from "reactstrap";
+import React, { useState, useEffect } from "react";
+import DuplicateSongs from "./DuplicateSongs";
 import { connect } from "react-redux";
 import {
-  removeSongs
+  removeSongs,
 } from "../../flux/actions/spotifyActions";
-import { ITrack, ITrackArtistHash, ITrackArtistHashArr } from "../../types/interfaces";
+import InfoCards from "../InfoCards/InfoCards";
+import DuplicateToolbox from "../Toolbox/DuplicateToolbox";
+import BoardStyle from "../Styles/Components/Boards/Board.module.scss"
+import DuplicateBoardStyle from "../Styles/Components/Boards/DuplicateBoard.module.scss"
+
 
 const DuplicateSongsBoard = (props) => {
-  let likedSongsObj:ITrackArtistHash = {};
-  let duplicateDict:ITrackArtistHashArr = {};
+  const [masterSongs, setMasterSongs]: any = useState([]);
+  const [currentSongs, setCurrentSongs]: any = useState([]);
+  const [selectedSongs, setSelectedSongs]: any = useState([]);
 
-  //Create an object of props of all liked songs
-  for (let index in props.likedSongs.list) {
-    if (
-      likedSongsObj[
-        "" +
-          props.likedSongs.list[index].track_name +
-          props.likedSongs.list[index].artist.artist_name
-      ] === undefined
-    ) {
-      likedSongsObj[
-        "" +
-          props.likedSongs.list[index].track_name +
-          props.likedSongs.list[index].artist.artist_name
-      ] = props.likedSongs.list[index];
-    } else {
+  useEffect(() => {
+    const likedSongsObj: any = {};
+    const duplicateDict: any = {};
+
+    for (let index in props.likedSongs.list) {
       if (
-        duplicateDict[
+        likedSongsObj[
           "" +
             props.likedSongs.list[index].track_name +
             props.likedSongs.list[index].artist.artist_name
         ] === undefined
       ) {
+        likedSongsObj[
+          "" +
+            props.likedSongs.list[index].track_name +
+            props.likedSongs.list[index].artist.artist_name
+        ] = props.likedSongs.list[index];
+      } else {
+        if (
+          duplicateDict[
+            "" +
+              props.likedSongs.list[index].track_name +
+              props.likedSongs.list[index].artist.artist_name
+          ] === undefined
+        ) {
+          const duplicateObj = {
+            track_name: props.likedSongs.list[index].track_name,
+            artist: {
+              artist_name: props.likedSongs.list[index].artist.artist_name,
+            },
+            image: props.likedSongs.list[index].album.album_images[2].url,
+            list: [
+              likedSongsObj[
+                "" +
+                  props.likedSongs.list[index].track_name +
+                  props.likedSongs.list[index].artist.artist_name
+              ],
+            ],
+          };
+          duplicateDict[
+            "" +
+              props.likedSongs.list[index].track_name +
+              props.likedSongs.list[index].artist.artist_name
+          ] = duplicateObj;
+        }
         duplicateDict[
           "" +
             props.likedSongs.list[index].track_name +
             props.likedSongs.list[index].artist.artist_name
-        ] = [
-          likedSongsObj[
-            "" +
-              props.likedSongs.list[index].track_name +
-              props.likedSongs.list[index].artist.artist_name
-          ],
-        ];
-      }
-      duplicateDict[
-        "" +
-          props.likedSongs.list[index].track_name +
-          props.likedSongs.list[index].artist.artist_name
-      ].push(props.likedSongs.list[index]);
-    }
-  }
-
-  let currentSongs = Object.values(duplicateDict)
-
-
-  function removeAllSongs(){
-    console.log("trying to remove")
-    let dupeIds:string [] = []
-    for(let songKey in duplicateDict){
-      for(let dupeSongsIndex=0; dupeSongsIndex < duplicateDict[songKey].length - 1; dupeSongsIndex++){
-        const id = duplicateDict[songKey][dupeSongsIndex].linked_from_id ?? duplicateDict[songKey][dupeSongsIndex].track_id 
-        dupeIds.push(id)
+        ].list.push(props.likedSongs.list[index]);
       }
     }
-    
-    props.removeSongs(dupeIds)
-  }
+    setMasterSongs(Object.values(duplicateDict));
+    setCurrentSongs(Object.values(duplicateDict));
+  }, [props.likedSongs]);
 
   return (
-    <div className="function-board">
-      <h5>Number of Duplicate Songs: {currentSongs.length}</h5>
-      <div className="toolbox">
-        <Button onClick={removeAllSongs} color="danger">Remove All</Button>
+    <div className={BoardStyle.functionBoard}>
+      <InfoCards
+        selectedSongsLength={currentSongs.length}
+        currentSongsLength={currentSongs.length}
+        currentBoard={"Liked Songs"}
+      />
+      <DuplicateToolbox
+        masterSongs={masterSongs}
+        currentSongs={currentSongs}
+        setCurrentSongs={setCurrentSongs}
+        selectedSongs={selectedSongs}
+        setSelectedSongs={setSelectedSongs}
+      />
+      <div className={`${BoardStyle.songContainer} ${DuplicateBoardStyle.duplicateSongContainer}`}>
+        {currentSongs.map((val, key) => (
+          <DuplicateSongs key={key} currentSongIndex={key} dupeSongs={val} />
+        ))}
       </div>
-      <div className="song-container">
-        {
-          currentSongs.map((val, key) => (
-            <DuplicateSongs key={key} currentSongIndex={key} dupeSongs={val}/>
-          ))
-        }
-        {/* {
-          Object.keys(duplicateDict).map((item, i) => (
-            <DuplicateSongs key={i} currentSongIndex={i} dupeSongs={duplicateDict[item]}/>
-          ))
-        } */}
-
-      </div>   
     </div>
   );
 };
 const mapStateToProps = (state: any) => ({
-  currentSongs: state.spotify.currentSongs,
   likedSongs: state.spotify.likedSongs,
 });
 
-export default connect(mapStateToProps, {removeSongs})(DuplicateSongsBoard);
-
+export default connect(mapStateToProps, { removeSongs })(DuplicateSongsBoard);

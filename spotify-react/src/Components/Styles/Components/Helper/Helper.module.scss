@@ -1,0 +1,134 @@
+$green-color: #50d0bc;
+$red-color: #ff7782;
+$blue-color: #45bfff;
+$bluer-color: #1b9dfe;
+$yellow-color: #ffbb55;
+$purple-color: #717eee;
+
+.greenColor {
+  background-color: $green-color;
+  color:white;
+}
+.redColor {
+  background-color: $red-color;
+  color:white;
+}
+.blueColor {
+  background-color: $blue-color;
+  color:white;
+}
+.bluerColor{
+  background-color: $bluer-color;
+  color:white;
+}
+.yellowColor {
+  background-color: $yellow-color;
+  color:white;
+}
+.purpleColor {
+  background-color: $purple-color;
+  color:white;
+}
+
+.toolbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.toolboxButton {
+  height: 50px;
+  width: 150px;
+  border-radius: 10px;
+  border: none;
+  background-color: $bluer-color;
+  font-weight: bold;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+.toolboxButton:hover {
+  background: #ebfdef;
+}
+.toolboxButton:active {
+  background: red;
+}
+.toolboxButton:focus {
+  outline: none;
+}
+.searchBox {
+  width: 250px;
+}
+
+//INFO CARDS
+.cardsContainer {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 3fr 3fr 3fr;
+  border-color: lightgray;
+  border-width: 1px;
+  border-radius: 25px;
+  // padding:2%;
+}
+.cardInfo {
+  height: 100%;
+  width: 80%;
+  min-width: 200px;
+  margin: auto;
+  // background-color: white;
+  border-radius: 15%;
+  // padding-top: 50px;
+  // padding-bottom: 20px;
+  padding: 10%;
+  // border: none;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  overflow: hidden;
+}
+.cardOne{
+  background-color: $green-color
+}
+.cardTwo{
+  background-color: $blue-color
+}
+.cardThree{
+  background-color: $red-color
+}
+.cardIcon {
+  margin-top: 25px;
+}
+.cardTitle {
+  color: gray;
+  margin-top: 25px;
+}
+.cardData {
+  margin-top: 25px;
+}
+// INFO CARDS END
+
+.songFeatures {
+  display: grid;
+  grid-template-columns: 45% 35% 15% 5%;
+  margin: 10px;
+  padding: 10px;
+}
+
+@media only screen and (max-width: 800px) {
+  .cardsContainer {
+    display: block;
+    border-radius: 10px;
+  }
+  .cardInfo {
+    width: 100%;
+    background-color: white;
+    border-radius: 0;
+    padding: 2%;
+    height: 100px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 3fr 2fr;
+  }
+}

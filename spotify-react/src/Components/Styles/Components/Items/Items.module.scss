@@ -1,0 +1,81 @@
+// SAVED SONG
+.songItem {
+  display: grid;
+  grid-template-columns: 45% 35% 15% 5%;
+  grid-template-rows: auto;
+  overflow: hidden;
+  padding: 10px;
+  height: 85px;
+  border-bottom: 3px solid #e8e8e8;
+  cursor: pointer;
+}
+
+.songTitle {
+  display: block;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.imageDiv {
+  height: 100%;
+  float: left;
+  margin-right: 10px;
+}
+.songImg {
+  border-radius: 10px;
+}
+.songSelected {
+  background: gray;
+}
+// END OF SAVED SONG
+
+//DUPLICATE
+.duplicateSongsContainer {
+  border-bottom: 3px solid #e8e8e8;
+  padding: 15px;
+}
+.duplicateSong {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  padding: 0;
+  padding-left: 30px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+// END OF DUPLICATE
+
+// ARTIST
+.artistItem {
+  height: 150px;
+  padding-bottom: 25px;
+  display: flex;
+}
+.artistImg {
+  width: 125px;
+  height: 125px;
+}
+.artistRank {
+  width: 10px;
+  height: 100%;
+  margin: auto;
+  background: blue;
+}
+// END OF ARTIST
+
+// TOP ARTIST
+.topSongItem {
+  display: grid;
+  grid-template-columns: 45px 42% 35% 15%;
+  grid-template-rows: auto;
+}
+.songRanking {
+  display: flex;
+  align-items: center;
+}
+// END OF TOP ARTIST
+
+.cardContainer {
+  width: 100%;
+  color: black;
+  padding: 2px;
+}

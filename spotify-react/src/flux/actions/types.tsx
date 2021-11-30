@@ -10,11 +10,13 @@ export const SET_LIKED_SONGS = 'SET_LIKED_SONGS';
 export const SET_PLAYLIST_SONGS = 'SET_PLAYLIST_SONGS';
 export const GET_PROFILE = 'GET_PROFILE';
 export const SET_ARTISTS = 'SET_ARTISTS';
-
+export const ADD_TO_PLAYLIST = 'ADD_TO_PLAYLIST'
 export const ADD_LOADING = 'ADD_LOADING';
 export const REMOVE_LOADING = 'REMOVE_LOADING';
 export const COMPLETE_SETUP = 'COMPLETE_SETUP';
 export const START_SETUP = 'START_SETUP';
+export const ADD_SONGS = 'ADD_SONGS';
+export const GET_TOP = 'GET_TOP'
 
 export const SET_BOARD = "SET_BOARD;"
 

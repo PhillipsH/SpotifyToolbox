@@ -1,17 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import {Button, Label} from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Label } from "reactstrap";
 import { connect } from "react-redux";
-import DecadeCheckBox from "./DecadeCheckBox";
-import DecadeSong from "./DecadeSong";
-
-import { addToPlaylist } from "../Utility";
-import { ITrack } from '../../types/interfaces';
+import { List, AutoSizer } from "react-virtualized";
+import SavedSong from "../Items/SavedSong";
+import { ITrack } from "../../types/interfaces";
+import InfoCards from "../InfoCards/InfoCards";
+import Toolbox from "../Toolbox/Toolbox";
+import SongFeatures from "../SongFeatures/SongFeatures";
+import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
+import DecadeBoardStyle from "../Styles/Components/Boards/DecadeBoard.module.scss";
 
 const DecadeSongBoard = (props) => {
-  const [decades, setDecades]:any = useState([]);
-  const [decadeDict, setDecadeDict]:any = useState({})
+  const [masterSongs, setMasterSongs]: any = useState([]);
+  const [currentSongs, setCurrentSongs]: any = useState([]);
+  const [selectedSongs, setSelectedSongs]: any = useState({});
+  const [decades, setDecades]: any = useState([]);
+  const [decadeDict, setDecadeDict]: any = useState({});
+
   useEffect(() => {
-    let decadeList = {}
+    let decadeList = {};
     for (let index in props.likedSongs.list) {
       let date = new Date(props.likedSongs.list[index].release_date);
       let year = date.getFullYear();
@@ -21,61 +28,104 @@ const DecadeSongBoard = (props) => {
       } else {
         decadeList[year].push(props.likedSongs.list[index]);
       }
-    }    
-    setDecadeDict(decadeList)
-    console.log("initialize")
+    }
+    setDecadeDict(decadeList);
   }, []);
 
-  function assessChecked(event){
-    if(event.target.checked){
-      setDecades([...decades, event.target.value])
-    }else{
-      setDecades(decades.filter(decade => decade != event.target.value))
+  useEffect(() => {
+    let currentList: ITrack[] = [];
+    for (let decadeIndex in decades) {
+      for (let songIndex in decadeDict[decades[decadeIndex]]) {
+        currentList.push(decadeDict[decades[decadeIndex]][songIndex]);
+      }
     }
+    setCurrentSongs(currentList);
+    setMasterSongs(currentList);
+  }, [decades]);
 
+  function selectSong(index) {
+    const newSelectedSongs = JSON.parse(JSON.stringify(selectedSongs));
+    const id =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
+    if (id in newSelectedSongs) {
+      delete newSelectedSongs[id];
+    } else {
+      newSelectedSongs[id] = currentSongs[index];
+    }
+    setSelectedSongs(newSelectedSongs);
   }
-  let currentSongs:ITrack[] = []
-  for(let decadeIndex in decades){
-    console.log(decades[decadeIndex])
-    for(let songIndex in decadeDict[decades[decadeIndex]]){
-      currentSongs.push(decadeDict[decades[decadeIndex]][songIndex])
+
+  function assessChecked(event) {
+    if (event.target.checked) {
+      setDecades([...decades, event.target.value]);
+    } else {
+      setDecades(decades.filter((decade) => decade != event.target.value));
     }
   }
 
-  function addSongsToPlaylist(){
-    addToPlaylist(props.currentSongs.currentList.currentSongList)
-  }
+  let renderRow = ({ index, key, style }) => {
+    let currentId =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
+    let album_image = currentSongs[index].album.album_images[2] ?? "";
+
+    return (
+      <SavedSong
+        key={key}
+        id={currentSongs[index].track_id}
+        title={currentSongs[index].track_name}
+        artist={currentSongs[index].artist.artist_name}
+        album={currentSongs[index].album.album_name}
+        image={album_image.url}
+        date={currentSongs[index].added_at}
+        style={style}
+        index={index}
+        selectSong={selectSong}
+        isSelected={currentId in selectedSongs}
+      />
+    );
+  };
 
   return (
-    <div className="function-board">
-      <h1>Decades</h1>
-      <h5>Number of Current Songs: {currentSongs.length}</h5>
-      <div className="toolbox">
-        <Button onClick={addSongsToPlaylist} color="success">Add to Playlist</Button>
-      </div>
-      <div id="decade-selector">
-        
+    <div className={BoardStyle.functionBoard}>
+      <InfoCards
+        selectedSongsLength={Object.keys(selectedSongs).length}
+        currentSongsLength={currentSongs.length}
+        currentBoard={"Decade"}
+      />
+      <Toolbox
+        masterSongs={masterSongs}
+        currentSongs={currentSongs}
+        setCurrentSongs={setCurrentSongs}
+        selectedSongs={selectedSongs}
+        setSelectedSongs={setSelectedSongs}
+      />
+      <div id={DecadeBoardStyle.decadeSelector}>
         {Object.keys(decadeDict).map((key, index) => (
-          <div className="decade" onChange={assessChecked}>
-            <Label check >
-                  <input type="checkbox" name={key} value={key}/>
-                  <h5>{key}</h5>
+          <div className={DecadeBoardStyle.decade} onChange={assessChecked}>
+            <Label check>
+              <input type="checkbox" name={key} value={key} />
+              <h5>{key}</h5>
             </Label>
           </div>
         ))}
       </div>
-      <div className="song-container">
-        {currentSongs.map((val, key) => (
-            <DecadeSong
-              key={key}
-              id={val.track_id}
-              title={val.track_name}
-              artist={val.artist.artist_name}
-              album={val.album.album_name}
-              date={val.release_date}
+      <SongFeatures
+        setCurrentSongs={setCurrentSongs}
+        currentSongs={currentSongs}
+        setSelectedSongs={setSelectedSongs}
+      />
+      <div className={BoardStyle.songContainer}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              height={height}
+              rowCount={currentSongs.length}
+              rowHeight={80}
+              rowRenderer={renderRow}
+              width={width}
             />
-          ))
-        }   
+          )}
+        </AutoSizer>
       </div>
     </div>
   );
@@ -85,4 +135,3 @@ const mapStateToProps = (state: any) => ({
 });
 
 export default connect(mapStateToProps, {})(DecadeSongBoard);
-
