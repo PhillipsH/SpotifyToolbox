@@ -6,7 +6,8 @@ import InfoCards from "../InfoCards/InfoCards";
 import Toolbox from "../Toolbox/Toolbox";
 import { ITrack } from "../../types/interfaces";
 import SavedSong from "../Items/SavedSong";
-import { List, AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List} from 'react-window'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngry,
@@ -439,11 +440,12 @@ const GenreBoard = (props) => {
           {({ height, width }) => (
             <List
               height={height}
-              rowCount={currentSongs.length}
-              rowHeight={80}
-              rowRenderer={renderRow}
+              itemCount={currentSongs.length}
+              itemSize={80}
               width={width}
-            />
+            >
+              {renderRow}
+            </List>
           )}
         </AutoSizer>
       </div>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "reactstrap";
 import { connect } from "react-redux";
-import { List, AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List} from 'react-window'
 import SavedSong from "../Items/SavedSong";
 import { ITrack } from "../../types/interfaces";
 import InfoCards from "../InfoCards/InfoCards";
@@ -119,11 +120,12 @@ const DecadeSongBoard = (props) => {
           {({ height, width }) => (
             <List
               height={height}
-              rowCount={currentSongs.length}
-              rowHeight={80}
-              rowRenderer={renderRow}
+              itemCount={currentSongs.length}
+              itemSize={80}
               width={width}
-            />
+            >
+              {renderRow}
+            </List>
           )}
         </AutoSizer>
       </div>

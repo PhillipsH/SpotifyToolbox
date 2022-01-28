@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Artist from "../Items/Artist";
 import { connect } from "react-redux";
-import { List, AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List} from 'react-window'
 import { getTop } from "../../flux/actions/spotifyActions";
 import BoardStyles from "../Styles/Components/Boards/Board.module.scss";
 import TopBoardStyles from "../Styles/Components/Boards/TopBoard.module.scss";
@@ -67,7 +68,9 @@ const RankingBoard = (props) => {
         </div>
         <a
           className={`${TopBoardStyles.timeSelection} ${
-            rankTime == "medium_term" ? TopBoardStyles.timeSelectionSelected : ""
+            rankTime == "medium_term"
+              ? TopBoardStyles.timeSelectionSelected
+              : ""
           }`}
           href="#"
           onClick={(event) => {
@@ -114,11 +117,12 @@ const RankingBoard = (props) => {
           {({ height, width }) => (
             <List
               height={height}
-              rowCount={currentArtists.length}
-              rowHeight={150}
-              rowRenderer={renderRow}
+              itemCount={currentArtists.length}
+              itemSize={150}
               width={width}
-            />
+            >
+              {renderRow}
+            </List>
           )}
         </AutoSizer>
       </div>

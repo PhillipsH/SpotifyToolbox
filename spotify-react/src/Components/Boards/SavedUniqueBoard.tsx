@@ -4,11 +4,12 @@ import { getPlaylistSongs } from "../../flux/actions/spotifyActions";
 import { addLoading } from "../../flux/actions/uiAction";
 import { LoadingTypes } from "../../flux/actions/types";
 import InfoCards from "../InfoCards/InfoCards";
-import { List, AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List} from 'react-window'
 import Toolbox from "../Toolbox/Toolbox";
 import SavedSong from "../Items/SavedSong";
 import SongFeatures from "../SongFeatures/SongFeatures";
-import BoardStyle from "../Styles/Components/Boards/Board.module.scss"
+import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
 
 const SavedUniqueBoard = (props) => {
   const [masterSongs, setMasterSongs]: any = useState([]);
@@ -123,11 +124,12 @@ const SavedUniqueBoard = (props) => {
           {({ height, width }) => (
             <List
               height={height}
-              rowCount={currentSongs.length}
-              rowHeight={80}
-              rowRenderer={renderRow}
+              itemCount={currentSongs.length}
+              itemSize={80}
               width={width}
-            />
+            >
+              {renderRow}
+            </List>
           )}
         </AutoSizer>
       </div>

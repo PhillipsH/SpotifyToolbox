@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { List, AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List} from 'react-window'
 import Toolbox from "../Toolbox/Toolbox";
 import { getTop } from "../../flux/actions/spotifyActions";
 import InfoCards from "../InfoCards/InfoCards";
 import TopSong from "../Items/TopSong";
 import BoardStyles from "../Styles/Components/Boards/Board.module.scss";
 import TopBoardStyles from "../Styles/Components/Boards/TopBoard.module.scss";
-import SongFeatures from "../SongFeatures/SongFeatures"
+import SongFeatures from "../SongFeatures/SongFeatures";
 
 const RankingBoard = (props) => {
   useEffect(() => {}, []);
@@ -146,7 +147,7 @@ const RankingBoard = (props) => {
         selectedSongs={selectedSongs}
         setSelectedSongs={setSelectedSongs}
       />
-      
+
       <SongFeatures
         setCurrentSongs={setCurrentSongs}
         currentSongs={currentSongs}
@@ -158,11 +159,12 @@ const RankingBoard = (props) => {
           {({ height, width }) => (
             <List
               height={height}
-              rowCount={currentSongs.length}
-              rowHeight={85}
-              rowRenderer={renderRow}
+              itemCount={currentSongs.length}
+              itemSize={80}
               width={width}
-            />
+            >
+              {renderRow}
+            </List>
           )}
         </AutoSizer>
       </div>
