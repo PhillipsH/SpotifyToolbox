@@ -10,14 +10,12 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
   date: Date;
   style: any;
   selectSong?: any;
-  key: number;
   index?: number;
   isSelected?: boolean;
 }
 
 const Song = ({
   index,
-  key,
   id,
   title,
   artist,

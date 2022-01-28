@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var cors_1 = __importDefault(require("cors"));
 var path_1 = __importDefault(require("path"));
 var authenticateRouter_1 = __importDefault(require("./routes/authenticateRouter"));
 var spotifyCallRouter_1 = __importDefault(require("./routes/spotifyCallRouter"));
@@ -11,7 +12,7 @@ var express_session_1 = __importDefault(require("express-session"));
 // import apiRouter from "./routes/api";
 // var cookieParser = require('cookie-parser');
 var app = (0, express_1.default)();
-// app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use((0, cors_1.default)({ credentials: true, origin: 'http://localhost:3000' }));
 app.use((0, express_session_1.default)({
     secret: "Shh, its a secret!",
     resave: true,

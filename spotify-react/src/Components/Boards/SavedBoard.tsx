@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import SavedSong from "../Items/SavedSong";
 import InfoCards from "../InfoCards/InfoCards";
 import { connect } from "react-redux";
-import { List, AutoSizer } from "react-virtualized";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List} from 'react-window'
 import Toolbox from "../Toolbox/Toolbox";
 import SongFeatures from "../SongFeatures/SongFeatures";
 import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
@@ -25,14 +26,15 @@ const LikedSongsBoard = (props) => {
     setSelectedSongs(newSelectedSongs);
   }
 
-  let renderRow = ({ index, key, style }) => {
+  let renderRow = ({ index, style }) => {
     let currentId =
       currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
     let album_image = currentSongs[index].album.album_images[2] ?? "";
 
+
     return (
       <SavedSong
-        key={key}
+        key={index}
         id={currentSongs[index].track_id}
         title={currentSongs[index].track_name}
         artist={currentSongs[index].artist.artist_name}
@@ -46,6 +48,9 @@ const LikedSongsBoard = (props) => {
       />
     );
   };
+  const Column = ({ index, style }) => (
+    <div style={style}>Column {index}</div>
+  );
 
   return (
     <div className={BoardStyle.functionBoard}>
@@ -69,15 +74,18 @@ const LikedSongsBoard = (props) => {
       />
 
       <div className={BoardStyle.songContainer}>
-        <AutoSizer>
+      <AutoSizer>
           {({ height, width }) => (
             <List
+              className="List"
               height={height}
-              rowCount={currentSongs.length}
-              rowHeight={90}
-              rowRenderer={renderRow}
+              itemCount={currentSongs.length}
+              itemSize={80}
               width={width}
-            />
+            >
+              {renderRow}
+            </List>
+
           )}
         </AutoSizer>
       </div>

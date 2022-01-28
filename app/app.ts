@@ -8,7 +8,7 @@ import session from 'express-session';
 // var cookieParser = require('cookie-parser');
 
 const app = express();
-// app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(session({
   secret: "Shh, its a secret!",
   resave: true,
