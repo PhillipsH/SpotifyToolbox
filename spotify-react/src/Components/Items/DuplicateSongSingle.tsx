@@ -21,7 +21,7 @@ const DuplicateSongSingle = (props) => {
         <h6 className="date">Date: {props.date}</h6>
       </div>
       <div className="duplicate-song-right">
-        <Button onClick={removeSingle} color="danger">Remove</Button>
+        <Button className={ItemsStyle.removeButton} onClick={removeSingle}>Remove</Button>
       </div>
     </div>
   );

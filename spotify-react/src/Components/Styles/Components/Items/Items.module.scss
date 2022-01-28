@@ -1,3 +1,10 @@
+$green-color: #50d0bc;
+$red-color: #ff7782;
+$blue-color: #45bfff;
+$bluer-color: #1b9dfe;
+$yellow-color: #ffbb55;
+$purple-color: #717eee;
+
 // SAVED SONG
 .songItem {
   display: grid;
@@ -42,6 +49,15 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+.duplicateArtistTitle{
+  display:flex;
+  justify-content: flex-start;
+  margin-bottom:15px;
+}
+.removeButton{
+  background-color: $red-color;
+  border:none;
+}
 // END OF DUPLICATE
 
 // ARTIST
@@ -62,9 +78,9 @@
   display:flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
+  width: 45px;
   font-weight: bold;
-  font-size:larger;
+  font-size:1.5em;
   text-align:center;
   height: 100%;
   margin: auto;

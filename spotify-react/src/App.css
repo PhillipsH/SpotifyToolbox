@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 html, body{
   height:100%;
 }
@@ -7,11 +9,12 @@ html, body{
 }
 .App {
   height:100%;
+  background-size: auto 100%;
+  font-family: 'Poppins', sans-serif;
 }
 
-.song-item:nth-child(even) {
-  /* background: #E8E8E8; */
-}
+/*
+
 
 .card-container {
   width: 100%;
@@ -19,7 +22,6 @@ html, body{
   padding: 2px;
 }
 
-/*Function Buttons */
 .button-board{
   width:100%;
   display: flex;
@@ -45,4 +47,4 @@ html, body{
 
 }
 
-/*Function Buttons Ending*/
+*/

@@ -1,7 +1,8 @@
-$sidenav-width: 350px;
-$sidebar-width: 400px;
+$sidenav-width: 320px;
+$sidebar-width: 350px;
 $topbar-height: 0px;
 $primary-color: #fffafa;
+// $primary-color: #303030;
 
 $green-color: #50d0bc;
 $red-color: #ff7782;
@@ -42,17 +43,17 @@ $secondary-text-color: #818181;
   color: $secondary-text-color;
 }
 
-.backgroundImg {
-  height: 100vh;
-  width: 100%;
-  color: white;
-  text-align: center;
-  padding-top: 400px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("../../../Icons/music-image.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
+// .backgroundImg {
+//   height: 100vh;
+//   width: 100%;
+//   color: white;
+//   text-align: center;
+//   padding-top: 400px;
+//   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+//     url("../../../Icons/music-image.jpg");
+//   background-repeat: no-repeat;
+//   background-size: cover;
+// }
 
 //DASHBOARD SECTION
 .dashboardDiv {
@@ -83,7 +84,10 @@ $secondary-text-color: #818181;
 .sidebar::-webkit-scrollbar {
   display: none;
 }
-
+.sidebarSectionTitle{
+  font-weight: 700;
+  font-size:1.1em;
+}
 .userContainer {
   display: flex;
   background: $green-color;
@@ -95,6 +99,8 @@ $secondary-text-color: #818181;
   width: 80%;
   align-items: center;
   margin: auto;
+  color:white;
+  // float:right;
   // background:red;
 }
 
@@ -105,7 +111,9 @@ $secondary-text-color: #818181;
   border-radius: 15px;
   margin-right: 5px;
 }
-
+.popularSection{
+  margin-top:25px;
+}
 .popularContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -122,7 +130,9 @@ $secondary-text-color: #818181;
   width: 65px;
   height: 65px;
 }
-
+.likedArtistSection{
+  margin-top:25px;
+}
 .likedArtistContainer {
   margin-bottom: 15px;
   font-weight: 500;
@@ -143,6 +153,9 @@ $secondary-text-color: #818181;
   height: 65px;
 }
 
+.statSection{
+  margin-top:25px;
+}
 .statsContainer {
   display: block;
 }
@@ -162,9 +175,12 @@ $secondary-text-color: #818181;
   margin-right: 5px;
   color: white;
 }
-.statDetails{
-  display:block;
-  // background:red;
+// .statDetails{
+//   display:block;
+//   // background:red;
+// }
+.detailTitle{
+  font-weight:600;
 }
 .statIcon {
   // margin-right: 5px;
@@ -185,6 +201,10 @@ $secondary-text-color: #818181;
   border-right: 3px solid #e8e8e8;
   margin-top: $topbar-height;
   overflow: scroll;
+}
+.mainTitle{
+  font-weight:600;
+  font-size:1.15em;
 }
 ul {
   li {
@@ -209,7 +229,7 @@ ul {
 .titleLogo {
   font-size: 1.5em;
   font-weight: 500;
-  margin-left: 15%;
+  margin-left: 8%;
 }
 // .navTitleLogo {
 //   display: none;
@@ -250,6 +270,8 @@ ul {
 .dashboardTitle {
   display: inline-block;
   margin-left: 100px;
+  font-weight:bold;
+  margin-bottom:15px;
 }
 .hidden {
   display: none;
@@ -282,16 +304,14 @@ ul {
 }
 // Topbar
 .topbar {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: blue;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   display: grid;
   grid-template-columns: $sidenav-width 1fr $sidebar-width;
-  height: $topbar-height;
-  // background:yellow;
-  overflow: hidden;
+  // height: $topbar-height;
 }
 .closedBar {
   display: none;
@@ -359,10 +379,15 @@ ul {
   line-height: 50px;
   border-radius: 15px;
   background-color: $blue-color;
+  color:white;
   border: 3px solid #e8e8e8;
   text-align: center;
 }
+.fixedToggle a{
+  color:inherit;
+}
 .toggleIcon {
+  color:inherit;
   font-size: 1.5em;
   margin: auto;
 }
@@ -435,4 +460,20 @@ ul {
 }
 .largeDashboard {
   margin-left: 0px;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (min--moz-device-pixel-ratio: 1.5),
+only screen and (min-device-pixel-ratio: 1.5){
+    .retina-logo{
+        display: block;
+        text-align: center; 
+        max-height: 43px; 
+        max-width: 350px; 
+        margin-top: 15px;
+    }
+    .retina-logo img{
+       width: 100%;
+       height: auto;
+    }
 }

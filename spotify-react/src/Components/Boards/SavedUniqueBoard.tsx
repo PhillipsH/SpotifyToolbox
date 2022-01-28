@@ -102,7 +102,7 @@ const SavedUniqueBoard = (props) => {
       <InfoCards
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
-        currentBoard={"Liked Songs"}
+        currentBoard={"Unique Saved"}
       />
 
       <Toolbox

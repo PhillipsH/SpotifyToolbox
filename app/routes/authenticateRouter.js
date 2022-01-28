@@ -29,4 +29,5 @@ var authenticateController = __importStar(require("../controllers/authenticateCo
 router.get('/', authenticateController.authenticateUser);
 router.get('/getTokens', authenticateController.getTokens);
 router.get('/checkAuth', authenticateController.checkAuth);
+router.get('/refreshToken', authenticateController.refreshToken);
 exports.default = router;

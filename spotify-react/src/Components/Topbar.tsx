@@ -1,80 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import MainStyle from "./Styles/Components/Main.module.scss";
+import LandingStyle from "./Styles/Components/LandingPage.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faPodcast,
-  faNotEqual,
-  faBox,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPodcast } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
-export const Topbar = (props) => {
-  let displayName = "user";
-  let profilePic = "user";
-
-  if (props.profile.display_name != undefined) {
-    displayName = props.profile.display_name;
-    profilePic = props.profile.images[0].url;
+export const Topbar = () => {
+  // const [prevScroll, setPrevScroll]: any = useState(window.pageYOffset);
+  const [topbar, setTopbar]: any = useState("showBar");
+  let prevScroll = window.pageYOffset
+  window.addEventListener("scroll", handleScroll.bind(this), { passive: true });
+  function handleScroll() {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScroll < currentScrollPos) {
+      setTopbar("noShowBar");
+    } else {
+      setTopbar("showBar");
+    }
+    prevScroll = (currentScrollPos);
   }
+  // console.log(topbar)
   return (
-    <div className={MainStyle.topbar}>
-      <div className={MainStyle.sidenavExtension}>
-        <div
-          className={`${MainStyle.toggleSidebar} ${
-            props.sidenavTheme ? MainStyle.closedToggle : ""
-          }`}
-        >
-          <a
-            href="#"
-            onClick={(event) => {
-              event.preventDefault();
-              props.setSidenavTheme(!props.sidenavTheme);
-            }}
-          >
-            <FontAwesomeIcon icon={faBars} className={MainStyle.navIcon} />
-          </a>
-        </div>
-        <div
-          className={`${MainStyle.titleLogo} ${
-            props.sidenavTheme ? MainStyle.closedToggle : ""
-          }`}
-        >
-          <FontAwesomeIcon icon={faPodcast} className={MainStyle.navIcon} />
-          <span className={MainStyle.title}>SpotifyTools</span>
-        </div>
+    <div className={LandingStyle.topbar + " " + LandingStyle[topbar]}>
+      <div className={`${LandingStyle.titleLogo}`}>
+        <FontAwesomeIcon icon={faPodcast} className={LandingStyle.navIcon} />
+        <span className={LandingStyle.title}>SpotifyTools</span>
       </div>
-      <div
-        className={`${MainStyle.dashboardExtension} ${MainStyle.verticalCenter}`}
-      >
-        {/* <ul className={MainStyle.topbarNav}>
-          <li>
-            <Link to="/uniquePlaylist">
-              <span className={MainStyle.navName}>Dashboard</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/uniquePlaylist">
-              <span className={MainStyle.navName}>Home</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/uniquePlaylist">
-              <span className={MainStyle.navName}>How To Use</span>
-            </Link>
-          </li>
-        </ul> */}
-        <div className={MainStyle.cartContainer}>
-          <FontAwesomeIcon icon={faBox} className={MainStyle.boxIcon} />
-        </div>
+      <div className={LandingStyle.topNav}>
+        <a className="active" href="#home">
+          Home
+        </a>
+        <a href="#about">About</a>
+        <a href="#cards">Tools</a>
       </div>
-      <div className={MainStyle.sidebarExtension}>
-        <div className={MainStyle.userContainer}>
-          <img className={MainStyle.userImg} src={profilePic}></img>
-          <h5 className={MainStyle.userName}>{displayName}</h5>
-        </div>
-      </div>
+      <a></a>
     </div>
   );
 };
@@ -83,4 +41,4 @@ const mapStateToProps = (state: any) => ({
   profile: state.spotify.profile,
 });
 
-export default connect(mapStateToProps, {})(Topbar);
+export default Topbar;

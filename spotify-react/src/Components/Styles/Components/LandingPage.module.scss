@@ -1,0 +1,248 @@
+$green-color: #50d0bc;
+$red-color: #ff7782;
+$blue-color: #45bfff;
+$bluer-color: #1b9dfe;
+$yellow-color: #ffbb55;
+$purple-color: #717eee;
+
+
+.topbar{
+  height:80px;
+  position:fixed;
+  top:0;
+  width:100%;
+  display:flex;
+  align-items: center;
+  justify-content:flex-start;
+  background-color: black;
+  color:white;
+}
+.titleLogo {
+  display:flex;
+  align-items:center;
+  font-size: 1.8em;
+  font-weight: 500;
+  margin-left: 15%;
+  margin-right:auto;
+  order:-1;
+  // height:100%;
+  height:50px;
+  // background:red;
+  // width:250px;
+}
+.topNav{
+  color:white;
+  justify-content:flex-end;
+  // background:blue;
+  margin-right:15%;
+  margin-left:20px;
+}
+.topNav a{
+  color:inherit;
+  margin-right:8px;
+  font-size:1.2em;
+}
+.noShowBar{
+  display:none;
+}
+
+.backgroundImg {
+  height: 850px;
+  width: 100%;
+  color: white;
+  //   text-align: center;
+  padding: 80px;
+  padding-top: 200px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)),
+    url("../../../Icons/music-image.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.button {
+  border-radius: 15px;
+  height: 50px;
+}
+
+.aboutContainer {
+padding:0;
+margin:0;
+background: #E5E4E2;
+}
+
+.aboutContainer h2 {
+  font-weight: 800;
+  font-size: 2.5em;
+}
+
+.content{
+    height:800px;
+    overflow:hidden;
+    padding:5%;
+}
+.background{
+    background-image: url("../../../Icons/wave.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.summaryContent{
+    display:flex;
+    overflow:hidden;
+}
+.textSummary{
+    width:33%;
+    padding:3%;
+    font-size:1.5em;
+    // background:red;
+}
+.imageSummary{
+    // background:green;
+    // width:66%;
+    margin-left:auto;
+}
+//INFO CARDS
+.cardsContainer {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  border-color: lightgray;
+  border-width: 1px;
+  border-radius: 25px;
+  height:100%;
+}
+
+.cardInfo {
+  height: 300px;
+  width: 300px;
+  margin: auto;
+  border-radius: 20%;
+  padding: 8%;
+  padding-top: 8%;
+  border: solid;
+  border-color: #05c665;
+  border-width: 3px;
+  //   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+  //     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  // box-shadow: rgba(80, 240, 93, 255) 0px 0px 0px 10px,
+  // rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+
+  //   -webkit-box-shadow: 0px -9px 0px #16a085;
+  //   -moz-box-shadow: 0px -9px 0px #16a085;
+  background:white;
+  box-shadow: 7px -7px 0px #05c665;
+  overflow: hidden;
+  //   text-align:center;
+  //   color:green;
+}
+.cardTitle {
+  font-weight: 800;
+  font-size: 1.5em;
+  color: #05c665;
+  text-align: center;
+  margin-bottom: 1000px;
+}
+.cardDescription {
+  font-weight: 600;
+  margin-top: 15px;
+  // text-align:left;
+}
+.mainContent {
+  width: 40%;
+  // background:blue;
+}
+.mainContent h1 {
+  font-weight: 900;
+  font-size: 3.5em;
+}
+.mainContent p {
+  font-size: 1.2em;
+}
+
+.cardIcon {
+  margin-top: 25px;
+}
+.cardData {
+  margin-top: 25px;
+}
+
+
+/* 
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+
+@media (min-width: 1281px) {
+  
+  /* CSS */
+  
+}
+
+/* 
+  ##Device = Laptops, Desktops
+  ##Screen = B/w 1025px to 1280px
+*/
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  
+  /* CSS */
+  
+}
+
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (max-width: 1024px) {
+  
+  /* CSS */
+  .textSummary{
+    width:100%;
+    font-weight:500;
+  }
+  .imageSummary{
+    display:none;
+  }
+  .mainContent{
+    width:100%;
+  }
+
+  .cardsContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+  .summaryContent{
+    display:block;
+  }
+}
+
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  
+  /* CSS */
+  
+}
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+  
+  /* CSS */
+  
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  
+  /* CSS */
+  
+}

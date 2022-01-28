@@ -94,7 +94,7 @@ const PlaylistSongsBoard = (props) => {
       <InfoCards
         selectedSongsLength={currentSongs.length}
         currentSongsLength={currentSongs.length}
-        currentBoard={"Liked Songs"}
+        currentBoard={"Unique Playlist"}
       />
       <Toolbox
         masterSongs={masterSongs}

@@ -10,19 +10,19 @@ import {
   startSetup,
 } from "../flux/actions/spotifyActions";
 
-import DuplicateSongsBoard from "./DuplicateSongs/DuplicateSongsBoard";
-import PlaylistSongsBoard from "./PlaylistSongs/PlaylistSongsBoard";
-import DecadeSongsBoard from "./DecadeSongs/DecadeSongsBoard";
-import SavedUniqueBoard from "./SavedUnique/SavedUniqueBoard";
-import TopArtistsBoard from "./Ranking/TopArtistsBoard";
-import TopSongsBoard from "./Ranking/TopSongsBoard";
-import GenreBoard from "./Genre/GenreBoard";
+import DecadeSongsBoard from "./Boards/DecadeSongsBoard";
+import DuplicateSongsBoard from "./Boards/DuplicateSongsBoard";
+import PlaylistSongsBoard from "./Boards/PlaylistSongsBoard";
+import SavedUniqueBoard from "./Boards/SavedUniqueBoard";
+import TopArtistsBoard from "./Boards/TopArtistsBoard";
+import TopSongsBoard from "./Boards/TopSongsBoard";
+import GenreBoard from "./Boards/GenreBoard";
 import Sidebar from "./Sidebar";
 import Sidenav from "./Sidenav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faPodcast } from "@fortawesome/free-solid-svg-icons";
 import { BoardTypes, LoadingTypes } from "../flux/actions/types";
-import SavedBoard from "./Saved/SavedBoard";
+import SavedBoard from "./Boards/SavedBoard";
 import MainStyle from "./Styles/Components/Main.module.scss";
 import Topbar from "./Topbar";
 
@@ -83,6 +83,8 @@ export const Dashboard = (props) => {
         <Route exact path="/uniquePlaylist">
           <PlaylistSongsBoard></PlaylistSongsBoard>
         </Route>
+        <Route exact path="/playlists">
+        </Route>
       </Switch>
     );
   }
@@ -90,19 +92,21 @@ export const Dashboard = (props) => {
   return (
     <>
       <BrowserRouter>
-      {
-        sidenavTheme ? (<div className={`${MainStyle.fixedToggle}`}>
-        <a
-          href="#"
-          onClick={(event) => {
-            event.preventDefault();
-            setSidenavTheme(!sidenavTheme);
-          }}
-        >
-          <FontAwesomeIcon icon={faBars} className={MainStyle.toggleIcon} />
-        </a>
-      </div>) : (<></>)
-      }
+        {sidenavTheme ? (
+          <div className={`${MainStyle.fixedToggle}`}>
+            <a
+              href="#"
+              onClick={(event) => {
+                event.preventDefault();
+                setSidenavTheme(!sidenavTheme);
+              }}
+            >
+              <FontAwesomeIcon icon={faBars} className={MainStyle.toggleIcon} />
+            </a>
+          </div>
+        ) : (
+          <></>
+        )}
         <Sidenav
           sidenavTheme={sidenavTheme}
           setSidenavTheme={setSidenavTheme}

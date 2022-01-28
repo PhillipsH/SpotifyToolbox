@@ -1,9 +1,16 @@
+$green-color: #50d0bc;
+$red-color: #ff7782;
+$blue-color: #45bfff;
+$bluer-color: #1b9dfe;
+$yellow-color: #ffbb55;
+$purple-color: #717eee;
+
 .genreButtonContainer {
-  display: flex;
-  flex-wrap: wrap; 
-  justify-content: space-evenly;
-  // display:grid;
-  // grid-template-columns: 1fr 1fr 1fr 1fr;
+  // display: flex;
+  // flex-wrap: wrap; 
+  // justify-content: space-evenly;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   margin-top:25px;
   // background:green;
   // width:auto;
@@ -17,42 +24,101 @@
   width: 150px;
   height: 150px;
   border: none;
+  border-radius:25%;
   margin-left:25px;
   margin-right:25px;
-  // margin:auto;
+
   // width:auto;
+
+  // height: 0; 
+  // width:100%;
+  // padding-bottom:100%;
+  // background-color:red
 }
+.icon{
+  font-size: 2.5em;
+}
+.buttonText{
+  font-size: 1.2em;
+  font-weight:bold;
+}
+// .popButton {
+//   background-color: #db81f0;
+//   background-image: -webkit-linear-gradient(150deg, #db81f0 50%, #7f2f91 50%);
+// }
+// .rapButton {
+//   background-image: -webkit-linear-gradient(150deg, #32de84 50%, #17b169 50%);
+// }
+// .rockButton {
+//   background-image: -webkit-linear-gradient(150deg, #ac25d9 50%, #6c15c4 50%);
+// }
+// .punkButton {
+//   background-image: -webkit-linear-gradient(150deg, #fd5c63 50%, #d2122e 50%);
+// }
+// .indieButton {
+//   background-image: -webkit-linear-gradient(150deg, #61edfc 50%, #1fb8fc 50%);
+// }
+// .kPopButton {
+//   background-image: -webkit-linear-gradient(150deg, #ffaa00 50%, #ff8800 50%);
+// }
+// .rNBButton {
+//   background-image: -webkit-linear-gradient(150deg, $blue-color 50%, $green-color 50%);
+// }
+// .electronicButton {
+//   background-image: -webkit-linear-gradient(150deg, #013a6b 50%,  50%);
+// }
+
+
 .popButton {
-  background-color: #db81f0;
-  background-image: -webkit-linear-gradient(150deg, #db81f0 50%, #7f2f91 50%);
+  background-color: #17b169;
+  // background-image: -webkit-linear-gradient(150deg, #db81f0 50%, #7f2f91 50%);
 }
 .rapButton {
-  background-image: -webkit-linear-gradient(150deg, #32de84 50%, #17b169 50%);
+  // background-color: $purple-color;
+  background-color:#fd5c63;
+  // background-image: -webkit-linear-gradient(150deg, #32de84 50%, #17b169 50%);
 }
 .rockButton {
-  background-image: -webkit-linear-gradient(150deg, #ac25d9 50%, #6c15c4 50%);
+  background-color: #013a6b;
+  // background-image: -webkit-linear-gradient(150deg, #ac25d9 50%, #6c15c4 50%);
 }
 .punkButton {
-  background-image: -webkit-linear-gradient(150deg, #fd5c63 50%, #d2122e 50%);
+  background-color: #6c15c4;
+  // background-image: -webkit-linear-gradient(150deg, #fd5c63 50%, #d2122e 50%);
 }
 .indieButton {
-  background-image: -webkit-linear-gradient(150deg, #61edfc 50%, #1fb8fc 50%);
+  background-color: #ac25d9;
+  // background-image: -webkit-linear-gradient(150deg, #61edfc 50%, #1fb8fc 50%);
 }
 .kPopButton {
-  background-image: -webkit-linear-gradient(150deg, #ffaa00 50%, #ff8800 50%);
+  background-color: #db81f0;
+  // background-image: -webkit-linear-gradient(150deg, #ffaa00 50%, #ff8800 50%);
 }
 .rNBButton {
-  background-image: -webkit-linear-gradient(150deg, #89fc7b 50%, #6def82 50%);
+  background-color: #ff8800;
+  // background-image: -webkit-linear-gradient(150deg, $blue-color 50%, $green-color 50%);
 }
 .electronicButton {
-  background-image: -webkit-linear-gradient(150deg, #013a6b 50%, #004e95 50%);
+  background-color: #013a6b;
+  // background-image: -webkit-linear-gradient(150deg, #013a6b 50%,  50%);
 }
-.yo{
-  background:red;
-  display:flex;
+.countryButton{
+  background-color: #ffaa00;
+}
 
-
-  // margin:auto;
-  // width:50%;
-  // padding:300px;
+@media only screen and (max-width: 800px) {
+  .genreButtonContainer {
+    grid-template-columns: 1fr 1fr;
+    background:red;
+  }
+}
+@media only screen and (max-width: 1600px) {
+  .genreButtonContainer {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+@media only screen and (max-width: 1440px) {
+  .genreButtonContainer {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }

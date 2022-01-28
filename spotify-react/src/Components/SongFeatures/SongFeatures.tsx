@@ -89,9 +89,9 @@ const SongFeatures = ({ setCurrentSongs, currentSongs, setSelectedSongs }) => {
 
   return (
     <div className={HelperStyles.songFeatures}>
-      <span onClick={sortByTitle}>Title</span>
-      <span onClick={sortByArtist}>Album</span>
-      <span onClick={sortByDate}>Date Added</span>
+      <span className={HelperStyles.sortFeature} onClick={sortByTitle}>Title</span>
+      <span className={HelperStyles.sortFeature} onClick={sortByArtist}>Album</span>
+      <span className={HelperStyles.sortFeature} onClick={sortByDate}>Date Added</span>
       <input
         type="checkbox"
         id="scales"

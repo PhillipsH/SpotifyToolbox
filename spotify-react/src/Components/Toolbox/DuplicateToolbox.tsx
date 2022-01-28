@@ -81,7 +81,7 @@ const DuplicateToolbox = ({
   };
 
   return (
-    <div className={HelperStyles.tooldbox}>
+    <div className={HelperStyles.toolbox}>
       <Modal isOpen={modal} toggle={toggle}>
         <form onSubmit={addSongsToPlaylist}>
           <ModalHeader toggle={toggle}>
@@ -116,10 +116,10 @@ const DuplicateToolbox = ({
       </Modal>
 
       <h4>Current Songs</h4>
-      <button className={HelperStyles.toolboxButton} onClick={toggle}>
+      <button className={`${HelperStyles.toolboxButton} ${HelperStyles.addButton}`} onClick={toggle}>
         Add to Playlist
       </button>
-      <button className={HelperStyles.toolboxButton} onClick={removeAllSongs}>
+      <button className={`${HelperStyles.toolboxButton} ${HelperStyles.removeButton}`} onClick={removeAllSongs}>
         Remove Duplicates
       </button>
       <div></div>

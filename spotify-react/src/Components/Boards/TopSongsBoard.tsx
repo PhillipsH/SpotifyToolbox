@@ -66,7 +66,7 @@ const RankingBoard = (props) => {
       <InfoCards
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
-        currentBoard={"Liked Songs"}
+        currentBoard={"Top Songs"}
       />
       <div className={TopBoardStyles.timeSelectionContainer}>
         <div>

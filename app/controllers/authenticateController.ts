@@ -29,7 +29,7 @@ export async function getTokens(req: Request, res: Response) {
 
   axios({
     url: authURI,
-    method: "post",
+    method: "POST",
     headers: {
       Authorization:
         "Basic " +
@@ -45,7 +45,7 @@ export async function getTokens(req: Request, res: Response) {
       req.session["code"] = req.query.code;
       req.session["access_token"] = response.data.access_token;
       req.session["refresh_token"] = response.data.refresh_token;
-      req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
+      // req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
       axios
         .get(profileURI, {
           headers: {
@@ -70,4 +70,26 @@ export async function checkAuth(req: Request, res: Response) {
   } else {
     res.send({ isAuthenticated: false });
   }
+}
+
+export async function refreshToken(req: Request, res: Response) {
+  console.log("refreshing")
+  console.log(req.session["refresh_token"])
+  const refreshTokenUri: string = "https://accounts.spotify.com/api/token";
+
+  let response = await axios({
+    url: refreshTokenUri,
+    method: "POST",
+    headers: {
+      Authorization:
+        "Basic " +
+        new Buffer(client_id + ":" + client_secret).toString("base64"),
+    },
+    params: {
+      grant_type: "refresh_token",
+      refresh_token: req.session["refresh_token"],
+    },
+  })
+  console.log("REFRESHED")
+  req.session["access_token"] = response.data.access_token;
 }

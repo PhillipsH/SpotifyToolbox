@@ -2,7 +2,7 @@ import React, {useEffect } from 'react';
 import { connect } from 'react-redux';
 import {checkAuthorize} from '../flux/actions/authorizeAction';
 import {IAuthProps} from '../types/interfaces';
-import Authorizer from './Authorizer';
+import LandingPage from './LandingPage';
 import Dashboard from './Dashboard'
 
 export const Main = (props)  => {
@@ -18,7 +18,7 @@ export const Main = (props)  => {
   </>
   )
   : (
-    <Authorizer/>
+    <LandingPage/>
   )
     
   

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
+exports.refreshToken = exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
 var axios = require("axios");
 require("dotenv").config();
 var redirect_uri = "http://localhost:5000/authenticate/getTokens";
@@ -69,7 +69,7 @@ function getTokens(req, res) {
             profileURI = "https://api.spotify.com/v1/me";
             axios({
                 url: authURI,
-                method: "post",
+                method: "POST",
                 headers: {
                     Authorization: "Basic " +
                         new Buffer(client_id + ":" + client_secret).toString("base64"),
@@ -84,7 +84,7 @@ function getTokens(req, res) {
                 req.session["code"] = req.query.code;
                 req.session["access_token"] = response.data.access_token;
                 req.session["refresh_token"] = response.data.refresh_token;
-                req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
+                // req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
                 axios
                     .get(profileURI, {
                     headers: {
@@ -120,3 +120,34 @@ function checkAuth(req, res) {
     });
 }
 exports.checkAuth = checkAuth;
+function refreshToken(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var refreshTokenUri, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log("refreshing");
+                    console.log(req.session["refresh_token"]);
+                    refreshTokenUri = "https://accounts.spotify.com/api/token";
+                    return [4 /*yield*/, axios({
+                            url: refreshTokenUri,
+                            method: "POST",
+                            headers: {
+                                Authorization: "Basic " +
+                                    new Buffer(client_id + ":" + client_secret).toString("base64"),
+                            },
+                            params: {
+                                grant_type: "refresh_token",
+                                refresh_token: req.session["refresh_token"],
+                            },
+                        })];
+                case 1:
+                    response = _a.sent();
+                    console.log("REFRESHED");
+                    req.session["access_token"] = response.data.access_token;
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.refreshToken = refreshToken;

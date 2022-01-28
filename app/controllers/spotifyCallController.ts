@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-
 import axios from "axios";
+import { refreshToken } from "./authenticateController";
 require("dotenv").config();
 
 const redirect_uri: string = "http://localhost:3000/callback";
@@ -43,29 +43,16 @@ export async function getLikedSongs(req: Request, res: Response) {
             error.response.headers["retry-after"] * 1000);
             return spotifyApiCall(url, offset);
           case 503:
-            console.log("timeout error");
+            console.log("503 error");
             setTimeout(function () {}, 5000);
             return spotifyApiCall(url, offset);
           case 401:
-            let authData = {
-              grant_type: "refresh_token",
-              refresh_token: req.session["refresh_token"],
-            };
-            let response = await axios.post(refreshTokenUri, authData, {
-              headers: {
-                Authorization:
-                  "Basic " +
-                  new Buffer(client_id + ":" + client_secret).toString(
-                    "base64"
-                  ),
-              },
-            });
-            req.session["access_token"] = response.data.access_token;
+            await refreshToken(req, res);
             return spotifyApiCall(url, offset);
 
           default:
             console.log("OTHER ERROR PLEASE CHECK LIKED");
-            console.log(error.response.status);
+            // console.log(error.response.status);
             return [];
         }
       } else {
@@ -122,27 +109,14 @@ export async function getPlaylistSongs(req: Request, res: Response) {
           setTimeout(function () {}, 5000);
           return recursiveSpotify(url);
         case 503:
-          console.log("timeout error");
+          console.log("error 503");
           setTimeout(function () {}, 5000);
           return recursiveSpotify(url);
         case 401:
-          let authData = {
-            grant_type: "refresh_token",
-            refresh_token: req.session["refresh_token"],
-          };
-          let response = await axios.post(refreshTokenUri, authData, {
-            headers: {
-              Authorization:
-                "Basic " +
-                new Buffer(client_id + ":" + client_secret).toString("base64"),
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          });
-          console.log("ERROR 401");
-          req.session["access_token"] = response.data.access_token;
+          await refreshToken(req, res);
           return recursiveSpotify(url);
         default:
-          console.log("OTHER ERROR PLEASE CHECK Playlist");
+          console.log("other error check PLAYLIST");
           console.log(error.response.status);
           return [];
       }
@@ -168,13 +142,13 @@ export async function getPlaylistSongs(req: Request, res: Response) {
       if (response.data.next == null) {
         return response.data.items;
       }
-      // console.log(response.data.next)
       return response.data.items.concat(
         await recursivePlaylist(response.data.next, playlistName, playlistId)
       );
     } catch (error: any) {
       if (error.response.status == undefined) {
-        console.log(error);
+        // console.log(error);
+        console.log("other error recursive playlist");
       }
       switch (error.response.status) {
         case 429:
@@ -185,19 +159,7 @@ export async function getPlaylistSongs(req: Request, res: Response) {
           setTimeout(function () {}, 5000);
           return recursivePlaylist(url, playlistName, playlistId);
         case 401:
-          let authData = {
-            grant_type: "refresh_token",
-            refresh_token: req.session["refresh_token"],
-          };
-          let response = await axios.post(refreshTokenUri, authData, {
-            headers: {
-              Authorization:
-                "Basic " +
-                new Buffer(client_id + ":" + client_secret).toString("base64"),
-            },
-          });
-          console.log(response);
-          req.session["access_token"] = response.data.access_token;
+          await refreshToken(req, res);
           return recursivePlaylist(url, playlistName, playlistId);
         default:
           console.log("OTHER ERROR PLEASE CHECK PLAYLIST 2");
@@ -240,7 +202,7 @@ export async function getPlaylistSongs(req: Request, res: Response) {
           combinedPlaylists[playlistIndex][songIndex];
       } catch (error) {
         console.log("not there");
-        console.log(combinedPlaylists[playlistIndex][songIndex]);
+        // console.log(combinedPlaylists[playlistIndex][songIndex]);
       }
     }
   }
@@ -276,7 +238,8 @@ export async function getGenre(req: Request, res: Response) {
       return response.data;
     } catch (error: any) {
       if (error.response.status == undefined) {
-        console.log(error);
+        // console.log(error);
+        console.log("other error");
       }
       switch (error.response.status) {
         case 429:
@@ -290,23 +253,11 @@ export async function getGenre(req: Request, res: Response) {
           return addGenre(idsString);
 
         case 401:
-          let authData = {
-            grant_type: "refresh_token",
-            refresh_token: req.session["refresh_token"],
-          };
-          let response = await axios.post(refreshTokenUri, authData, {
-            headers: {
-              Authorization:
-                "Basic " +
-                new Buffer(client_id + ":" + client_secret).toString("base64"),
-            },
-          });
-          console.log(response);
-          req.session["access_token"] = response.data.access_token;
+          await refreshToken(req, res);
           return addGenre(idsString);
         default:
-          console.log("OTHER ERROR PLEASE CHECK");
-          console.log(error.response.status);
+          console.log("OTHER ERROR PLEASE CHECK GETGENRE");
+          // console.log(error.response.status);
           return [];
       }
     }
@@ -317,17 +268,39 @@ export async function getGenre(req: Request, res: Response) {
 
 export async function getProfile(req: Request, res: Response) {
   const profileURI = "https://api.spotify.com/v1/me";
-  axios
-    .get(profileURI, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + req.session["access_token"],
-        "Content-Type": "application/json",
-      },
-    })
-    .then((response) => {
-      res.send(response.data);
-    });
+  async function getSpotifyProfile() {
+    try {
+      let response = await axios.get(profileURI, {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + req.session["access_token"],
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data
+    } catch (error: any) {
+      if (error.response.status == undefined) {
+        console.log(error);
+      }
+      switch (error.response.status) {
+        case 429:
+          console.log("timeout error");
+          setTimeout(function () {},
+          error.response.headers["retry-after"] * 1000);
+          return getSpotifyProfile();
+        case 401:
+          await refreshToken(req, res);
+          return getSpotifyProfile();
+        default:
+          console.log("OTHER ERROR PLEASE CHECK");
+          // console.log(error.response.status);
+          return [];
+      }
+    }
+  }
+  let profile = await getSpotifyProfile();
+  console.log(profile);
+  res.send(profile);
 }
 
 export async function removeLikedSongs(req: Request, res: Response) {
@@ -359,23 +332,11 @@ export async function removeLikedSongs(req: Request, res: Response) {
           error.response.headers["retry-after"] * 1000);
           return deleteSpotify(url, songs);
         case 401:
-          let authData = {
-            grant_type: "refresh_token",
-            refresh_token: req.session["refresh_token"],
-          };
-          let response = await axios.post(refreshTokenUri, authData, {
-            headers: {
-              Authorization:
-                "Basic " +
-                new Buffer(client_id + ":" + client_secret).toString("base64"),
-            },
-          });
-          console.log(response);
-          req.session["access_token"] = response.data.access_token;
+          await refreshToken(req, res);
           return deleteSpotify(url, songs);
         default:
           console.log("OTHER ERROR PLEASE CHECK");
-          console.log(error.response.status);
+          // console.log(error.response.status);
           return [];
       }
     }
@@ -387,58 +348,46 @@ export async function removeLikedSongs(req: Request, res: Response) {
 }
 
 export async function addLikedSongs(req: Request, res: Response) {
-    const url = "https://api.spotify.com/v1/me/tracks";
-  
-    async function addLikedSongsCall(url: string, songs) {
-      try {
-        let response = await axios.put(url, {
-          headers: {
-            Accept: "application/json",
-            Authorization: "Bearer " + req.session["access_token"],
-            "Content-Type": "application/json",
-          },
-          data: {
-            ids: songs,
-          },
-        });
-        console.log(response);
-        return response.data.items;
-      } catch (error: any) {
-        if (error.response.status == undefined) {
-          console.log(error);
-        }
-        switch (error.response.status) {
-          case 429:
-            console.log("timeout error");
-            setTimeout(function () {},
-            error.response.headers["retry-after"] * 1000);
-            return addLikedSongsCall(url, songs);
-          case 401:
-            let authData = {
-              grant_type: "refresh_token",
-              refresh_token: req.session["refresh_token"],
-            };
-            let response = await axios.post(refreshTokenUri, authData, {
-              headers: {
-                Authorization:
-                  "Basic " +
-                  new Buffer(client_id + ":" + client_secret).toString("base64"),
-              },
-            });
-            console.log(response);
-            req.session["access_token"] = response.data.access_token;
-            return addLikedSongsCall(url, songs);
-          default:
-            console.log("OTHER ERROR" + error.response.status);
-            return [];
-        }
+  const url = "https://api.spotify.com/v1/me/tracks";
+
+  async function addLikedSongsCall(url: string, songs) {
+    try {
+      let response = await axios.put(url, {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + req.session["access_token"],
+          "Content-Type": "application/json",
+        },
+        data: {
+          ids: songs,
+        },
+      });
+      // console.log(response);
+      return response.data.items;
+    } catch (error: any) {
+      if (error.response.status == undefined) {
+        console.log(error);
+      }
+      switch (error.response.status) {
+        case 429:
+          console.log("timeout error");
+          setTimeout(function () {},
+          error.response.headers["retry-after"] * 1000);
+          return addLikedSongsCall(url, songs);
+        case 401:
+          await refreshToken(req, res);
+          return addLikedSongsCall(url, songs);
+        default:
+          console.log("OTHER ERROR" + error.response.status);
+          return [];
       }
     }
-  
-    while (req.body.songIds.length > 0) {
-      addLikedSongsCall(url, req.body.songIds.splice(0, 50));
-    }
   }
+
+  while (req.body.songIds.length > 0) {
+    addLikedSongsCall(url, req.body.songIds.splice(0, 50));
+  }
+}
 
 export async function createPlaylist(req: Request, res: Response) {
   const createPlaylistURL =
@@ -446,7 +395,7 @@ export async function createPlaylist(req: Request, res: Response) {
     req.session["profile_id"] +
     "/playlists";
   const playlistDetails = req.body.playlistDetails;
-  console.log(playlistDetails);
+
   async function getPlaylistId(url: string) {
     try {
       let response = await axios.post(url, playlistDetails, {
@@ -522,19 +471,7 @@ export async function addSongsToPlaylist(req: Request, res: Response) {
           error.response.headers["retry-after"] * 1000);
           return addToPlaylistCall(url, songs);
         case 401:
-          let authData = {
-            grant_type: "refresh_token",
-            refresh_token: req.session["refresh_token"],
-          };
-          let response = await axios.post(refreshTokenUri, authData, {
-            headers: {
-              Authorization:
-                "Basic " +
-                new Buffer(client_id + ":" + client_secret).toString("base64"),
-            },
-          });
-          console.log(response);
-          req.session["access_token"] = response.data.access_token;
+          await refreshToken(req, res);
           return addToPlaylistCall(url, songs);
         default:
           console.log("OTHER ERROR PLEASE CHECK");
@@ -550,12 +487,12 @@ export async function addSongsToPlaylist(req: Request, res: Response) {
 }
 
 export async function top(req: Request, res: Response) {
-  const rankType = req.query.rankType
-  const rankTime = req.query.rankTime
-  const url = "https://api.spotify.com/v1/me/top/" + rankType
+  const rankType = req.query.rankType;
+  const rankTime = req.query.rankTime;
+  const url = "https://api.spotify.com/v1/me/top/" + rankType;
   // console.log(req.body)
 
-  async function topCall(){
+  async function topCall() {
     try {
       let response = await axios.get(url, {
         headers: {
@@ -569,11 +506,27 @@ export async function top(req: Request, res: Response) {
         },
       });
       return response.data;
-    }catch(error){
-      console.log(error)
+    } catch (error: any) {
+      if (error.response.status == undefined) {
+        console.log(error);
+      }
+      switch (error.response.status) {
+        case 429:
+          console.log("timeout error");
+          setTimeout(function () {},
+          error.response.headers["retry-after"] * 1000);
+          return topCall();
+        case 401:
+          await refreshToken(req, res);
+          return topCall();
+        default:
+          console.log("OTHER ERROR PLEASE CHECK");
+          console.log(error.response.status);
+          return [];
+      }
     }
   }
-  let topObj = await topCall()
-  console.log(topObj)
-  res.send(topObj.items)
+  let topObj = await topCall();
+  // console.log(topObj)
+  res.send(topObj.items);
 }

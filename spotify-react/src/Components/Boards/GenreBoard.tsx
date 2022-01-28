@@ -312,77 +312,113 @@ const GenreBoard = (props) => {
       <InfoCards
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
-        currentBoard={"Liked Songs"}
+        currentBoard={"Genre"}
       />
       <div className={GenreBoardStyles.genreButtonContainer}>
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.popButton}`}
           onClick={getPop}
         >
-          Pop
-          <FontAwesomeIcon icon={faMicrophone} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faMicrophone}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>Pop</span>
         </Button>
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.rapButton}`}
           onClick={getHipHop}
         >
-          HipHop
-          <FontAwesomeIcon icon={faPen} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faPen}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>HipHop</span>
         </Button>
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.rockButton}`}
           onClick={getRock}
         >
-          Rock
-          <FontAwesomeIcon icon={faPepperHot} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faPepperHot}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>Rock</span>
         </Button>
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.rNBButton}`}
           onClick={getRNB}
         >
-          R&B
-          <FontAwesomeIcon icon={faDrum} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faDrum}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>R&B</span>
         </Button>
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.punkButton}`}
           onClick={getPunk}
         >
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faAngry}
+          />
+          <br></br>
           Punk
-          <FontAwesomeIcon icon={faAngry} />
         </Button>
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.indieButton}`}
           onClick={getIndie}
         >
-          Indie
-          <FontAwesomeIcon icon={faPeace} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faPeace}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>Indie</span>
         </Button>
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.kPopButton}`}
           onClick={getKPop}
         >
-          K-Pop
-          <FontAwesomeIcon icon={faFlag} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faFlag}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>K-Pop</span>
         </Button>
-        <Button
+        {/* <Button
           className={`${GenreBoardStyles.genreButton}`}
           onClick={getChristian}
         >
-          Christian
-        </Button>
+          <span className={`${GenreBoardStyles.buttonText}`}>Christian</span>
+        </Button> */}
         <Button
           className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.electronicButton}`}
           onClick={getElectronic}
         >
-          <span>Electronic</span>
-          <FontAwesomeIcon icon={faRobot} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faRobot}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>Electronic</span>
         </Button>
         <Button
-          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.electronicButton}`}
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.countryButton}`}
           onClick={getElectronic}
         >
-          Country
-          <FontAwesomeIcon icon={faFlagUsa} />
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faFlagUsa}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>Country</span>
         </Button>
       </div>
 
