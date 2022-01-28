@@ -90,7 +90,7 @@ function getLikedSongs(req, res) {
                             console.log("503 error");
                             setTimeout(function () { }, 5000);
                             return [2 /*return*/, spotifyApiCall(url, offset)];
-                        case 5: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 5: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 6:
                             _b.sent();
                             return [2 /*return*/, spotifyApiCall(url, offset)];
@@ -180,7 +180,7 @@ function getPlaylistSongs(req, res) {
                             console.log("error 503");
                             setTimeout(function () { }, 5000);
                             return [2 /*return*/, recursiveSpotify(url)];
-                        case 6: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 6: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 7:
                             _d.sent();
                             return [2 /*return*/, recursiveSpotify(url)];
@@ -239,7 +239,7 @@ function getPlaylistSongs(req, res) {
                         case 5:
                             setTimeout(function () { }, 5000);
                             return [2 /*return*/, recursivePlaylist(url, playlistName, playlistId)];
-                        case 6: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 6: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 7:
                             _d.sent();
                             return [2 /*return*/, recursivePlaylist(url, playlistName, playlistId)];
@@ -342,7 +342,7 @@ function getGenre(req, res) {
                         case 4:
                             setTimeout(function () { }, error_4.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, addGenre(idsString)];
-                        case 5: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 5: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 6:
                             _b.sent();
                             return [2 /*return*/, addGenre(idsString)];
@@ -412,7 +412,7 @@ function getProfile(req, res) {
                             console.log("timeout error");
                             setTimeout(function () { }, error_5.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, getSpotifyProfile()];
-                        case 4: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 4: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 5:
                             _b.sent();
                             return [2 /*return*/, getSpotifyProfile()];
@@ -480,7 +480,7 @@ function removeLikedSongs(req, res) {
                             console.log("timeout error");
                             setTimeout(function () { }, error_6.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, deleteSpotify(url, songs)];
-                        case 4: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 4: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 5:
                             _b.sent();
                             return [2 /*return*/, deleteSpotify(url, songs)];
@@ -544,7 +544,7 @@ function addLikedSongs(req, res) {
                             console.log("timeout error");
                             setTimeout(function () { }, error_7.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, addLikedSongsCall(url, songs)];
-                        case 4: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 4: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 5:
                             _b.sent();
                             return [2 /*return*/, addLikedSongsCall(url, songs)];
@@ -683,7 +683,7 @@ function addSongsToPlaylist(req, res) {
                             console.log("timeout error");
                             setTimeout(function () { }, error_9.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, addToPlaylistCall(url, songs)];
-                        case 5: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 5: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 6:
                             _b.sent();
                             return [2 /*return*/, addToPlaylistCall(url, songs)];
@@ -749,7 +749,7 @@ function top(req, res) {
                             console.log("timeout error");
                             setTimeout(function () { }, error_10.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, topCall()];
-                        case 4: return [4 /*yield*/, authenticateController_1.refreshToken(req, res)];
+                        case 4: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 5:
                             _b.sent();
                             return [2 /*return*/, topCall()];

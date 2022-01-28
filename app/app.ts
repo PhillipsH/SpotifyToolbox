@@ -8,7 +8,7 @@ import session from 'express-session';
 // var cookieParser = require('cookie-parser');
 
 const app = express();
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+// app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(session({
   secret: "Shh, its a secret!",
   resave: true,
@@ -26,12 +26,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.static('../spotify-react/build'));
 
-app.get('/', (req, res) =>{
+app.use('/spotify/', spotifyCallRouter);
+app.use('/authenticate',authenticateRouter);
+
+app.get('*', (req, res) =>{
     res.sendFile(path.resolve(__dirname,'../', 'spotify-react', 'build', 'index.html'))
 })
 
 // app.use('', apiRouter);
-app.use('/spotify/', spotifyCallRouter);
-app.use('/authenticate',authenticateRouter);
 
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
