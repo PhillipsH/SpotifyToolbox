@@ -3,7 +3,6 @@ import axios from "axios";
 import { refreshToken } from "./authenticateController";
 require("dotenv").config();
 
-const redirect_uri: string = "http://localhost:3000/callback";
 const client_id: string | undefined = process.env.CLIENT_ID;
 const client_secret: string | undefined = process.env.CLIENT_SECRET;
 

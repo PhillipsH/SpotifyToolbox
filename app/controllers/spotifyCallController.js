@@ -43,7 +43,6 @@ exports.top = exports.addSongsToPlaylist = exports.createPlaylist = exports.addL
 var axios_1 = __importDefault(require("axios"));
 var authenticateController_1 = require("./authenticateController");
 require("dotenv").config();
-var redirect_uri = "http://localhost:3000/callback";
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var refreshTokenUri = "https://accounts.spotify.com/api/token";
