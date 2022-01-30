@@ -4,7 +4,7 @@ const axios = require("axios");
 require("dotenv").config();
 
 // const redirect_uri: string = "http://localhost:5000/api/authenticate/getTokens";
-const redirect_uri: string = "http://http://52.188.116.255:5000/api/authenticate/getTokens";
+const redirect_uri: string = "http://52.188.116.255:5000/api/authenticate/getTokens";
 const client_id: string | undefined = process.env.CLIENT_ID;
 const client_secret: string | undefined = process.env.CLIENT_SECRET;
 const querystring = require("querystring");
