@@ -23,13 +23,13 @@ import { addLoading, removeLoading } from "./uiAction";
 import { LoadingTypes } from "./types";
 
 async function getSavedTracks() {
-  const LIKED_SONGS_URI = "http://localhost:5000/spotify/getLikedSongs";
+  const LIKED_SONGS_URI = "http://localhost:5000/api/spotify/getLikedSongs";
+
   let res = await axios.get(LIKED_SONGS_URI, { withCredentials: true });
   let trackList: ITrack[] = [];
 
   for (let i in res.data) {
     if (res.data[i] == undefined) {
-      console.log(res.data);
     }
     let currentArtist: IArtist = {
       artist_id: res.data[i].track.artists[0].id,
@@ -62,7 +62,9 @@ async function getSavedTracks() {
 }
 
 export const getPlaylistsTracks = async () => {
-  let res = await axios.get("http://localhost:5000/spotify/getPlaylistSongs", {
+  const GET_PLAYLIST_URL = "http://localhost:5000/api/spotify/getPlaylistSongs";
+
+  let res = await axios.get(GET_PLAYLIST_URL, {
     withCredentials: true,
   });
 
@@ -103,7 +105,7 @@ export const getPlaylistsTracks = async () => {
 };
 
 async function getArtists(trackList) {
-  const GET_GENRE_URI = "http://localhost:5000/spotify/getGenre";
+  const GET_GENRE_URI = "http://localhost:5000/api/spotify/getGenre";
 
   let uniqueArtists: IArtistHash = {};
   let artistArr: string[] = [];
@@ -195,11 +197,11 @@ export const startSetup = () => async (dispatch: Function) => {
 };
 
 export const getLikedSongs = () => (dispatch: Function) => {
-  // dispatch(setItemsLoading());
-  dispatch(addLoading(LoadingTypes.LikedSongs));
+  const GET_LIKED_SONGS_URL = "http://localhost:5000/api/spotify/getLikedSongs";
 
+  dispatch(addLoading(LoadingTypes.LikedSongs));
   axios
-    .get("http://localhost:5000/spotify/getLikedSongs", {
+    .get(GET_LIKED_SONGS_URL, {
       withCredentials: true,
     })
     .then((res) => {
@@ -247,7 +249,9 @@ export const getLikedSongs = () => (dispatch: Function) => {
 };
 
 export const getPlaylistSongs = () => async (dispatch: Function) => {
-  let res = await axios.get("http://localhost:5000/spotify/getPlaylistSongs", {
+  const GET_PLAYLIST_URL = "http://localhost:5000/api/spotify/getPlaylistSongs";
+
+  let res = await axios.get(GET_PLAYLIST_URL, {
     withCredentials: true,
   });
 
@@ -292,8 +296,10 @@ export const getPlaylistSongs = () => async (dispatch: Function) => {
 };
 
 export const getProfile = () => async (dispatch: Function) => {
+  const GET_PROFILE_URL = "http://localhost:5000/api/spotify/getProfile";
+
   dispatch(addLoading([LoadingTypes.Profile]));
-  let res = await axios.get("http://localhost:5000/spotify/getProfile", {
+  let res = await axios.get(GET_PROFILE_URL, {
     withCredentials: true,
   });
   await dispatch({
@@ -304,13 +310,13 @@ export const getProfile = () => async (dispatch: Function) => {
 };
 
 export const removeSongs = (dupeIds) => async (dispatch: Function) => {
+  // const REMOVE_SONGS_URL = "http://localhost:5000/spotify/removeLikedSongs"
   // axios
-  // .delete('http://localhost:5000/spotify/removeLikedSongs',
+  // .delete(REMOVE_SONGS_URL,
   // {withCredentials: true,
   // data : {
   //   songIds : dupeIds
   // }})
-  console.log(dupeIds);
   dispatch({
     type: REMOVE_SONGS,
     payload: dupeIds,
@@ -318,13 +324,14 @@ export const removeSongs = (dupeIds) => async (dispatch: Function) => {
 };
 
 export const addLikedSongs = (songs) => async (dispatch: Function) => {
+  const ADD_LIKED_SONGS_URL = "http://localhost:5000/api/spotify/addLikedSongs";
   let songIds: string[] = [];
   for (let i in songs) {
     const uri = songs[i].linked_from_uri ?? songs[i].track_id;
     songIds.push(uri);
   }
 
-  axios.put("http://localhost:5000/spotify/addLikedSongs", {
+  axios.put(ADD_LIKED_SONGS_URL, {
     withCredentials: true,
     data: {
       songIds: songIds,
@@ -336,29 +343,13 @@ export const addLikedSongs = (songs) => async (dispatch: Function) => {
     payload: songs,
   });
 };
-// export function addToPlaylist(playlistSongs){
-//   let songUris:string []= []
-//   //getting all songs
-//   for(let songIndex in playlistSongs){
-//     songUris.push(playlistSongs[songIndex].track.uri)
-//   }
-//   let playlistData = {
-//     songUris : songUris
-//   }
-//   // delete song from spotify through server api
-//   console.log(playlistData)
-//   axios
-//   .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
-//   {withCredentials: true,})
-//   .then(res =>{
-//     console.log(res)
-//   });
-// }
 
 export const addToPlaylist =
   (playlistSongs, playlistDetails) => async (dispatch: Function) => {
-    console.log("ADD TO PLAYLIST ACTION");
+    const CREATE_PLAYLIST_URL = "http://localhost:5000/api/spotify/createPlaylist"
+    const ADD_SONGS_TO_PLAYLIST_URL = "http://localhost:5000/api/spotify/addSongsToPlaylist"
     let songUris: string[] = [];
+
     for (let i in playlistSongs) {
       const uri =
         playlistSongs[i].track_uri ?? playlistSongs[i].linked_from_uri;
@@ -366,11 +357,10 @@ export const addToPlaylist =
     }
 
     const res = await axios.post(
-      "http://localhost:5000/spotify/createPlaylist",
+      CREATE_PLAYLIST_URL,
       { playlistDetails: playlistDetails },
       { withCredentials: true }
     );
-    console.log(res.data);
     const playlistId = res.data;
     while (songUris.length > 0) {
       const playlistData = {
@@ -379,17 +369,14 @@ export const addToPlaylist =
       };
 
       axios.post(
-        "http://localhost:5000/spotify/addSongsToPlaylist",
+        ADD_SONGS_TO_PLAYLIST_URL,
         playlistData,
         {
           withCredentials: true,
         }
       );
     }
-    // axios
-    //   .post("http://localhost:5000/spotify/addSongsToPlaylist", playlistData, {
-    //     withCredentials: true,
-    //   })
+
     dispatch({
       type: ADD_TO_PLAYLIST,
       payload: playlistSongs,
@@ -426,9 +413,7 @@ export const setArtists = (artists) => (dispatch: Function) => {
 };
 
 export const getTop = (rankType, rankTime) => async (dispatch: Function) => {
-  // dispatch(setItemsLoading());
-  const GET_TOP_URI = "http://localhost:5000/spotify/top";
-  // let res = await axios.get(LIKED_SONGS_URI, { withCredentials: true });
+  const GET_TOP_URI = "http://localhost:5000/api/spotify/top";
 
   let res = await axios.get(GET_TOP_URI, {
     withCredentials: true,
@@ -437,13 +422,10 @@ export const getTop = (rankType, rankTime) => async (dispatch: Function) => {
       rankTime: rankTime,
     },
   });
-  let topArr:any = []
-  console.log(rankType)
-  if(rankType =="tracks"){
+  let topArr: any = [];
+  if (rankType == "tracks") {
     for (let i in res.data) {
-      console.log("pushing")
       if (res.data[i] == undefined) {
-        console.log(res.data);
       }
       let currentArtist: IArtist = {
         artist_id: res.data[i].artists[0].id,
@@ -468,9 +450,8 @@ export const getTop = (rankType, rankTime) => async (dispatch: Function) => {
       };
       topArr.push(currentTrack);
     }
-  }else{
-    console.log("other")
-    topArr = res.data
+  } else {
+    topArr = res.data;
   }
   dispatch({
     type: GET_TOP,

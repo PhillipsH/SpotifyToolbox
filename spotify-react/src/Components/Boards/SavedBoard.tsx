@@ -7,6 +7,23 @@ import { FixedSizeList as List} from 'react-window'
 import Toolbox from "../Toolbox/Toolbox";
 import SongFeatures from "../SongFeatures/SongFeatures";
 import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faCopy,
+  faMicrophone,
+  faRecordVinyl,
+  faTrophy,
+  faListAlt,
+  faNotEqual,
+  faAddressCard,
+  faSignOutAlt,
+  faAddressBook,
+  faDonate,
+  faMusic,
+  faBars,
+  faPodcast,
+} from "@fortawesome/free-solid-svg-icons";
 
 const LikedSongsBoard = (props) => {
   useEffect(() => {}, []);
@@ -58,6 +75,7 @@ const LikedSongsBoard = (props) => {
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Liked Songs"}
+        currentIcon={faMusic}
       />
 
       <Toolbox

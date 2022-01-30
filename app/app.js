@@ -10,28 +10,28 @@ var authenticateRouter_1 = __importDefault(require("./routes/authenticateRouter"
 var spotifyCallRouter_1 = __importDefault(require("./routes/spotifyCallRouter"));
 var express_session_1 = __importDefault(require("express-session"));
 // import apiRouter from "./routes/api";
-// var cookieParser = require('cookie-parser');
 var app = (0, express_1.default)();
-app.use((0, cors_1.default)({ credentials: true, origin: 'http://localhost:3000' }));
+app.use((0, cors_1.default)({ credentials: true, origin: "http://localhost:3000" }));
 app.use((0, express_session_1.default)({
     secret: "Shh, its a secret!",
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({
-    extended: true
+    extended: true,
 }));
-// app.use(cookieParser());
-app.use(express_1.default.static(__dirname + '/public'));
+app.use(express_1.default.static(__dirname + "/public"));
 var port = 5000;
-app.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 // Configuring body parser middleware
-app.use(express_1.default.static('../spotify-react/build'));
-app.use('/spotify/', spotifyCallRouter_1.default);
-app.use('/authenticate', authenticateRouter_1.default);
-app.get('*', function (req, res) {
-    res.sendFile(path_1.default.resolve(__dirname, '../', 'spotify-react', 'build', 'index.html'));
+app.use(express_1.default.static("../spotify-react/build"));
+app.use("/api/spotify/", spotifyCallRouter_1.default);
+app.use("/api/authenticate/", authenticateRouter_1.default);
+app.get("*", function (req, res) {
+    res.sendFile(path_1.default.resolve(__dirname, "../", "spotify-react", "build", "index.html"));
 });
 // app.use('', apiRouter);
-app.listen(port, function () { return console.log("Hello world app listening on port ".concat(port, "!")); });
+app.listen(port, function () {
+    return console.log("Hello world app listening on port ".concat(port, "!"));
+});

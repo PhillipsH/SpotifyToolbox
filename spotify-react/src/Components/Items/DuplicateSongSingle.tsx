@@ -10,7 +10,6 @@ const DuplicateSongSingle = (props) => {
 
   function removeSingle(){
     let id:string [] = props.currentSong.linked_from_id ?? props.currentSong.track_id
-    console.log(id)
     props.removeSongs([id])
   }
   return (

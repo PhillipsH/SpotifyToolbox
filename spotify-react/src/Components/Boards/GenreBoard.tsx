@@ -11,7 +11,6 @@ import { FixedSizeList as List} from 'react-window'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngry,
-  faCalendarAlt,
   faDrum,
   faFlag,
   faFlagUsa,
@@ -20,6 +19,7 @@ import {
   faPen,
   faPepperHot,
   faRobot,
+
 } from "@fortawesome/free-solid-svg-icons";
 import SongFeatures from "../SongFeatures/SongFeatures";
 import BoardStyles from "../Styles/Components/Boards/Board.module.scss";
@@ -116,7 +116,6 @@ const GenreBoard = (props) => {
     setCurrentSongs(Object.values(currentPop));
     setMasterSongs(Object.values(currentPop));
 
-    console.log(currentPop);
   }
   function getHipHop() {
     let currentHipHop = {};
@@ -314,6 +313,7 @@ const GenreBoard = (props) => {
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Genre"}
+        currentIcon={faMicrophone}
       />
       <div className={GenreBoardStyles.genreButtonContainer}>
         <Button

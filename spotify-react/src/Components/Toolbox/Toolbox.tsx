@@ -54,12 +54,10 @@ const Toolbox = ({
         // return songName.includes(searchQuery.toLowerCase());
       })
     );
-    console.log(currentSongs);
   }
   const handleForm = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    console.log(value);
     setPlaylistDetails((values) => ({ ...values, [name]: value }));
   };
 

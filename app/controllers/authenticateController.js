@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshToken = exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
 var axios = require("axios");
 require("dotenv").config();
-var redirect_uri = "http://localhost:5000/authenticate/getTokens";
+var redirect_uri = "http://localhost:5000/api/authenticate/getTokens";
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var querystring = require("querystring");
@@ -99,7 +99,6 @@ function getTokens(req, res) {
                 });
             })
                 .catch(function (error) {
-                console.log(error);
             });
             return [2 /*return*/];
         });
@@ -126,8 +125,6 @@ function refreshToken(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    console.log("refreshing");
-                    console.log(req.session["refresh_token"]);
                     refreshTokenUri = "https://accounts.spotify.com/api/token";
                     return [4 /*yield*/, axios({
                             url: refreshTokenUri,
@@ -143,7 +140,6 @@ function refreshToken(req, res) {
                         })];
                 case 1:
                     response = _a.sent();
-                    console.log("REFRESHED");
                     req.session["access_token"] = response.data.access_token;
                     return [2 /*return*/];
             }

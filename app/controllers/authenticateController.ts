@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 const axios = require("axios");
 require("dotenv").config();
 
-const redirect_uri: string = "http://localhost:5000/authenticate/getTokens";
+const redirect_uri: string = "http://localhost:5000/api/authenticate/getTokens";
 const client_id: string | undefined = process.env.CLIENT_ID;
 const client_secret: string | undefined = process.env.CLIENT_SECRET;
 const querystring = require("querystring");
@@ -60,7 +60,6 @@ export async function getTokens(req: Request, res: Response) {
         });
     })
     .catch((error) => {
-      console.log(error);
     });
 }
 
@@ -73,8 +72,6 @@ export async function checkAuth(req: Request, res: Response) {
 }
 
 export async function refreshToken(req: Request, res: Response) {
-  console.log("refreshing")
-  console.log(req.session["refresh_token"])
   const refreshTokenUri: string = "https://accounts.spotify.com/api/token";
 
   let response = await axios({
@@ -90,6 +87,5 @@ export async function refreshToken(req: Request, res: Response) {
       refresh_token: req.session["refresh_token"],
     },
   })
-  console.log("REFRESHED")
   req.session["access_token"] = response.data.access_token;
 }

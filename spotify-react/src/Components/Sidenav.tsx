@@ -33,7 +33,7 @@ export const Sidenav = (props) => {
   function toggleNav(event) {
     event.preventDefault();
   }
-  console.log(useLocation().pathname);
+
   return (
     <div
       className={`${MainStyle.sidenav} ${props.sidenavTheme ? MainStyle.closedBar : ""

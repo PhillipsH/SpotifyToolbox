@@ -352,7 +352,7 @@ export const Sidebar = (props) => {
         <div className={MainStyle.popularContainer}>
           {/* {topFivePopular} */}
           {popularSongs.map((val, key) => (
-            <div className={MainStyle.popularSong}>
+            <div className={MainStyle.popularSong} key={key}>
               <div>
                 <img src={val.image}></img>
               </div>
@@ -368,13 +368,13 @@ export const Sidebar = (props) => {
         </span>
         {/* <div className={MainStyle.likedArtistContainer}>{topFiveArtists}</div> */}
         {topArtist.map((val, key) => (
-          <div className={MainStyle.likedArtist}>
+          <div className={MainStyle.likedArtist} key={key}>
             <span>0{key + 1}</span>
             <img src={val.image}></img>
             <div className={MainStyle.likedArtistText}>
               <span className={MainStyle.detailTitle}>{val.artist}</span>
               <br></br>
-              <span>{val.counter} Songs Saved</span>
+              <span className={MainStyle.numArtistSaved}>{val.counter} Songs Saved</span>
             </div>
           </div>
         ))}

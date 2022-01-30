@@ -8,6 +8,23 @@ import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
 import DuplicateBoardStyle from "../Styles/Components/Boards/DuplicateBoard.module.scss";
 import ItemStyles from '../Styles/Components/Items/Items.module.scss'
 import DuplicateSongSingle from "../Items/DuplicateSongSingle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faCopy,
+  faMicrophone,
+  faRecordVinyl,
+  faTrophy,
+  faListAlt,
+  faNotEqual,
+  faAddressCard,
+  faSignOutAlt,
+  faAddressBook,
+  faDonate,
+  faMusic,
+  faBars,
+  faPodcast,
+} from "@fortawesome/free-solid-svg-icons";
 
 const DuplicateSongsBoard = (props) => {
   const [masterSongs, setMasterSongs]: any = useState([]);
@@ -78,6 +95,7 @@ const DuplicateSongsBoard = (props) => {
         selectedSongsLength={currentSongs.length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Duplicate"}
+        currentIcon={faCopy}
       />
       <DuplicateToolbox
         masterSongs={masterSongs}

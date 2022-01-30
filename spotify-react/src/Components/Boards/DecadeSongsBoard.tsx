@@ -10,7 +10,23 @@ import Toolbox from "../Toolbox/Toolbox";
 import SongFeatures from "../SongFeatures/SongFeatures";
 import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
 import DecadeBoardStyle from "../Styles/Components/Boards/DecadeBoard.module.scss";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faCopy,
+  faMicrophone,
+  faRecordVinyl,
+  faTrophy,
+  faListAlt,
+  faNotEqual,
+  faAddressCard,
+  faSignOutAlt,
+  faAddressBook,
+  faDonate,
+  faMusic,
+  faBars,
+  faPodcast,
+} from "@fortawesome/free-solid-svg-icons";
 const DecadeSongBoard = (props) => {
   const [masterSongs, setMasterSongs]: any = useState([]);
   const [currentSongs, setCurrentSongs]: any = useState([]);
@@ -92,6 +108,7 @@ const DecadeSongBoard = (props) => {
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Decade"}
+        currentIcon={faCalendarAlt}
       />
       <Toolbox
         masterSongs={masterSongs}
@@ -102,7 +119,7 @@ const DecadeSongBoard = (props) => {
       />
       <div id={DecadeBoardStyle.decadeSelector}>
         {Object.keys(decadeDict).map((key, index) => (
-          <div className={DecadeBoardStyle.decade} onChange={assessChecked}>
+          <div className={DecadeBoardStyle.decade} onChange={assessChecked} key={key}>
             <Label check>
               <input type="checkbox" name={key} value={key} />
               <h5>{key}</h5>

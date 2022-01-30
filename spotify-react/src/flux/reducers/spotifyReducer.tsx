@@ -104,7 +104,6 @@ export default function (state = initialState, action: any) {
         },
       };
     case ADD_TO_PLAYLIST:
-      console.log(action.payload);
       let newPlaylistSongs = JSON.parse(
         JSON.stringify(state.playlistSongs.list)
       );
@@ -119,7 +118,6 @@ export default function (state = initialState, action: any) {
         const currentId =
           action.payload.playlistSongs[i].linked_from_id ??
           action.payload.playlistSongs[i].track_id;
-        console.log(currentId);
         if (!(currentId in playlistDict)) {
           newPlaylistSongs.push(action.payload.playlistSongs[i]);
         }

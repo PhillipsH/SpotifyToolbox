@@ -9,7 +9,23 @@ import TopSong from "../Items/TopSong";
 import BoardStyles from "../Styles/Components/Boards/Board.module.scss";
 import TopBoardStyles from "../Styles/Components/Boards/TopBoard.module.scss";
 import SongFeatures from "../SongFeatures/SongFeatures";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faCopy,
+  faMicrophone,
+  faRecordVinyl,
+  faTrophy,
+  faListAlt,
+  faNotEqual,
+  faAddressCard,
+  faSignOutAlt,
+  faAddressBook,
+  faDonate,
+  faMusic,
+  faBars,
+  faPodcast,
+} from "@fortawesome/free-solid-svg-icons";
 const RankingBoard = (props) => {
   useEffect(() => {}, []);
 
@@ -42,7 +58,6 @@ const RankingBoard = (props) => {
   let renderRow = ({ index, key, style }) => {
     let currentId =
       currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
-    console.log(currentSongs[index]);
     let album_image = currentSongs[index].album.album_images[2] ?? "";
 
     return (
@@ -68,6 +83,7 @@ const RankingBoard = (props) => {
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Top Songs"}
+        currentIcon={faTrophy}
       />
       <div className={TopBoardStyles.timeSelectionContainer}>
         <div>

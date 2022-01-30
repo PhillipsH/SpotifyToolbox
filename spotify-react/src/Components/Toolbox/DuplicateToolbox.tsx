@@ -71,7 +71,6 @@ const DuplicateToolbox = ({
         // return songName.includes(searchQuery.toLowerCase());
       })
     );
-    console.log(currentSongs);
   }
   const handleForm = (event) => {
     const name = event.target.name;

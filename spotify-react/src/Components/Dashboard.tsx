@@ -20,8 +20,8 @@ import GenreBoard from "./Boards/GenreBoard";
 import Sidebar from "./Sidebar";
 import Sidenav from "./Sidenav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faPodcast } from "@fortawesome/free-solid-svg-icons";
-import { BoardTypes, LoadingTypes } from "../flux/actions/types";
+import { faBars} from "@fortawesome/free-solid-svg-icons";
+import { LoadingTypes } from "../flux/actions/types";
 import SavedBoard from "./Boards/SavedBoard";
 import MainStyle from "./Styles/Components/Main.module.scss";
 import Topbar from "./Topbar";
@@ -39,8 +39,7 @@ export const Dashboard = (props) => {
       fetchData();
     }
   }, []);
-
-  let songList = <></>;
+  
   let mainContent = <></>;
   if (props.loading.includes(LoadingTypes.LikedSongs)) {
     mainContent = (
@@ -111,31 +110,6 @@ export const Dashboard = (props) => {
           sidenavTheme={sidenavTheme}
           setSidenavTheme={setSidenavTheme}
         ></Sidenav>
-        {/* <div className={MainStyle.dashboardToggleTitle}>
-          <div
-            className={`${MainStyle.dashboardNavToggle} ${
-              !sidenavTheme ? MainStyle.hidden : ""
-            }`}
-          >
-            <a
-              href="#"
-              onClick={(event) => {
-                event.preventDefault();
-                setSidenavTheme(!sidenavTheme);
-              }}
-            >
-              <FontAwesomeIcon icon={faBars} className={MainStyle.navIcon} />
-            </a>
-          </div>
-          <div
-            className={`${MainStyle.dashboardTitleLogo} ${
-              !sidenavTheme ? MainStyle.hidden : ""
-            }`}
-          >
-            <FontAwesomeIcon icon={faPodcast} className={MainStyle.navIcon} />
-            <span className={MainStyle.navTitle}>SpotifyTools</span>
-          </div>
-        </div> */}
         <div
           className={`${MainStyle.dashboardDiv} ${
             sidenavTheme ? MainStyle.largeDashboard : ""
@@ -145,7 +119,6 @@ export const Dashboard = (props) => {
           {mainContent}
         </div>
         <Sidebar></Sidebar>
-        {/* <Topbar setSidenavTheme={setSidenavTheme} sidenavTheme={sidenavTheme}></Topbar> */}
       </BrowserRouter>
     </>
   );

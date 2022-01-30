@@ -11,7 +11,6 @@ const ArtistBoard = (props) => {
   const [artists, setArtists]:any = useState([]);
 
   useEffect(() => {
-    console.log("THIS IS STARTING")
     let artistsRanking = {};
     for (let songIndex in props.likedSongs.list) {
       if (
@@ -23,7 +22,6 @@ const ArtistBoard = (props) => {
         artistsRanking[props.likedSongs.list[songIndex].artist.artist_name]++;
       }
     }
-    console.log(artistsRanking)
     let sortedArtistRank: any = [];
     for (let artist in artistsRanking) {
       let artistObj = {
@@ -39,7 +37,6 @@ const ArtistBoard = (props) => {
 
     setArtists(sortedArtistRank)
   }, []);
-  console.log(artists)
   function sortByLeastLiked(){
     let artistRank = JSON.parse(JSON.stringify(artists))
     let artistArrayCopy = artistRank.slice()

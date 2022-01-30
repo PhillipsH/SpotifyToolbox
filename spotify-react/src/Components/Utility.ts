@@ -11,7 +11,6 @@ export function addToPlaylist(playlistSongs){
     songUris : songUris
   }
   // delete song from spotify through server api
-  console.log(playlistData)
   axios
   .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
   {withCredentials: true,})
@@ -30,7 +29,6 @@ export function removeLikedSong(dupeIds:string[], likedSongsList:ITrack[]){
     songIds : dupeIds
   }})
   .then(res =>{
-    console.log(res)
   });
 
   let likedSongsDict:any = {}

@@ -25,15 +25,11 @@ $purple-color: #717eee;
   margin-left: 15%;
   margin-right:auto;
   order:-1;
-  // height:100%;
   height:50px;
-  // background:red;
-  // width:250px;
 }
 .topNav{
   color:white;
   justify-content:flex-end;
-  // background:blue;
   margin-right:15%;
   margin-left:20px;
 }
@@ -50,7 +46,6 @@ $purple-color: #717eee;
   height: 850px;
   width: 100%;
   color: white;
-  //   text-align: center;
   padding: 80px;
   padding-top: 200px;
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7)),
@@ -92,11 +87,8 @@ background: #E5E4E2;
     width:33%;
     padding:3%;
     font-size:1.5em;
-    // background:red;
 }
 .imageSummary{
-    // background:green;
-    // width:66%;
     margin-left:auto;
 }
 //INFO CARDS
@@ -130,8 +122,6 @@ background: #E5E4E2;
   background:white;
   box-shadow: 7px -7px 0px #05c665;
   overflow: hidden;
-  //   text-align:center;
-  //   color:green;
 }
 .cardTitle {
   font-weight: 800;
@@ -143,11 +133,9 @@ background: #E5E4E2;
 .cardDescription {
   font-weight: 600;
   margin-top: 15px;
-  // text-align:left;
 }
 .mainContent {
   width: 40%;
-  // background:blue;
 }
 .mainContent h1 {
   font-weight: 900;
@@ -164,7 +152,36 @@ background: #E5E4E2;
   margin-top: 25px;
 }
 
+//FAQ
+.faq{
+  // display:flex;
+}
+.qaContainer{
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 
+}
+.qa {
+  width:45%;
+  margin-top:15px;
+  margin-bottom:15px;
+  // width:100px;
+  height:250px;
+  background:white;
+  // border:solid;
+  border-radius: 5px;
+  padding:20px;
+  overflow:hidden;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.question{
+  font-weight:bold;
+  font-size:1.2em;
+}
+.answer{
+  
+}
 /* 
   ##Device = Desktops
   ##Screen = 1281px to higher resolution desktops
@@ -209,6 +226,7 @@ background: #E5E4E2;
   .cardsContainer {
     grid-template-columns: 1fr 1fr;
   }
+
   .summaryContent{
     display:block;
   }
@@ -222,7 +240,6 @@ background: #E5E4E2;
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
   
   /* CSS */
-  
 }
 
 /* 
@@ -233,7 +250,9 @@ background: #E5E4E2;
 @media (min-width: 481px) and (max-width: 767px) {
   
   /* CSS */
-  
+  .cardsContainer {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 

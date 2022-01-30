@@ -9,6 +9,24 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List} from 'react-window'
 import Toolbox from "../Toolbox/Toolbox";
 import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faCopy,
+  faMicrophone,
+  faRecordVinyl,
+  faTrophy,
+  faListAlt,
+  faNotEqual,
+  faAddressCard,
+  faSignOutAlt,
+  faAddressBook,
+  faDonate,
+  faMusic,
+  faBars,
+  faPodcast,
+  faList,
+} from "@fortawesome/free-solid-svg-icons";
 
 const PlaylistSongsBoard = (props) => {
   const [masterSongs, setMasterSongs]: any = useState([]);
@@ -52,7 +70,6 @@ const PlaylistSongsBoard = (props) => {
       //     props.likedSongs.list[index];
       // }
     }
-    console.log(likedSongsObjId);
     for (let index in props.playlistSongs.list) {
       let id: string =
         props.playlistSongs.list[index].linked_from_id ??
@@ -96,6 +113,7 @@ const PlaylistSongsBoard = (props) => {
         selectedSongsLength={currentSongs.length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Unique Playlist"}
+        currentIcon={faListAlt}
       />
       <Toolbox
         masterSongs={masterSongs}

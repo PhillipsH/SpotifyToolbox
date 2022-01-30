@@ -15,10 +15,8 @@ export async function getLikedSongs(req: Request, res: Response) {
     and using the total songs to calculate amount of requests needed to be done and asyncronously 
     creating all requests.
     */
-
   const LIKED_SONGS_URI = "https://api.spotify.com/v1/me/tracks";
-  console.log("GETTING LIKED SONGS");
-
+  
   async function spotifyApiCall(url: string, offset) {
     try {
       let response = await axios.get(url, {
@@ -51,8 +49,6 @@ export async function getLikedSongs(req: Request, res: Response) {
             return spotifyApiCall(url, offset);
 
           default:
-            console.log("OTHER ERROR PLEASE CHECK LIKED");
-            // console.log(error.response.status);
             return [];
         }
       } else {
@@ -80,7 +76,6 @@ export async function getLikedSongs(req: Request, res: Response) {
 }
 
 export async function getPlaylistSongs(req: Request, res: Response) {
-  console.log("GETTING PLAYLIST SONGS");
   const allPlaylistUrl: string =
     "https://api.spotify.com/v1/me/playlists?limit=50";
 
@@ -147,7 +142,6 @@ export async function getPlaylistSongs(req: Request, res: Response) {
       );
     } catch (error: any) {
       if (error.response.status == undefined) {
-        // console.log(error);
         console.log("other error recursive playlist");
       }
       switch (error.response.status) {
@@ -362,7 +356,6 @@ export async function addLikedSongs(req: Request, res: Response) {
           ids: songs,
         },
       });
-      // console.log(response);
       return response.data.items;
     } catch (error: any) {
       if (error.response.status == undefined) {
@@ -428,7 +421,6 @@ export async function createPlaylist(req: Request, res: Response) {
                 new Buffer(client_id + ":" + client_secret).toString("base64"),
             },
           });
-          console.log(response);
           req.session["access_token"] = response.data.access_token;
           return getPlaylistId(url);
         default:
@@ -490,7 +482,6 @@ export async function top(req: Request, res: Response) {
   const rankType = req.query.rankType;
   const rankTime = req.query.rankTime;
   const url = "https://api.spotify.com/v1/me/top/" + rankType;
-  // console.log(req.body)
 
   async function topCall() {
     try {
@@ -527,6 +518,5 @@ export async function top(req: Request, res: Response) {
     }
   }
   let topObj = await topCall();
-  // console.log(topObj)
   res.send(topObj.items);
 }

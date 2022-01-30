@@ -94,10 +94,7 @@ function getLikedSongs(req, res) {
                         case 6:
                             _b.sent();
                             return [2 /*return*/, spotifyApiCall(url, offset)];
-                        case 7:
-                            console.log("OTHER ERROR PLEASE CHECK LIKED");
-                            // console.log(error.response.status);
-                            return [2 /*return*/, []];
+                        case 7: return [2 /*return*/, []];
                         case 8: return [3 /*break*/, 10];
                         case 9:
                             console.log("error");
@@ -113,7 +110,6 @@ function getLikedSongs(req, res) {
             switch (_a.label) {
                 case 0:
                     LIKED_SONGS_URI = "https://api.spotify.com/v1/me/tracks";
-                    console.log("GETTING LIKED SONGS");
                     return [4 /*yield*/, spotifyApiCall(LIKED_SONGS_URI, 0)];
                 case 1:
                     initialCall = _a.sent();
@@ -223,7 +219,6 @@ function getPlaylistSongs(req, res) {
                         case 3:
                             error_3 = _d.sent();
                             if (error_3.response.status == undefined) {
-                                // console.log(error);
                                 console.log("other error recursive playlist");
                             }
                             _c = error_3.response.status;
@@ -257,7 +252,6 @@ function getPlaylistSongs(req, res) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    console.log("GETTING PLAYLIST SONGS");
                     allPlaylistUrl = "https://api.spotify.com/v1/me/playlists?limit=50";
                     return [4 /*yield*/, recursiveSpotify(allPlaylistUrl)];
                 case 1:
@@ -527,7 +521,6 @@ function addLikedSongs(req, res) {
                                 })];
                         case 1:
                             response = _b.sent();
-                            // console.log(response);
                             return [2 /*return*/, response.data.items];
                         case 2:
                             error_7 = _b.sent();
@@ -615,7 +608,6 @@ function createPlaylist(req, res) {
                                 })];
                         case 5:
                             response = _b.sent();
-                            console.log(response);
                             req.session["access_token"] = response.data.access_token;
                             return [2 /*return*/, getPlaylistId(url)];
                         case 6:
@@ -712,7 +704,6 @@ function addSongsToPlaylist(req, res) {
 exports.addSongsToPlaylist = addSongsToPlaylist;
 function top(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        // console.log(req.body)
         function topCall() {
             return __awaiter(this, void 0, void 0, function () {
                 var response, error_10, _a;
@@ -773,7 +764,6 @@ function top(req, res) {
                     return [4 /*yield*/, topCall()];
                 case 1:
                     topObj = _a.sent();
-                    // console.log(topObj)
                     res.send(topObj.items);
                     return [2 /*return*/];
             }

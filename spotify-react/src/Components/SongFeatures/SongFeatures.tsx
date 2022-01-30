@@ -7,7 +7,6 @@ const SongFeatures = ({ setCurrentSongs, currentSongs, setSelectedSongs }) => {
     asc: false,
   });
   function sortByTitle() {
-    console.log("title");
     const currentList = JSON.parse(JSON.stringify(currentSongs));
     if (feature.type == "title" && !feature.asc) {
       currentList.sort((a, b) => {
@@ -29,7 +28,6 @@ const SongFeatures = ({ setCurrentSongs, currentSongs, setSelectedSongs }) => {
     setCurrentSongs(currentList);
   }
   function sortByArtist() {
-    console.log("title");
     const currentList = JSON.parse(JSON.stringify(currentSongs));
     if (feature.type == "album" && !feature.asc) {
       currentList.sort((a, b) => {
@@ -73,7 +71,6 @@ const SongFeatures = ({ setCurrentSongs, currentSongs, setSelectedSongs }) => {
   }
 
   function selectSongs(event) {
-    console.log(event.target.checked);
     if (event.target.checked) {
       const newSelectedSongs = {};
       for (let index in currentSongs) {

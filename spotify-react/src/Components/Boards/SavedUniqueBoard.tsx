@@ -10,6 +10,23 @@ import Toolbox from "../Toolbox/Toolbox";
 import SavedSong from "../Items/SavedSong";
 import SongFeatures from "../SongFeatures/SongFeatures";
 import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCalendarAlt,
+  faCopy,
+  faMicrophone,
+  faRecordVinyl,
+  faTrophy,
+  faListAlt,
+  faNotEqual,
+  faAddressCard,
+  faSignOutAlt,
+  faAddressBook,
+  faDonate,
+  faMusic,
+  faBars,
+  faPodcast,
+} from "@fortawesome/free-solid-svg-icons";
 
 const SavedUniqueBoard = (props) => {
   const [masterSongs, setMasterSongs]: any = useState([]);
@@ -59,7 +76,6 @@ const SavedUniqueBoard = (props) => {
         currentList.push(props.likedSongs.list[index]);
       }
     }
-    console.log(currentList);
     setCurrentSongs(currentList);
     setMasterSongs(currentList);
   }, [props.likedSongs, props.playlistSongs]);
@@ -104,6 +120,7 @@ const SavedUniqueBoard = (props) => {
         selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Unique Saved"}
+        currentIcon={faNotEqual}
       />
 
       <Toolbox
