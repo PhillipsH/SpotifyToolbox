@@ -5,6 +5,7 @@ import MusicListener from "../Icons/music-listener.svg";
 import Topbar from "./Topbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
+require("dotenv").config();
 
 export const LandingPage = () => {
   return (
@@ -17,7 +18,7 @@ export const LandingPage = () => {
             Create playlists that are categorized based on the features that you
             want.
           </p>
-          <a href="http://localhost:5000/api/authenticate">
+          <a href={`http://${process.env.REACT_APP_API_IP}/api/authenticate`}>
             <Button className={LandingStyle.button} color="success">
               Login With Spotify
             </Button>
