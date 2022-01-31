@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 const axios = require("axios");
 require("dotenv").config();
 
-// const redirect_uri: string = "http://localhost:5000/api/authenticate/getTokens";
-const redirect_uri: string = "http://52.188.116.255:5000/api/authenticate/getTokens";
+const redirect_uri: string = `http://${process.env.API_IP}/api/authenticate/getTokens`
+// const redirect_uri: string = "http://52.188.116.255:5000/api/authenticate/getTokens";
 const client_id: string | undefined = process.env.CLIENT_ID;
 const client_secret: string | undefined = process.env.CLIENT_SECRET;
 const querystring = require("querystring");
@@ -57,10 +57,13 @@ export async function getTokens(req: Request, res: Response) {
         })
         .then((response) => {
           req.session["profile_id"] = response.data.id;
-          res.redirect("http://localhost:5000/");
+          res.redirect("http://localhost:3000/");
         });
     })
     .catch((error) => {
+      if (error.response.status == undefined) {
+        console.log(error);
+      }
     });
 }
 

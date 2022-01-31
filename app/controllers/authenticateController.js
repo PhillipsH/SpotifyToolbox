@@ -39,8 +39,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshToken = exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
 var axios = require("axios");
 require("dotenv").config();
-// const redirect_uri: string = "http://localhost:5000/api/authenticate/getTokens";
-var redirect_uri = "http://52.188.116.255:5000/api/authenticate/getTokens";
+var redirect_uri = "http://".concat(process.env.API_IP, "/api/authenticate/getTokens");
+// const redirect_uri: string = "http://52.188.116.255:5000/api/authenticate/getTokens";
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var querystring = require("querystring");
@@ -96,10 +96,13 @@ function getTokens(req, res) {
                 })
                     .then(function (response) {
                     req.session["profile_id"] = response.data.id;
-                    res.redirect("http://localhost:5000/");
+                    res.redirect("http://localhost:3000/");
                 });
             })
                 .catch(function (error) {
+                if (error.response.status == undefined) {
+                    console.log(error);
+                }
             });
             return [2 /*return*/];
         });
