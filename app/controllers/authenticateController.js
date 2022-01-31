@@ -96,7 +96,7 @@ function getTokens(req, res) {
                 })
                     .then(function (response) {
                     req.session["profile_id"] = response.data.id;
-                    res.redirect("http://localhost:3000/");
+                    res.redirect("http://".concat(process.env.API_IP));
                 });
             })
                 .catch(function (error) {

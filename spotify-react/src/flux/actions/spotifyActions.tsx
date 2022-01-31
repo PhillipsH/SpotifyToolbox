@@ -23,7 +23,7 @@ import { addLoading, removeLoading } from "./uiAction";
 import { LoadingTypes } from "./types";
 
 async function getSavedTracks() {
-  const LIKED_SONGS_URI = "http://localhost:5000/api/spotify/getLikedSongs";
+  const LIKED_SONGS_URI = `http://${process.env.REACT_APP_API_IP}/api/spotify/getLikedSongs`;
 
   let res = await axios.get(LIKED_SONGS_URI, { withCredentials: true });
   let trackList: ITrack[] = [];
@@ -62,7 +62,7 @@ async function getSavedTracks() {
 }
 
 export const getPlaylistsTracks = async () => {
-  const GET_PLAYLIST_URL = "http://localhost:5000/api/spotify/getPlaylistSongs";
+  const GET_PLAYLIST_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/getPlaylistSongs`;
 
   let res = await axios.get(GET_PLAYLIST_URL, {
     withCredentials: true,
@@ -105,7 +105,7 @@ export const getPlaylistsTracks = async () => {
 };
 
 async function getArtists(trackList) {
-  const GET_GENRE_URI = "http://localhost:5000/api/spotify/getGenre";
+  const GET_GENRE_URI = `http://${process.env.REACT_APP_API_IP}/api/spotify/getGenre`;
 
   let uniqueArtists: IArtistHash = {};
   let artistArr: string[] = [];
@@ -197,7 +197,7 @@ export const startSetup = () => async (dispatch: Function) => {
 };
 
 export const getLikedSongs = () => (dispatch: Function) => {
-  const GET_LIKED_SONGS_URL = "http://localhost:5000/api/spotify/getLikedSongs";
+  const GET_LIKED_SONGS_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/getLikedSongs`;
 
   dispatch(addLoading(LoadingTypes.LikedSongs));
   axios
@@ -249,7 +249,7 @@ export const getLikedSongs = () => (dispatch: Function) => {
 };
 
 export const getPlaylistSongs = () => async (dispatch: Function) => {
-  const GET_PLAYLIST_URL = "http://localhost:5000/api/spotify/getPlaylistSongs";
+  const GET_PLAYLIST_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/getPlaylistSongs`;
 
   let res = await axios.get(GET_PLAYLIST_URL, {
     withCredentials: true,
@@ -296,7 +296,7 @@ export const getPlaylistSongs = () => async (dispatch: Function) => {
 };
 
 export const getProfile = () => async (dispatch: Function) => {
-  const GET_PROFILE_URL = "http://localhost:5000/api/spotify/getProfile";
+  const GET_PROFILE_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/getProfile`;
 
   dispatch(addLoading([LoadingTypes.Profile]));
   let res = await axios.get(GET_PROFILE_URL, {
@@ -310,7 +310,7 @@ export const getProfile = () => async (dispatch: Function) => {
 };
 
 export const removeSongs = (dupeIds) => async (dispatch: Function) => {
-  // const REMOVE_SONGS_URL = "http://localhost:5000/spotify/removeLikedSongs"
+  // const REMOVE_SONGS_URL = "http://${process.env.REACT_APP_API_IP}/spotify/removeLikedSongs"
   // axios
   // .delete(REMOVE_SONGS_URL,
   // {withCredentials: true,
@@ -324,7 +324,7 @@ export const removeSongs = (dupeIds) => async (dispatch: Function) => {
 };
 
 export const addLikedSongs = (songs) => async (dispatch: Function) => {
-  const ADD_LIKED_SONGS_URL = "http://localhost:5000/api/spotify/addLikedSongs";
+  const ADD_LIKED_SONGS_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/addLikedSongs`;
   let songIds: string[] = [];
   for (let i in songs) {
     const uri = songs[i].linked_from_uri ?? songs[i].track_id;
@@ -346,8 +346,8 @@ export const addLikedSongs = (songs) => async (dispatch: Function) => {
 
 export const addToPlaylist =
   (playlistSongs, playlistDetails) => async (dispatch: Function) => {
-    const CREATE_PLAYLIST_URL = "http://localhost:5000/api/spotify/createPlaylist"
-    const ADD_SONGS_TO_PLAYLIST_URL = "http://localhost:5000/api/spotify/addSongsToPlaylist"
+    const CREATE_PLAYLIST_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/createPlaylist`
+    const ADD_SONGS_TO_PLAYLIST_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/addSongsToPlaylist`
     let songUris: string[] = [];
 
     for (let i in playlistSongs) {
@@ -413,7 +413,7 @@ export const setArtists = (artists) => (dispatch: Function) => {
 };
 
 export const getTop = (rankType, rankTime) => async (dispatch: Function) => {
-  const GET_TOP_URI = "http://localhost:5000/api/spotify/top";
+  const GET_TOP_URI = `http://${process.env.REACT_APP_API_IP}/api/spotify/top`;
 
   let res = await axios.get(GET_TOP_URI, {
     withCredentials: true,

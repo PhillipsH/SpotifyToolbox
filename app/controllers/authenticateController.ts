@@ -57,7 +57,7 @@ export async function getTokens(req: Request, res: Response) {
         })
         .then((response) => {
           req.session["profile_id"] = response.data.id;
-          res.redirect("http://localhost:3000/");
+          res.redirect(`http://${process.env.API_IP}`);
         });
     })
     .catch((error) => {
