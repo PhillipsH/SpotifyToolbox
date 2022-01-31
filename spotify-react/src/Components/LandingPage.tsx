@@ -5,7 +5,6 @@ import MusicListener from "../Icons/music-listener.svg";
 import Topbar from "./Topbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
-require("dotenv").config();
 
 export const LandingPage = () => {
   return (
