@@ -109,7 +109,7 @@ const DuplicateSongsBoard = (props) => {
       >
         {currentSongs.map((val, key) => (
           // <DuplicateSongs key={key} currentSongIndex={key} dupeSongs={val} />
-          <div className={ItemStyles.duplicateSongsContainer}>
+          <div className={ItemStyles.duplicateSongsContainer} key={key}>
             <div className={""}>
               <div className={ItemStyles.duplicateArtistTitle}>
                 <div className={ItemStyles.imageDiv}>
@@ -135,6 +135,7 @@ const DuplicateSongsBoard = (props) => {
                   albumName={val.album.album_name}
                   date={date}
                   currentSongIndex={key}
+
                   key={index}
                   currentPlacement={index}
                   currentSong={val}

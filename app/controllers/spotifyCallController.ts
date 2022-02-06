@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import { refreshToken } from "./authenticateController";
 require("dotenv").config();
 
@@ -8,14 +9,23 @@ const client_secret: string | undefined = process.env.CLIENT_SECRET;
 
 const refreshTokenUri: string = "https://accounts.spotify.com/api/token";
 
-//Function adds user to database then redirects user to the main page.
+axiosRetry(axios, {
+  retries: 15,
+  retryDelay: (error) => {
+    console.log(error)
+    return 2500;
+  },
+  retryCondition: (error) => {
+    return error?.response?.status === 429 || error?.response?.status === 503;
+  },
+});
+
+/*
+ Calls The Spotify API
+*/
 export async function getLikedSongs(req: Request, res: Response) {
-  /*Possible to make function faster by getting the total amount of songs in the first url
-    and using the total songs to calculate amount of requests needed to be done and asyncronously 
-    creating all requests.
-    */
   const LIKED_SONGS_URI = "https://api.spotify.com/v1/me/tracks";
-  
+
   async function spotifyApiCall(url: string, offset) {
     try {
       let response = await axios.get(url, {
@@ -195,7 +205,6 @@ export async function getPlaylistSongs(req: Request, res: Response) {
           combinedPlaylists[playlistIndex][songIndex];
       } catch (error) {
         console.log("not there");
-        // console.log(combinedPlaylists[playlistIndex][songIndex]);
       }
     }
   }
@@ -213,7 +222,6 @@ export async function getGenre(req: Request, res: Response) {
 
   artists = req.query.artists;
   if (artists > 50) throw "songList is too large";
-  // const API_KEY = '57ee3318536b23ee81d6b27e36997cde'
 
   async function addGenre(idsString) {
     try {
@@ -231,7 +239,6 @@ export async function getGenre(req: Request, res: Response) {
       return response.data;
     } catch (error: any) {
       if (error.response.status == undefined) {
-        // console.log(error);
         console.log("other error");
       }
       switch (error.response.status) {
@@ -249,8 +256,6 @@ export async function getGenre(req: Request, res: Response) {
           await refreshToken(req, res);
           return addGenre(idsString);
         default:
-          console.log("OTHER ERROR PLEASE CHECK GETGENRE");
-          // console.log(error.response.status);
           return [];
       }
     }
@@ -270,7 +275,7 @@ export async function getProfile(req: Request, res: Response) {
           "Content-Type": "application/json",
         },
       });
-      return response.data
+      return response.data;
     } catch (error: any) {
       if (error.response.status == undefined) {
         console.log(error);
@@ -285,8 +290,6 @@ export async function getProfile(req: Request, res: Response) {
           await refreshToken(req, res);
           return getSpotifyProfile();
         default:
-          console.log("OTHER ERROR PLEASE CHECK");
-          // console.log(error.response.status);
           return [];
       }
     }
@@ -312,7 +315,6 @@ export async function removeLikedSongs(req: Request, res: Response) {
           ids: songs,
         },
       });
-      console.log(response);
       return response.data.items;
     } catch (error: any) {
       if (error.response.status == undefined) {
@@ -328,8 +330,6 @@ export async function removeLikedSongs(req: Request, res: Response) {
           await refreshToken(req, res);
           return deleteSpotify(url, songs);
         default:
-          console.log("OTHER ERROR PLEASE CHECK");
-          // console.log(error.response.status);
           return [];
       }
     }
@@ -341,18 +341,17 @@ export async function removeLikedSongs(req: Request, res: Response) {
 }
 
 export async function addLikedSongs(req: Request, res: Response) {
-  const url = "https://api.spotify.com/v1/me/tracks";
-
+  console.log("RUNNING")
+  console.log(req.session["access_token"])
+  const url = 'https://api.spotify.com/v1/me/tracks';
   async function addLikedSongsCall(url: string, songs) {
     try {
-      let response = await axios.put(url, {
+      console.log(songs)
+      let response = await axios.put(url, songs, {
         headers: {
           Accept: "application/json",
           Authorization: "Bearer " + req.session["access_token"],
           "Content-Type": "application/json",
-        },
-        data: {
-          ids: songs,
         },
       });
       return response.data.items;
@@ -367,10 +366,10 @@ export async function addLikedSongs(req: Request, res: Response) {
           error.response.headers["retry-after"] * 1000);
           return addLikedSongsCall(url, songs);
         case 401:
+          console.log(error)
           await refreshToken(req, res);
-          return addLikedSongsCall(url, songs);
+          // return addLikedSongsCall(url, songs);
         default:
-          console.log("OTHER ERROR" + error.response.status);
           return [];
       }
     }
@@ -409,21 +408,9 @@ export async function createPlaylist(req: Request, res: Response) {
           error.response.headers["retry-after"] * 1000);
           return getPlaylistId(url);
         case 401:
-          let authData = {
-            grant_type: "refresh_token",
-            refresh_token: req.session["refresh_token"],
-          };
-          let response = await axios.post(refreshTokenUri, authData, {
-            headers: {
-              Authorization:
-                "Basic " +
-                new Buffer(client_id + ":" + client_secret).toString("base64"),
-            },
-          });
-          req.session["access_token"] = response.data.access_token;
+          await refreshToken(req, res);
           return getPlaylistId(url);
         default:
-          console.log("OTHER ERROR PLEASE CHECK");
           console.log(error.response.status);
           return [];
       }
@@ -465,7 +452,6 @@ export async function addSongsToPlaylist(req: Request, res: Response) {
           await refreshToken(req, res);
           return addToPlaylistCall(url, songs);
         default:
-          console.log("OTHER ERROR PLEASE CHECK");
           console.log(error.response.status);
           return [];
       }
@@ -481,7 +467,7 @@ export async function top(req: Request, res: Response) {
   const rankType = req.query.rankType;
   const rankTime = req.query.rankTime;
   const url = "https://api.spotify.com/v1/me/top/" + rankType;
-
+  console.log(req.session["access_token"],)
   async function topCall() {
     try {
       let response = await axios.get(url, {
@@ -510,7 +496,6 @@ export async function top(req: Request, res: Response) {
           await refreshToken(req, res);
           return topCall();
         default:
-          console.log("OTHER ERROR PLEASE CHECK");
           console.log(error.response.status);
           return [];
       }

@@ -2,7 +2,6 @@ import React from "react";
 import ItemStyles from "../Styles/Components/Items/Items.module.scss";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-  key: number;
   index?: number;
   id: string;
   name: string;
@@ -14,7 +13,6 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 }
 
 const Artist = ({
-  key,
   id,
   index,
   name,

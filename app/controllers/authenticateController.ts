@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
-const axios = require("axios");
+import axios from "axios"
+import axiosRetry from "axios-retry"
 require("dotenv").config();
 
 const redirect_uri: string = `http://${process.env.API_IP}/api/authenticate/getTokens`
@@ -8,6 +9,17 @@ const redirect_uri: string = `http://${process.env.API_IP}/api/authenticate/getT
 const client_id: string | undefined = process.env.CLIENT_ID;
 const client_secret: string | undefined = process.env.CLIENT_SECRET;
 const querystring = require("querystring");
+
+axiosRetry(axios, {
+  retries: 15,
+  retryDelay: (error) => {
+    console.log(error)
+    return 2500;
+  },
+  retryCondition: (error) => {
+    return error?.response?.status === 429 || error?.response?.status === 503;
+  },
+});
 
 //Function adds user to database then redirects user to the main page.
 export async function authenticateUser(req: Request, res: Response) {
@@ -34,7 +46,7 @@ export async function getTokens(req: Request, res: Response) {
     headers: {
       Authorization:
         "Basic " +
-        new Buffer(client_id + ":" + client_secret).toString("base64"),
+        Buffer.from(client_id + ":" + client_secret).toString("base64"),
     },
     params: {
       grant_type: "authorization_code",
@@ -57,12 +69,14 @@ export async function getTokens(req: Request, res: Response) {
         })
         .then((response) => {
           req.session["profile_id"] = response.data.id;
-          res.redirect(`http://${process.env.API_IP}`);
+          res.redirect(`http://${'localhost:3000'}`);
         });
     })
     .catch((error) => {
-      if (error.response.status == undefined) {
+      if (error?.response?.status == undefined) {
         console.log(error);
+      }else{
+        console.log(error)
       }
     });
 }
@@ -77,19 +91,22 @@ export async function checkAuth(req: Request, res: Response) {
 
 export async function refreshToken(req: Request, res: Response) {
   const refreshTokenUri: string = "https://accounts.spotify.com/api/token";
-
-  let response = await axios({
-    url: refreshTokenUri,
-    method: "POST",
-    headers: {
-      Authorization:
-        "Basic " +
-        new Buffer(client_id + ":" + client_secret).toString("base64"),
-    },
-    params: {
-      grant_type: "refresh_token",
-      refresh_token: req.session["refresh_token"],
-    },
-  })
-  req.session["access_token"] = response.data.access_token;
+  try{
+    let response = await axios({
+      url: refreshTokenUri,
+      method: "POST",
+      headers: {
+        Authorization:
+          "Basic " +
+          Buffer.from(client_id + ":" + client_secret).toString("base64"),
+      },
+      params: {
+        grant_type: "refresh_token",
+        refresh_token: req.session["refresh_token"],
+      },
+    })
+    req.session["access_token"] = response.data.access_token;
+  }catch{
+    res.redirect(`http://${'localhost:3000'}`);
+  }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LandingStyle from "./Styles/Components/LandingPage.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPodcast } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +6,12 @@ import { faPodcast } from "@fortawesome/free-solid-svg-icons";
 export const Topbar = () => {
   const [topbar, setTopbar]: any = useState("showBar");
   let prevScroll = window.pageYOffset
-  window.addEventListener("scroll", handleScroll.bind(this), { passive: true });
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  });
   function handleScroll() {
     var currentScrollPos = window.pageYOffset;
     if (prevScroll < currentScrollPos) {

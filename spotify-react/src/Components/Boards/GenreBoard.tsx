@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import { connect } from "react-redux";
-import { addToPlaylist } from "../Utility";
 import InfoCards from "../InfoCards/InfoCards";
 import Toolbox from "../Toolbox/Toolbox";
 import { ITrack } from "../../types/interfaces";
@@ -190,9 +189,6 @@ const GenreBoard = (props) => {
     // Object.assign(currentHipHop, genres["chinese hip hop"]);
     // Object.assign(currentHipHop, genres["korean old school hip hop"]);
 
-    //
-    // Object.assign(currentHipHop, genres["latin hip hop"]);
-
     setCurrentSongs(Object.values(currentHipHop));
     setMasterSongs(Object.values(currentHipHop));
   }
@@ -302,6 +298,30 @@ const GenreBoard = (props) => {
     Object.assign(currentElectronic, genres["electro house"]);
     Object.assign(currentElectronic, genres["canadian electronic"]);
     Object.assign(currentElectronic, genres["gaming edm"]);
+
+    setCurrentSongs(Object.values(currentElectronic));
+    setMasterSongs(Object.values(currentElectronic));
+  }
+
+  function getJapanese() {
+    let currentElectronic = {};
+    Object.assign(currentElectronic, genres["japanese teen pop"]);
+    Object.assign(currentElectronic, genres["j-pop"]);
+    Object.assign(currentElectronic, genres["classic j-pop"]);
+    Object.assign(currentElectronic, genres["j-rock"]);
+    Object.assign(currentElectronic, genres["j-poprock"]);
+    Object.assign(currentElectronic, genres["japanese indie rock"]);
+    Object.assign(currentElectronic, genres["japanese singer-songwriter"]);
+    Object.assign(currentElectronic, genres["japanese chillhop"]);
+    Object.assign(currentElectronic, genres["japanese r&b"]);
+    Object.assign(currentElectronic, genres["japanese soundtrack"]);
+    Object.assign(currentElectronic, genres["japanese emo"]);
+    Object.assign(currentElectronic, genres["japanese vgm"]);
+    Object.assign(currentElectronic, genres["japanese electropop"]);
+    Object.assign(currentElectronic, genres["anime rock"]);
+    Object.assign(currentElectronic, genres["anime"]);
+    Object.assign(currentElectronic, genres["anime lofi"]);
+    Object.assign(currentElectronic, genres["anime rap"]);
 
     setCurrentSongs(Object.values(currentElectronic));
     setMasterSongs(Object.values(currentElectronic));
@@ -420,6 +440,17 @@ const GenreBoard = (props) => {
           />
           <br></br>
           <span className={`${GenreBoardStyles.buttonText}`}>Country</span>
+        </Button>
+        <Button
+          className={`${GenreBoardStyles.genreButton} ${GenreBoardStyles.rapButton}`}
+          onClick={getJapanese}
+        >
+          <FontAwesomeIcon
+            className={`${GenreBoardStyles.icon}`}
+            icon={faFlag}
+          />
+          <br></br>
+          <span className={`${GenreBoardStyles.buttonText}`}>Japanese</span>
         </Button>
       </div>
 

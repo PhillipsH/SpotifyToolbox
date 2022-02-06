@@ -68,12 +68,13 @@ export const Sidenav = (props) => {
               <span className={MainStyle.navName}>Liked Songs</span>
             </Link>
           </li>
-          <li className={MainStyle.navSelection}>
+          {/*Add Playlist feature*/}
+          {/* <li className={MainStyle.navSelection}>
             <Link to="/Playlists" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon icon={faListAlt} className={MainStyle.navIcon} />
               <span className={MainStyle.navName}>Playlists</span>
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
 
@@ -148,7 +149,7 @@ export const Sidenav = (props) => {
         <span>General</span>
         <ul>
           <li className={MainStyle.navSelection}>
-            <a href={profileUrl} className={`${MainStyle.navLink} ${''}`}>
+            <a href={profileUrl} target="_blank" className={`${MainStyle.navLink} ${''}`}>
               <FontAwesomeIcon
                 icon={faAddressCard}
                 className={MainStyle.navIcon}
@@ -158,7 +159,8 @@ export const Sidenav = (props) => {
           </li>
           <li className={MainStyle.navSelection}>
             <a
-              href={"#"}
+              href={"https://github.com/PhillipsH/SpotifyTools"}
+              target="_blank"
               onClick={toggleNav}
               className={`${MainStyle.navLink} ${""}`}
             >
@@ -167,18 +169,18 @@ export const Sidenav = (props) => {
             </a>
           </li>
           <li className={MainStyle.navSelection}>
-            <a href={"#"} className={`${MainStyle.navLink} ${""}`}>
+            <a href={"https://Ko-fi.com/wagyubeep"} target="_blank" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon icon={faDonate} className={MainStyle.navIcon} />
               <span className={MainStyle.navName}>Donate</span>
             </a>
           </li>
           <li className={MainStyle.navSelection}>
-            <a href={"#"} className={`${MainStyle.navLink} ${""}`}>
+            <a href={"/home"} className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon
                 icon={faSignOutAlt}
                 className={MainStyle.navIcon}
               />
-              <span className={MainStyle.navName}>Log Out</span>
+              <span className={MainStyle.navName}>Home</span>
             </a>
           </li>
         </ul>

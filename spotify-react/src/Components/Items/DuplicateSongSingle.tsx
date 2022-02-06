@@ -13,7 +13,7 @@ const DuplicateSongSingle = (props) => {
     props.removeSongs([id])
   }
   return (
-    <div className={ItemsStyle.duplicateSong} key={props.index}>
+    <div className={ItemsStyle.duplicateSong}>
       <div className="duplicate-song-left">
         <h5 className="song_title">{props.currentSong.track_name}</h5>
         <h6 className="artist">Album: {props.currentSong.album.album_name}</h6>

@@ -17,6 +17,7 @@ export const COMPLETE_SETUP = 'COMPLETE_SETUP';
 export const START_SETUP = 'START_SETUP';
 export const ADD_SONGS = 'ADD_SONGS';
 export const GET_TOP = 'GET_TOP'
+export const ADD_TO_SAVED = "ADD_TO_SAVED";
 
 export const SET_BOARD = "SET_BOARD;"
 

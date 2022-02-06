@@ -35,15 +35,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshToken = exports.checkAuth = exports.getTokens = exports.authenticateUser = void 0;
-var axios = require("axios");
+var axios_1 = __importDefault(require("axios"));
+var axios_retry_1 = __importDefault(require("axios-retry"));
 require("dotenv").config();
 var redirect_uri = "http://".concat(process.env.API_IP, "/api/authenticate/getTokens");
 // const redirect_uri: string = "http://52.188.116.255:5000/api/authenticate/getTokens";
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var querystring = require("querystring");
+(0, axios_retry_1.default)(axios_1.default, {
+    retries: 15,
+    retryDelay: function (error) {
+        console.log(error);
+        return 2500;
+    },
+    retryCondition: function (error) {
+        var _a, _b;
+        return ((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) === 429 || ((_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.status) === 503;
+    },
+});
 //Function adds user to database then redirects user to the main page.
 function authenticateUser(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -68,12 +83,12 @@ function getTokens(req, res) {
         return __generator(this, function (_a) {
             authURI = "https://accounts.spotify.com/api/token";
             profileURI = "https://api.spotify.com/v1/me";
-            axios({
+            (0, axios_1.default)({
                 url: authURI,
                 method: "POST",
                 headers: {
                     Authorization: "Basic " +
-                        new Buffer(client_id + ":" + client_secret).toString("base64"),
+                        Buffer.from(client_id + ":" + client_secret).toString("base64"),
                 },
                 params: {
                     grant_type: "authorization_code",
@@ -86,7 +101,7 @@ function getTokens(req, res) {
                 req.session["access_token"] = response.data.access_token;
                 req.session["refresh_token"] = response.data.refresh_token;
                 // req.session.cookie.maxAge = parseInt(response.data.expires_in) * 1000;
-                axios
+                axios_1.default
                     .get(profileURI, {
                     headers: {
                         Accept: "application/json",
@@ -96,11 +111,15 @@ function getTokens(req, res) {
                 })
                     .then(function (response) {
                     req.session["profile_id"] = response.data.id;
-                    res.redirect("http://".concat(process.env.API_IP));
+                    res.redirect("http://".concat('localhost:3000'));
                 });
             })
                 .catch(function (error) {
-                if (error.response.status == undefined) {
+                var _a;
+                if (((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) == undefined) {
+                    console.log(error);
+                }
+                else {
                     console.log(error);
                 }
             });
@@ -125,27 +144,35 @@ function checkAuth(req, res) {
 exports.checkAuth = checkAuth;
 function refreshToken(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var refreshTokenUri, response;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var refreshTokenUri, response, _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     refreshTokenUri = "https://accounts.spotify.com/api/token";
-                    return [4 /*yield*/, axios({
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, (0, axios_1.default)({
                             url: refreshTokenUri,
                             method: "POST",
                             headers: {
                                 Authorization: "Basic " +
-                                    new Buffer(client_id + ":" + client_secret).toString("base64"),
+                                    Buffer.from(client_id + ":" + client_secret).toString("base64"),
                             },
                             params: {
                                 grant_type: "refresh_token",
                                 refresh_token: req.session["refresh_token"],
                             },
                         })];
-                case 1:
-                    response = _a.sent();
+                case 2:
+                    response = _b.sent();
                     req.session["access_token"] = response.data.access_token;
-                    return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 3:
+                    _a = _b.sent();
+                    res.redirect("http://".concat('localhost:3000'));
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });

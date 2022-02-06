@@ -9,7 +9,7 @@ import {
   SET_ARTISTS,
   START_SETUP,
   ADD_TO_PLAYLIST,
-  ADD_SONGS,
+  ADD_TO_SAVED,
   GET_TOP,
 } from "./types";
 import {
@@ -22,10 +22,12 @@ import {
 import { addLoading, removeLoading } from "./uiAction";
 import { LoadingTypes } from "./types";
 
+axios.defaults.withCredentials = true
+
 async function getSavedTracks() {
   const LIKED_SONGS_URI = `http://${process.env.REACT_APP_API_IP}/api/spotify/getLikedSongs`;
 
-  let res = await axios.get(LIKED_SONGS_URI, { withCredentials: true });
+  let res = await axios.get(LIKED_SONGS_URI,);
   let trackList: ITrack[] = [];
 
   for (let i in res.data) {
@@ -64,9 +66,7 @@ async function getSavedTracks() {
 export const getPlaylistsTracks = async () => {
   const GET_PLAYLIST_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/getPlaylistSongs`;
 
-  let res = await axios.get(GET_PLAYLIST_URL, {
-    withCredentials: true,
-  });
+  let res = await axios.get(GET_PLAYLIST_URL);
 
   let trackList: IPlaylistTrack[] = [];
 
@@ -129,7 +129,6 @@ async function getArtists(trackList) {
   while (artistArr.length > 0) {
     promiseArr.push(
       await axios.get(GET_GENRE_URI, {
-        withCredentials: true,
         params: {
           artists: artistArr.splice(0, 50),
         },
@@ -159,7 +158,6 @@ async function getArtists(trackList) {
           artistArrays[arrIndex].data.artists[artistIndex].id
         ].images = artistArrays[arrIndex].data.artists[artistIndex].images;
       } else {
-        console.log(artistArrays[arrIndex].data.artists[artistIndex].id);
       }
     }
   }
@@ -175,12 +173,10 @@ async function getArtists(trackList) {
   }
   let uniqueArtistsArr: IArtist[] = [];
   uniqueArtistsArr = Object.values(uniqueArtists);
-  // uniqueArtistsArr.sort((a,b) => b.counter - a.counter)
   return uniqueArtistsArr;
 }
 
 export const startSetup = () => async (dispatch: Function) => {
-  // dispatch(setItemsLoading());
   dispatch(addLoading([LoadingTypes.LikedSongs, LoadingTypes.Artists]));
 
   let trackList = await getSavedTracks();
@@ -201,9 +197,7 @@ export const getLikedSongs = () => (dispatch: Function) => {
 
   dispatch(addLoading(LoadingTypes.LikedSongs));
   axios
-    .get(GET_LIKED_SONGS_URL, {
-      withCredentials: true,
-    })
+    .get(GET_LIKED_SONGS_URL)
     .then((res) => {
       let currentSongs = {
         currentType: "LIKED_SONGS",
@@ -251,9 +245,7 @@ export const getLikedSongs = () => (dispatch: Function) => {
 export const getPlaylistSongs = () => async (dispatch: Function) => {
   const GET_PLAYLIST_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/getPlaylistSongs`;
 
-  let res = await axios.get(GET_PLAYLIST_URL, {
-    withCredentials: true,
-  });
+  let res = await axios.get(GET_PLAYLIST_URL);
 
   let trackList: IPlaylistTrack[] = [];
 
@@ -299,9 +291,7 @@ export const getProfile = () => async (dispatch: Function) => {
   const GET_PROFILE_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/getProfile`;
 
   dispatch(addLoading([LoadingTypes.Profile]));
-  let res = await axios.get(GET_PROFILE_URL, {
-    withCredentials: true,
-  });
+  let res = await axios.get(GET_PROFILE_URL);
   await dispatch({
     type: GET_PROFILE,
     payload: res.data,
@@ -310,37 +300,33 @@ export const getProfile = () => async (dispatch: Function) => {
 };
 
 export const removeSongs = (dupeIds) => async (dispatch: Function) => {
-  // const REMOVE_SONGS_URL = "http://${process.env.REACT_APP_API_IP}/spotify/removeLikedSongs"
-  // axios
-  // .delete(REMOVE_SONGS_URL,
-  // {withCredentials: true,
-  // data : {
-  //   songIds : dupeIds
-  // }})
+  const REMOVE_SONGS_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/removeLikedSongs`
+  axios
+  .delete(REMOVE_SONGS_URL,
+  {withCredentials: true,
+  data : {
+    songIds : dupeIds
+  }})
   dispatch({
     type: REMOVE_SONGS,
     payload: dupeIds,
   });
 };
 
-export const addLikedSongs = (songs) => async (dispatch: Function) => {
+export const addToSaved = (songs) => async (dispatch: Function) => {
   const ADD_LIKED_SONGS_URL = `http://${process.env.REACT_APP_API_IP}/api/spotify/addLikedSongs`;
   let songIds: string[] = [];
   for (let i in songs) {
     const uri = songs[i].linked_from_uri ?? songs[i].track_id;
     songIds.push(uri);
   }
-
+  
   axios.put(ADD_LIKED_SONGS_URL, {
-    withCredentials: true,
-    data: {
       songIds: songIds,
-    },
   });
-
   dispatch({
-    type: ADD_SONGS,
-    payload: songs,
+    type: ADD_TO_SAVED,
+    payload: Object.values(songs),
   });
 };
 
@@ -359,7 +345,7 @@ export const addToPlaylist =
     const res = await axios.post(
       CREATE_PLAYLIST_URL,
       { playlistDetails: playlistDetails },
-      { withCredentials: true }
+     
     );
     const playlistId = res.data;
     while (songUris.length > 0) {
@@ -371,9 +357,6 @@ export const addToPlaylist =
       axios.post(
         ADD_SONGS_TO_PLAYLIST_URL,
         playlistData,
-        {
-          withCredentials: true,
-        }
       );
     }
 
@@ -395,20 +378,23 @@ export const setCurrentSongList =
     });
   };
 
-export const setLikedSongs = (likedSongsNew) => (dispatch: Function) => {
-  dispatch(addLoading(LoadingTypes.LikedSongs));
-  dispatch({
-    type: SET_LIKED_SONGS,
-    payload: likedSongsNew,
-  });
-  dispatch(removeLoading(LoadingTypes.LikedSongs));
-};
+// export const setLikedSongs = (likedSongsNew) => (dispatch: Function) => {
+//   dispatch({
+//     type: SET_LIKED_SONGS,
+//     payload: likedSongsNew,
+//   });
+// };
+// export const addSavedTracks = (tracks) => (dispatch: Function) => {
+//   dispatch({
+//     type: ADD_TO_SAVED,
+//     payload: tracks,
+//   });
+// };
 
 export const setArtists = (artists) => (dispatch: Function) => {
-  // dispatch(setItemsLoading());
   dispatch({
     type: SET_ARTISTS,
-    payload: artists,
+    payload: artists, 
   });
 };
 
@@ -416,7 +402,6 @@ export const getTop = (rankType, rankTime) => async (dispatch: Function) => {
   const GET_TOP_URI = `http://${process.env.REACT_APP_API_IP}/api/spotify/top`;
 
   let res = await axios.get(GET_TOP_URI, {
-    withCredentials: true,
     params: {
       rankType: rankType,
       rankTime: rankTime,

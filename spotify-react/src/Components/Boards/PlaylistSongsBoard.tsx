@@ -7,68 +7,54 @@ import { LoadingTypes } from "../../flux/actions/types";
 import InfoCards from "../InfoCards/InfoCards";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List} from 'react-window'
-import Toolbox from "../Toolbox/Toolbox";
+import UniquePlaylistToolbox from "../Toolbox/UniquePlaylistToolbox";
 import BoardStyle from "../Styles/Components/Boards/Board.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import PlaylistSongFeatures from "../SongFeatures/PlaylistSongFeatures"
 import {
-  faCalendarAlt,
-  faCopy,
-  faMicrophone,
-  faRecordVinyl,
-  faTrophy,
   faListAlt,
-  faNotEqual,
-  faAddressCard,
-  faSignOutAlt,
-  faAddressBook,
-  faDonate,
-  faMusic,
-  faBars,
-  faPodcast,
-  faList,
 } from "@fortawesome/free-solid-svg-icons";
 
 const PlaylistSongsBoard = (props) => {
   const [masterSongs, setMasterSongs]: any = useState([]);
   const [currentSongs, setCurrentSongs]: any = useState([]);
-  const [selectedSongs, setSelectedSongs]: any = useState([]);
+  const [selectedSongs, setSelectedSongs]: any = useState({});
 
   useEffect(() => {
     if (props.playlistSongs.initialized == false) {
       addLoading([LoadingTypes.PlaylistSongs]);
     }
   }, []);
+
+  function selectSong(index) {
+    const newSelectedSongs = JSON.parse(JSON.stringify(selectedSongs));
+    const id =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
+    if (id in newSelectedSongs) {
+      delete newSelectedSongs[id];
+    } else {
+      newSelectedSongs[id] = currentSongs[index];
+    }
+    setSelectedSongs(newSelectedSongs);
+  }
+
   useEffect(() => {
+    console.log("rerun")
     let likedSongsObjName: any = {};
     let likedSongsObjId: any = {};
     let playlistUniqueSongs: any = [];
 
     for (let index in props.likedSongs.list) {
-      // likedSongsObj[props.likedSongs.list[index].track.external_ids.isrc] =
-      //   props.likedSongs.list[index];
 
       likedSongsObjName[
         props.likedSongs.list[index].track_name +
           props.likedSongs.list[index].artist.artist_name
       ] = props.likedSongs.list[index];
 
-      // let id: string =
-      //   props.playlistSongs.list[index].linked_from_id ??
-      //   props.playlistSongs.list[index].track_id;
-      // likedSongsObjId[id] = props.likedSongs.list[index]
-
       let id: string =
         props.likedSongs.list[index].linked_from_id ??
         props.likedSongs.list[index].track_id;
       likedSongsObjId[id] = props.likedSongs.list[index];
 
-      // if (props.likedSongs.list[index].linked_from_id !== undefined) {
-      //   likedSongsObjId[props.likedSongs.list[index].linked_from_id] =
-      //     props.likedSongs.list[index];
-      // } else {
-      //   likedSongsObjId[props.likedSongs.list[index].track_id] =
-      //     props.likedSongs.list[index];
-      // }
     }
     for (let index in props.playlistSongs.list) {
       let id: string =
@@ -81,7 +67,6 @@ const PlaylistSongsBoard = (props) => {
             props.playlistSongs.list[index].artist.artist_name
         ] === undefined &&
         likedSongsObjId[id] === undefined
-        // && likedSongsObj[props.playlistSongs.list[index].track.external_ids.isrc] === undefined
       ) {
         playlistUniqueSongs.push(props.playlistSongs.list[index]);
       }
@@ -89,20 +74,25 @@ const PlaylistSongsBoard = (props) => {
 
     setCurrentSongs(playlistUniqueSongs);
     setMasterSongs(playlistUniqueSongs);
-    // props.setCurrentSongList(playlistUniqueSongs, "PLAYLIST_UNIQUES_SONGS");
   }, [props.likedSongs, props.playlistSongs]);
 
   const renderRow = ({ index, key, style }) => {
+    let currentId =
+      currentSongs[index].linked_from_id ?? currentSongs[index].track_id;
     let album_image = currentSongs[index].album.album_images[2] ?? "";
+
     return (
       <PlaylistSong
         key={key}
+        index={index}
         id={currentSongs[index].track_id}
         title={currentSongs[index].track_name}
         artist={currentSongs[index].artist.artist_name}
         album={currentSongs[index].album.album_name}
         image={album_image.url}
         playlistName={currentSongs[index].playlist_name}
+        selectSong={selectSong}
+        isSelected={currentId in selectedSongs}
         style={style}
       />
     );
@@ -110,18 +100,19 @@ const PlaylistSongsBoard = (props) => {
   return (
     <div className={BoardStyle.functionBoard}>
       <InfoCards
-        selectedSongsLength={currentSongs.length}
+        selectedSongsLength={Object.keys(selectedSongs).length}
         currentSongsLength={currentSongs.length}
         currentBoard={"Unique Playlist"}
         currentIcon={faListAlt}
       />
-      <Toolbox
+      <UniquePlaylistToolbox
         masterSongs={masterSongs}
         currentSongs={currentSongs}
         setCurrentSongs={setCurrentSongs}
         selectedSongs={selectedSongs}
         setSelectedSongs={setSelectedSongs}
       />
+      <PlaylistSongFeatures setCurrentSongs={setCurrentSongs} currentSongs={currentSongs} setSelectedSongs={setSelectedSongs}></PlaylistSongFeatures>
       <div className={BoardStyle.songContainer}>
         <AutoSizer>
           {({ height, width }) => (

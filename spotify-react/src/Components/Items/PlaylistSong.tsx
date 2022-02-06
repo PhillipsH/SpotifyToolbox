@@ -10,15 +10,28 @@ const style = {
 
 const PlaylistSong = ({
   id,
+  index,
   title,
   artist,
   album,
   image,
   playlistName,
   style,
+  selectSong,
+  isSelected
 }) => {
+  let selectStyle = "";
+  if (isSelected) {
+    selectStyle = ItemStyles.songSelected;
+  }
   return (
-    <div className={ItemStyles.songItem} style={style}>
+    <div
+      className={ItemStyles.songItem + " " + selectStyle}
+      style={style}
+      onClick={() => {
+        selectSong(index);
+      }}
+    >
       <div className="title-body">
         <div className={ItemStyles.imageDiv}>
           <img className={ItemStyles.songImg} src={image} alt="Album Image"></img>

@@ -12,6 +12,7 @@
     "@types/cors": "^2.8.8",
     "@types/express-session": "^1.17.3",
     "axios": "^0.21.0",
+    "axios-retry": "^3.2.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

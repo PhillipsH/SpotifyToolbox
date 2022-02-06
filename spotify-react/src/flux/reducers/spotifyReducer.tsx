@@ -14,39 +14,40 @@ import {
   START_SETUP,
   ADD_TO_PLAYLIST,
   ADD_SONGS,
-  GET_TOP
+  GET_TOP,
+  ADD_TO_SAVED,
 } from "../actions/types";
 
 const topRanking = {
   artists: {
-    short_term:{
-      initialized:false,
-      list: []
+    short_term: {
+      initialized: false,
+      list: [],
     },
-    medium_term:{
-      initialized:false,
-      list: []
-    },    
-    long_term:{
-      initialized:false,
-      list: []
+    medium_term: {
+      initialized: false,
+      list: [],
+    },
+    long_term: {
+      initialized: false,
+      list: [],
     },
   },
-  tracks:{
-    short_term:{
-      initialized:false,
-      list: []
+  tracks: {
+    short_term: {
+      initialized: false,
+      list: [],
     },
-    medium_term:{
-      initialized:false,
-      list: []
-    },    
-    long_term:{
-      initialized:false,
-      list: []
+    medium_term: {
+      initialized: false,
+      list: [],
     },
-  }
-}
+    long_term: {
+      initialized: false,
+      list: [],
+    },
+  },
+};
 
 const initialState = {
   likedSongs: {
@@ -64,8 +65,7 @@ const initialState = {
   profile: {
     initialized: false,
   },
-  topRanking: topRanking
-  
+  topRanking: topRanking,
 };
 export default function (state = initialState, action: any) {
   switch (action.type) {
@@ -185,22 +185,31 @@ export default function (state = initialState, action: any) {
         artists: action.payload,
         loading: false,
       };
+    case ADD_TO_SAVED:
+      return {
+        ...state,
+        likedSongs: { 
+          ...state.likedSongs,
+          list: [...state.likedSongs.list, ...action.payload]
+        },
+        loading: false
+      };
     case GET_TOP:
-      const rankType = action.payload.rankType
-      const rankTime = action.payload.rankTime
-      return{
+      const rankType = action.payload.rankType;
+      const rankTime = action.payload.rankTime;
+      return {
         ...state,
         topRanking: {
           ...topRanking,
           [rankType]: {
             ...state.topRanking[rankType],
-            [rankTime] : {
+            [rankTime]: {
               list: action.payload.data,
-              initialized: true
-            }
-          }
-        }
-      }
+              initialized: true,
+            },
+          },
+        },
+      };
     default:
       return state;
   }

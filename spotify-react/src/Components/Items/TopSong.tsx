@@ -9,7 +9,6 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
   image: any;
   style: any;
   selectSong?: any;
-  key: number;
   index: number;
   popularity: number;
   isSelected?: boolean;
@@ -17,7 +16,6 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 
 const TopSong = ({
   index,
-  key,
   id,
   title,
   artist,

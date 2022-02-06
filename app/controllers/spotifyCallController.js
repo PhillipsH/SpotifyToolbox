@@ -41,12 +41,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.top = exports.addSongsToPlaylist = exports.createPlaylist = exports.addLikedSongs = exports.removeLikedSongs = exports.getProfile = exports.getGenre = exports.getPlaylistSongs = exports.getLikedSongs = void 0;
 var axios_1 = __importDefault(require("axios"));
+var axios_retry_1 = __importDefault(require("axios-retry"));
 var authenticateController_1 = require("./authenticateController");
 require("dotenv").config();
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var refreshTokenUri = "https://accounts.spotify.com/api/token";
-//Function adds user to database then redirects user to the main page.
+(0, axios_retry_1.default)(axios_1.default, {
+    retries: 15,
+    retryDelay: function (error) {
+        console.log(error);
+        return 2500;
+    },
+    retryCondition: function (error) {
+        var _a, _b;
+        return ((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) === 429 || ((_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.status) === 503;
+    },
+});
+/*
+ Calls The Spotify API
+*/
 function getLikedSongs(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         function spotifyApiCall(url, offset) {
@@ -278,7 +292,6 @@ function getPlaylistSongs(req, res) {
                             }
                             catch (error) {
                                 console.log("not there");
-                                // console.log(combinedPlaylists[playlistIndex][songIndex]);
                             }
                         }
                     }
@@ -293,7 +306,6 @@ function getPlaylistSongs(req, res) {
 exports.getPlaylistSongs = getPlaylistSongs;
 function getGenre(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        // const API_KEY = '57ee3318536b23ee81d6b27e36997cde'
         function addGenre(idsString) {
             return __awaiter(this, void 0, void 0, function () {
                 var response, error_4, _a;
@@ -319,7 +331,6 @@ function getGenre(req, res) {
                         case 2:
                             error_4 = _b.sent();
                             if (error_4.response.status == undefined) {
-                                // console.log(error);
                                 console.log("other error");
                             }
                             _a = error_4.response.status;
@@ -339,10 +350,7 @@ function getGenre(req, res) {
                         case 6:
                             _b.sent();
                             return [2 /*return*/, addGenre(idsString)];
-                        case 7:
-                            console.log("OTHER ERROR PLEASE CHECK GETGENRE");
-                            // console.log(error.response.status);
-                            return [2 /*return*/, []];
+                        case 7: return [2 /*return*/, []];
                         case 8: return [3 /*break*/, 9];
                         case 9: return [2 /*return*/];
                     }
@@ -409,10 +417,7 @@ function getProfile(req, res) {
                         case 5:
                             _b.sent();
                             return [2 /*return*/, getSpotifyProfile()];
-                        case 6:
-                            console.log("OTHER ERROR PLEASE CHECK");
-                            // console.log(error.response.status);
-                            return [2 /*return*/, []];
+                        case 6: return [2 /*return*/, []];
                         case 7: return [3 /*break*/, 8];
                         case 8: return [2 /*return*/];
                     }
@@ -456,7 +461,6 @@ function removeLikedSongs(req, res) {
                                 })];
                         case 1:
                             response = _b.sent();
-                            console.log(response);
                             return [2 /*return*/, response.data.items];
                         case 2:
                             error_6 = _b.sent();
@@ -477,10 +481,7 @@ function removeLikedSongs(req, res) {
                         case 5:
                             _b.sent();
                             return [2 /*return*/, deleteSpotify(url, songs)];
-                        case 6:
-                            console.log("OTHER ERROR PLEASE CHECK");
-                            // console.log(error.response.status);
-                            return [2 /*return*/, []];
+                        case 6: return [2 /*return*/, []];
                         case 7: return [3 /*break*/, 8];
                         case 8: return [2 /*return*/];
                     }
@@ -508,14 +509,12 @@ function addLikedSongs(req, res) {
                     switch (_b.label) {
                         case 0:
                             _b.trys.push([0, 2, , 8]);
-                            return [4 /*yield*/, axios_1.default.put(url, {
+                            console.log(songs);
+                            return [4 /*yield*/, axios_1.default.put(url, songs, {
                                     headers: {
                                         Accept: "application/json",
                                         Authorization: "Bearer " + req.session["access_token"],
                                         "Content-Type": "application/json",
-                                    },
-                                    data: {
-                                        ids: songs,
                                     },
                                 })];
                         case 1:
@@ -536,13 +535,13 @@ function addLikedSongs(req, res) {
                             console.log("timeout error");
                             setTimeout(function () { }, error_7.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, addLikedSongsCall(url, songs)];
-                        case 4: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
+                        case 4:
+                            console.log(error_7);
+                            return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 5:
                             _b.sent();
-                            return [2 /*return*/, addLikedSongsCall(url, songs)];
-                        case 6:
-                            console.log("OTHER ERROR" + error_7.response.status);
-                            return [2 /*return*/, []];
+                            _b.label = 6;
+                        case 6: return [2 /*return*/, []];
                         case 7: return [3 /*break*/, 8];
                         case 8: return [2 /*return*/];
                     }
@@ -551,7 +550,9 @@ function addLikedSongs(req, res) {
         }
         var url;
         return __generator(this, function (_a) {
-            url = "https://api.spotify.com/v1/me/tracks";
+            console.log("RUNNING");
+            console.log(req.session["access_token"]);
+            url = 'https://api.spotify.com/v1/me/tracks';
             while (req.body.songIds.length > 0) {
                 addLikedSongsCall(url, req.body.songIds.splice(0, 50));
             }
@@ -564,7 +565,7 @@ function createPlaylist(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         function getPlaylistId(url) {
             return __awaiter(this, void 0, void 0, function () {
-                var response, error_8, _a, authData, response;
+                var response, error_8, _a;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0:
@@ -594,23 +595,11 @@ function createPlaylist(req, res) {
                             console.log("timeout error");
                             setTimeout(function () { }, error_8.response.headers["retry-after"] * 1000);
                             return [2 /*return*/, getPlaylistId(url)];
-                        case 4:
-                            authData = {
-                                grant_type: "refresh_token",
-                                refresh_token: req.session["refresh_token"],
-                            };
-                            return [4 /*yield*/, axios_1.default.post(refreshTokenUri, authData, {
-                                    headers: {
-                                        Authorization: "Basic " +
-                                            new Buffer(client_id + ":" + client_secret).toString("base64"),
-                                    },
-                                })];
+                        case 4: return [4 /*yield*/, (0, authenticateController_1.refreshToken)(req, res)];
                         case 5:
-                            response = _b.sent();
-                            req.session["access_token"] = response.data.access_token;
+                            _b.sent();
                             return [2 /*return*/, getPlaylistId(url)];
                         case 6:
-                            console.log("OTHER ERROR PLEASE CHECK");
                             console.log(error_8.response.status);
                             return [2 /*return*/, []];
                         case 7: return [3 /*break*/, 8];
@@ -679,7 +668,6 @@ function addSongsToPlaylist(req, res) {
                             _b.sent();
                             return [2 /*return*/, addToPlaylistCall(url, songs)];
                         case 7:
-                            console.log("OTHER ERROR PLEASE CHECK");
                             console.log(error_9.response.status);
                             return [2 /*return*/, []];
                         case 8: return [3 /*break*/, 9];
@@ -744,7 +732,6 @@ function top(req, res) {
                             _b.sent();
                             return [2 /*return*/, topCall()];
                         case 6:
-                            console.log("OTHER ERROR PLEASE CHECK");
                             console.log(error_10.response.status);
                             return [2 /*return*/, []];
                         case 7: return [3 /*break*/, 8];
@@ -760,6 +747,7 @@ function top(req, res) {
                     rankType = req.query.rankType;
                     rankTime = req.query.rankTime;
                     url = "https://api.spotify.com/v1/me/top/" + rankType;
+                    console.log(req.session["access_token"]);
                     return [4 /*yield*/, topCall()];
                 case 1:
                     topObj = _a.sent();
