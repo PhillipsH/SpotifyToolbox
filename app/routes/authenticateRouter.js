@@ -24,7 +24,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var router = express_1.default.Router();
-// const authenticateController = require('../controllers/authenticateController');
 var authenticateController = __importStar(require("../controllers/authenticateController"));
 router.get('/', authenticateController.authenticateUser);
 router.get('/getTokens', authenticateController.getTokens);

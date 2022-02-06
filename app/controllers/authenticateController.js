@@ -111,7 +111,7 @@ function getTokens(req, res) {
                 })
                     .then(function (response) {
                     req.session["profile_id"] = response.data.id;
-                    res.redirect("http://".concat('localhost:3000'));
+                    res.redirect("http://".concat(process.env.API_IP));
                 });
             })
                 .catch(function (error) {
@@ -170,7 +170,7 @@ function refreshToken(req, res) {
                     return [3 /*break*/, 4];
                 case 3:
                     _a = _b.sent();
-                    res.redirect("http://".concat('localhost:3000'));
+                    res.redirect("".concat(process.env.API_IP));
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
