@@ -17,7 +17,7 @@ export const LandingPage = () => {
             Create playlists that are categorized based on the features that you
             want.
           </p>
-          <a href={`http://${process.env.REACT_APP_API_IP}/api/authenticate`}>
+          <a href={`${process.env.REACT_APP_API_IP}/api/authenticate`}>
             <Button className={LandingStyle.button} color="success">
               Login With Spotify
             </Button>
