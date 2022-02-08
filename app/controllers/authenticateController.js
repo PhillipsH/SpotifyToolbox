@@ -43,8 +43,7 @@ exports.refreshToken = exports.checkAuth = exports.getTokens = exports.authentic
 var axios_1 = __importDefault(require("axios"));
 var axios_retry_1 = __importDefault(require("axios-retry"));
 require("dotenv").config();
-var redirect_uri = "http://".concat(process.env.API_IP, "/api/authenticate/getTokens");
-// const redirect_uri: string = "http://52.188.116.255:5000/api/authenticate/getTokens";
+var redirect_uri = "".concat(process.env.API_IP, "/api/authenticate/getTokens");
 var client_id = process.env.CLIENT_ID;
 var client_secret = process.env.CLIENT_SECRET;
 var querystring = require("querystring");
@@ -110,7 +109,7 @@ function getTokens(req, res) {
                 })
                     .then(function (response) {
                     req.session["profile_id"] = response.data.id;
-                    res.redirect("http://".concat(process.env.API_IP));
+                    res.redirect("".concat(process.env.API_IP));
                 });
             })
                 .catch(function (error) {
