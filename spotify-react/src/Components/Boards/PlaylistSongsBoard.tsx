@@ -38,7 +38,6 @@ const PlaylistSongsBoard = (props) => {
   }
 
   useEffect(() => {
-    console.log("rerun")
     let likedSongsObjName: any = {};
     let likedSongsObjId: any = {};
     let playlistUniqueSongs: any = [];

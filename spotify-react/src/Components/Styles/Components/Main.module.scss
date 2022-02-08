@@ -228,9 +228,10 @@ ul {
 .navHeader {
   margin-top: 15px;
   display: flex;
+  justify-content: flex-start;
 }
 .titleLogo {
-  font-size: 1.5em;
+  font-size: 1.4em;
   font-weight: 500;
   margin-left: 8%;
 }
@@ -450,6 +451,7 @@ ul {
   }
   .navHeader {
     display: block;
+    // background:blue;
     padding-top: 15px;
     // padding-left: 15px;
   }

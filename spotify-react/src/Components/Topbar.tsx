@@ -26,7 +26,7 @@ export const Topbar = () => {
     <div className={LandingStyle.topbar + " " + LandingStyle[topbar]}>
       <div className={`${LandingStyle.titleLogo}`}>
         <FontAwesomeIcon icon={faPodcast} className={LandingStyle.navIcon} />
-        <span className={LandingStyle.title}>SpotifyTools</span>
+        <span className={LandingStyle.title}>SpotifyToolbox</span>
       </div>
       <div className={LandingStyle.topNav}>
         <a className="active" href="#home">

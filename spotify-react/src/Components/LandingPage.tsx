@@ -27,7 +27,7 @@ export const LandingPage = () => {
 
       <div id={"about"} className={LandingStyle.aboutContainer}>
         <div className={LandingStyle.content}>
-          <h2>What you can do with SpotifyTools?</h2>
+          <h2>What you can do with SpotifyToolbox?</h2>
           <div className={LandingStyle.summaryContent}>
             <div className={LandingStyle.textSummary}>
               <p>

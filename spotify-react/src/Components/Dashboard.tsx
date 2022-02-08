@@ -24,7 +24,6 @@ import { faBars} from "@fortawesome/free-solid-svg-icons";
 import { LoadingTypes } from "../flux/actions/types";
 import SavedBoard from "./Boards/SavedBoard";
 import MainStyle from "./Styles/Components/Main.module.scss";
-import Topbar from "./Topbar";
 
 export const Dashboard = (props) => {
   const [sidenavTheme, setSidenavTheme]: any = useState(false);
@@ -91,6 +90,14 @@ export const Dashboard = (props) => {
   return (
     <>
       <BrowserRouter>
+        <div
+          className={`${MainStyle.dashboardDiv} ${
+            sidenavTheme ? MainStyle.largeDashboard : ""
+          }`}
+        >
+          <h1 className={MainStyle.dashboardTitle}>Spotify Dashboard</h1>
+          {mainContent}
+        </div>
         {sidenavTheme ? (
           <div className={`${MainStyle.fixedToggle}`}>
             <a
@@ -110,14 +117,6 @@ export const Dashboard = (props) => {
           sidenavTheme={sidenavTheme}
           setSidenavTheme={setSidenavTheme}
         ></Sidenav>
-        <div
-          className={`${MainStyle.dashboardDiv} ${
-            sidenavTheme ? MainStyle.largeDashboard : ""
-          }`}
-        >
-          <h1 className={MainStyle.dashboardTitle}>Spotify Dashboard</h1>
-          {mainContent}
-        </div>
         <Sidebar></Sidebar>
       </BrowserRouter>
     </>

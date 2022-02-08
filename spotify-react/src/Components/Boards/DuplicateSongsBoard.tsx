@@ -62,7 +62,6 @@ const DuplicateSongsBoard = (props) => {
               artist_name: props.likedSongs.list[index].artist.artist_name,
             },
 
-            // image: (props.likedSongs.list[index].album.album_images[2].url ?? null),
             image: ((props.likedSongs.list[index].album.album_images[2] != undefined) ? props.likedSongs.list[index].album.album_images[2].url : undefined),
             list: [
               likedSongsObj[
@@ -128,7 +127,6 @@ const DuplicateSongsBoard = (props) => {
 
             {val.list.map((val, index) => {
               var date = new Date(val.added_at).toDateString();
-              // console.log(val.track_id + val.linked_from_id)
               return (
                 <DuplicateSongSingle
                   trackName={val.track_name}

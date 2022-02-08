@@ -75,7 +75,6 @@ const DuplicateToolbox = ({
   const handleForm = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    console.log(value);
     setPlaylistDetails((values) => ({ ...values, [name]: value }));
   };
 

@@ -15,7 +15,6 @@ export function addToPlaylist(playlistSongs){
   .post('http://localhost:5000/spotify/addToPlaylist', playlistData,
   {withCredentials: true,})
   .then(res =>{
-    console.log(res)
   });
 }
 

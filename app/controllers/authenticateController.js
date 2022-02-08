@@ -51,7 +51,6 @@ var querystring = require("querystring");
 (0, axios_retry_1.default)(axios_1.default, {
     retries: 15,
     retryDelay: function (error) {
-        console.log(error);
         return 2500;
     },
     retryCondition: function (error) {
@@ -117,10 +116,8 @@ function getTokens(req, res) {
                 .catch(function (error) {
                 var _a;
                 if (((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.status) == undefined) {
-                    console.log(error);
                 }
                 else {
-                    console.log(error);
                 }
             });
             return [2 /*return*/];

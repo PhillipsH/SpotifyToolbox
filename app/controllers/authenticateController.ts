@@ -13,7 +13,6 @@ const querystring = require("querystring");
 axiosRetry(axios, {
   retries: 15,
   retryDelay: (error) => {
-    console.log(error)
     return 2500;
   },
   retryCondition: (error) => {
@@ -74,9 +73,7 @@ export async function getTokens(req: Request, res: Response) {
     })
     .catch((error) => {
       if (error?.response?.status == undefined) {
-        console.log(error);
       }else{
-        console.log(error)
       }
     });
 }

@@ -54,7 +54,7 @@ export const Sidenav = (props) => {
         <div className={`${MainStyle.titleLogo}`}>
           <FontAwesomeIcon icon={faPodcast} className={``} />
            
-          <span className={MainStyle.mainTitle}> SpotifyTools</span>
+          <span className={MainStyle.mainTitle}> SpotifyToolbox</span>
         </div>
       </div>
 

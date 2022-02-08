@@ -1,18 +1,16 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import axios from "axios";
 import axiosRetry from "axios-retry";
 import { refreshToken } from "./authenticateController";
 require("dotenv").config();
 
-const client_id: string | undefined = process.env.CLIENT_ID;
-const client_secret: string | undefined = process.env.CLIENT_SECRET;
 
-const refreshTokenUri: string = "https://accounts.spotify.com/api/token";
-
+/*
+  Retry request on error 429 and 503
+*/
 axiosRetry(axios, {
-  retries: 15,
+  retries: 25,
   retryDelay: (error) => {
-    console.log(error)
     return 2500;
   },
   retryCondition: (error) => {
@@ -21,9 +19,9 @@ axiosRetry(axios, {
 });
 
 /*
- Calls The Spotify API
+ Get all saved songs from Spotify API
 */
-export async function getLikedSongs(req: Request, res: Response) {
+export async function getLikedSongs(req: Request, res: Response, next: NextFunction) {
   const LIKED_SONGS_URI = "https://api.spotify.com/v1/me/tracks";
 
   async function spotifyApiCall(url: string, offset) {
@@ -40,34 +38,31 @@ export async function getLikedSongs(req: Request, res: Response) {
           offset: offset,
         },
       });
+
       return response.data;
     } catch (error: any) {
       if (error.response.status != undefined) {
         switch (error.response.status) {
           case 429:
-            console.log("timeout error");
             setTimeout(function () {},
             error.response.headers["retry-after"] * 1000);
             return spotifyApiCall(url, offset);
           case 503:
-            console.log("503 error");
             setTimeout(function () {}, 5000);
             return spotifyApiCall(url, offset);
           case 401:
             await refreshToken(req, res);
             return spotifyApiCall(url, offset);
-
           default:
             return [];
         }
       } else {
-        console.log("error");
+        return next(error)
       }
     }
   }
 
   let initialCall = await spotifyApiCall(LIKED_SONGS_URI, 0);
-
   let promiseArr: any = [];
 
   for (let i = 50; i < initialCall.total; i += 50) {
@@ -81,9 +76,14 @@ export async function getLikedSongs(req: Request, res: Response) {
   for (let i in songApiArr) {
     totalLikedSongs = totalLikedSongs.concat(songApiArr[i].items);
   }
-  res.send(totalLikedSongs);
+  
+  res.status(200).send(totalLikedSongs);
 }
 
+
+/*
+  Get all playlists created by the user, then get each song in the array of playlists
+*/
 export async function getPlaylistSongs(req: Request, res: Response) {
   const allPlaylistUrl: string =
     "https://api.spotify.com/v1/me/playlists?limit=50";
@@ -104,25 +104,22 @@ export async function getPlaylistSongs(req: Request, res: Response) {
         await recursiveSpotify(response.data.next)
       );
     } catch (error: any) {
-      if (error.response.status == undefined) {
-        // console.log(error)
-      }
-      switch (error.response.status) {
-        case 429:
-          console.log("timeout error");
-          setTimeout(function () {}, 5000);
-          return recursiveSpotify(url);
-        case 503:
-          console.log("error 503");
-          setTimeout(function () {}, 5000);
-          return recursiveSpotify(url);
-        case 401:
-          await refreshToken(req, res);
-          return recursiveSpotify(url);
-        default:
-          console.log("other error check PLAYLIST");
-          console.log(error.response.status);
-          return [];
+
+      if (error?.response?.status != undefined) {
+        switch (error.response.status) {
+          case 429:
+            setTimeout(function () {},
+            error.response.headers["retry-after"] * 1000);
+            return recursiveSpotify(url);
+          case 503:
+            setTimeout(function () {}, 5000);
+            return recursiveSpotify(url);
+          case 401:
+            await refreshToken(req, res);
+            return recursiveSpotify(url);
+          default:
+            return [];
+        }
       }
     }
   }
@@ -151,7 +148,6 @@ export async function getPlaylistSongs(req: Request, res: Response) {
       );
     } catch (error: any) {
       if (error.response.status == undefined) {
-        console.log("other error recursive playlist");
       }
       switch (error.response.status) {
         case 429:
@@ -165,8 +161,6 @@ export async function getPlaylistSongs(req: Request, res: Response) {
           await refreshToken(req, res);
           return recursivePlaylist(url, playlistName, playlistId);
         default:
-          console.log("OTHER ERROR PLEASE CHECK PLAYLIST 2");
-          console.log(error.response.status);
           return [];
       }
     }
@@ -174,13 +168,14 @@ export async function getPlaylistSongs(req: Request, res: Response) {
   //Getting all the playlists
   let playlists = await recursiveSpotify(allPlaylistUrl);
 
-  //Removing all playlits not created by current user
+  //Removing all playlists not created by current user
   for (let i = 0; i < playlists.length; i++) {
     if (playlists[i].owner.id != req.session["profile_id"]) {
       playlists.splice(i, 1);
       i -= 1;
     }
   }
+
   // Combining all promises in one array
   let combinedPlaylistPromise: any = [];
   for (let playlistIndex in playlists) {
@@ -204,16 +199,19 @@ export async function getPlaylistSongs(req: Request, res: Response) {
         uniqueTracks[combinedPlaylists[playlistIndex][songIndex].track.id] =
           combinedPlaylists[playlistIndex][songIndex];
       } catch (error) {
-        console.log("not there");
       }
     }
   }
   //converting the object into an array
   let uniqueTracksArr = [];
   uniqueTracksArr = Object.values(uniqueTracks);
-  res.send(uniqueTracksArr);
+  res.status(200).send(uniqueTracksArr);
 }
 
+
+/*
+
+*/
 export async function getGenre(req: Request, res: Response) {
   const GENRE_API = `https://api.spotify.com/v1/artists`;
   let artists;
@@ -239,7 +237,6 @@ export async function getGenre(req: Request, res: Response) {
       return response.data;
     } catch (error: any) {
       if (error.response.status == undefined) {
-        console.log("other error");
       }
       switch (error.response.status) {
         case 429:
@@ -261,9 +258,13 @@ export async function getGenre(req: Request, res: Response) {
     }
   }
 
-  res.send(await addGenre(artists.toString()));
+  res.status(200).send(await addGenre(artists.toString()));
 }
 
+
+/*
+
+*/
 export async function getProfile(req: Request, res: Response) {
   const profileURI = "https://api.spotify.com/v1/me";
   async function getSpotifyProfile() {
@@ -278,11 +279,9 @@ export async function getProfile(req: Request, res: Response) {
       return response.data;
     } catch (error: any) {
       if (error.response.status == undefined) {
-        console.log(error);
       }
       switch (error.response.status) {
         case 429:
-          console.log("timeout error");
           setTimeout(function () {},
           error.response.headers["retry-after"] * 1000);
           return getSpotifyProfile();
@@ -295,13 +294,14 @@ export async function getProfile(req: Request, res: Response) {
     }
   }
   let profile = await getSpotifyProfile();
-  console.log(profile);
-  res.send(profile);
+  res.status(200).send(profile);
 }
 
+/*
+
+*/
 export async function removeLikedSongs(req: Request, res: Response) {
   let url = "https://api.spotify.com/v1/me/tracks";
-  console.log(req.session["access_token"]);
 
   async function deleteSpotify(url: string, songs) {
     try {
@@ -318,11 +318,9 @@ export async function removeLikedSongs(req: Request, res: Response) {
       return response.data.items;
     } catch (error: any) {
       if (error.response.status == undefined) {
-        console.log(error);
       }
       switch (error.response.status) {
         case 429:
-          console.log("timeout error");
           setTimeout(function () {},
           error.response.headers["retry-after"] * 1000);
           return deleteSpotify(url, songs);
@@ -340,13 +338,13 @@ export async function removeLikedSongs(req: Request, res: Response) {
   }
 }
 
-export async function addLikedSongs(req: Request, res: Response) {
-  console.log("RUNNING")
-  console.log(req.session["access_token"])
+/*
+
+*/
+export async function addLikedSongs(req: Request, res: Response, next: NextFunction) {
   const url = 'https://api.spotify.com/v1/me/tracks';
   async function addLikedSongsCall(url: string, songs) {
     try {
-      console.log(songs)
       let response = await axios.put(url, songs, {
         headers: {
           Accept: "application/json",
@@ -356,21 +354,21 @@ export async function addLikedSongs(req: Request, res: Response) {
       });
       return response.data.items;
     } catch (error: any) {
-      if (error.response.status == undefined) {
-        console.log(error);
-      }
-      switch (error.response.status) {
+      if (error.response.status != undefined) {      
+        switch (error.response.status) {
         case 429:
-          console.log("timeout error");
           setTimeout(function () {},
           error.response.headers["retry-after"] * 1000);
           return addLikedSongsCall(url, songs);
         case 401:
-          console.log(error)
           await refreshToken(req, res);
-          // return addLikedSongsCall(url, songs);
+          return addLikedSongsCall(url, songs);
         default:
           return [];
+        }
+      }
+      else{
+        return next(error)
       }
     }
   }
@@ -380,7 +378,11 @@ export async function addLikedSongs(req: Request, res: Response) {
   }
 }
 
-export async function createPlaylist(req: Request, res: Response) {
+
+/*
+
+*/
+export async function createPlaylist(req: Request, res: Response, next: NextFunction) {
   const createPlaylistURL =
     "https://api.spotify.com/v1/users/" +
     req.session["profile_id"] +
@@ -398,29 +400,31 @@ export async function createPlaylist(req: Request, res: Response) {
       });
       return response.data.id;
     } catch (error: any) {
-      if (error.response.status == undefined) {
-        console.log(error);
+      if (error?.response?.status != undefined) {
+        switch (error.response.status) {
+          case 429:
+            setTimeout(function () {},
+            error.response.headers["retry-after"] * 1000);
+            return getPlaylistId(url);
+          case 401:
+            await refreshToken(req, res);
+            return getPlaylistId(url);
+          default:
+            return [];
+        }
       }
-      switch (error.response.status) {
-        case 429:
-          console.log("timeout error");
-          setTimeout(function () {},
-          error.response.headers["retry-after"] * 1000);
-          return getPlaylistId(url);
-        case 401:
-          await refreshToken(req, res);
-          return getPlaylistId(url);
-        default:
-          console.log(error.response.status);
-          return [];
-      }
+
     }
   }
   let playlistId = await getPlaylistId(createPlaylistURL);
-  res.send(playlistId);
+  res.status(200).send(playlistId);
 }
 
-export async function addSongsToPlaylist(req: Request, res: Response) {
+
+/*
+
+*/
+export async function addSongsToPlaylist(req: Request, res: Response, next: NextFunction) {
   const playlistId = req.body.playlistId;
   const songUris = req.body.songUris;
 
@@ -439,21 +443,21 @@ export async function addSongsToPlaylist(req: Request, res: Response) {
       });
       return response.data.items;
     } catch (error: any) {
-      if (error.response.status == undefined) {
-        console.log(error);
+      if (error.response.status != undefined) {
+        switch (error.response.status) {
+          case 429:
+            setTimeout(function () {},
+            error.response.headers["retry-after"] * 1000);
+            return addToPlaylistCall(url, songs);
+          case 401:
+            await refreshToken(req, res);
+            return addToPlaylistCall(url, songs);
+          default:
+            return [];
+        }
       }
-      switch (error.response.status) {
-        case 429:
-          console.log("timeout error");
-          setTimeout(function () {},
-          error.response.headers["retry-after"] * 1000);
-          return addToPlaylistCall(url, songs);
-        case 401:
-          await refreshToken(req, res);
-          return addToPlaylistCall(url, songs);
-        default:
-          console.log(error.response.status);
-          return [];
+      else{
+        return next(error)
       }
     }
   }
@@ -463,11 +467,14 @@ export async function addSongsToPlaylist(req: Request, res: Response) {
   }
 }
 
-export async function top(req: Request, res: Response) {
+
+/*
+
+*/
+export async function top(req: Request, res: Response, next:NextFunction) {
   const rankType = req.query.rankType;
   const rankTime = req.query.rankTime;
   const url = "https://api.spotify.com/v1/me/top/" + rankType;
-  console.log(req.session["access_token"],)
   async function topCall() {
     try {
       let response = await axios.get(url, {
@@ -483,24 +490,24 @@ export async function top(req: Request, res: Response) {
       });
       return response.data;
     } catch (error: any) {
-      if (error.response.status == undefined) {
-        console.log(error);
+      if (error.response.status != undefined) {
+        switch (error.response.status) {
+          case 429:
+            setTimeout(function () {},
+            error.response.headers["retry-after"] * 1000);
+            return topCall();
+          case 401:
+            await refreshToken(req, res);
+            return topCall();
+          default:
+            return [];
+        }
       }
-      switch (error.response.status) {
-        case 429:
-          console.log("timeout error");
-          setTimeout(function () {},
-          error.response.headers["retry-after"] * 1000);
-          return topCall();
-        case 401:
-          await refreshToken(req, res);
-          return topCall();
-        default:
-          console.log(error.response.status);
-          return [];
+      else{
+        return next(error)
       }
     }
   }
   let topObj = await topCall();
-  res.send(topObj.items);
+  res.status(200).send(topObj.items);
 }

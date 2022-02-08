@@ -15,7 +15,6 @@ export const addLoading = (loadingType) => {
 };
 
 export const removeLoading = (loadingType) => {
-    // console.log(loadingType)
     return({
         type:REMOVE_LOADING,
         payload:loadingType
@@ -23,7 +22,6 @@ export const removeLoading = (loadingType) => {
 };
 
 export const setBoard = (boardType) => {
-    // console.log(loadingType)
     return({
         type:SET_BOARD,
         payload:boardType
