@@ -264,8 +264,11 @@ ul {
   background-color: $bluer-color;
   color: white;
 }
-.navLink {
-  color: inherit;
+.navSelection a{
+  color: #818181;
+}
+.navSelected a{
+  color: white;
 }
 .navIcon {
   margin-right: 10px;
