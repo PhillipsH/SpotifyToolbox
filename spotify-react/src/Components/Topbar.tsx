@@ -16,7 +16,9 @@ export const Topbar = () => {
     var currentScrollPos = window.pageYOffset;
     if (prevScroll < currentScrollPos) {
       setTopbar("noShowBar");
-    } else {
+    } else if (currentScrollPos == 0){
+      setTopbar("invis");
+    }else{
       setTopbar("showBar");
     }
     prevScroll = (currentScrollPos);

@@ -157,7 +157,7 @@ export const Sidenav = (props) => {
               <span className={MainStyle.navName}>Spotify Profile</span>
             </a>
           </li>
-          <li className={MainStyle.navSelection}>
+          {/* <li className={MainStyle.navSelection}>
             <a
               href={"https://github.com/PhillipsH/SpotifyTools"}
               target="_blank"
@@ -167,7 +167,7 @@ export const Sidenav = (props) => {
               <FontAwesomeIcon icon={faGithub} className={MainStyle.navIcon} />
               <span className={MainStyle.navName}>Github Repo</span>
             </a>
-          </li>
+          </li> */}
           <li className={MainStyle.navSelection}>
             <a href={"https://Ko-fi.com/wagyubeep"} target="_blank" className={`${MainStyle.navLink} ${""}`}>
               <FontAwesomeIcon icon={faDonate} className={MainStyle.navIcon} />

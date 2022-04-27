@@ -5,41 +5,43 @@ $bluer-color: #1b9dfe;
 $yellow-color: #ffbb55;
 $purple-color: #717eee;
 
-
-.topbar{
-  height:80px;
-  position:fixed;
-  top:0;
-  width:100%;
-  display:flex;
+.topbar {
+  height: 80px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
   align-items: center;
-  justify-content:flex-start;
-  background-color: black;
-  color:white;
+  justify-content: flex-start;
+  background-color: none;
+  color: white;
 }
 .titleLogo {
-  display:flex;
-  align-items:center;
-  font-size: 1.8em;
+  display: flex;
+  align-items: center;
+  font-size: 2em;
   font-weight: 500;
   margin-left: 15%;
-  margin-right:auto;
-  order:-1;
-  height:50px;
+  margin-right: auto;
+  order: -1;
+  height: 50px;
 }
-.topNav{
-  color:white;
-  justify-content:flex-end;
-  margin-right:15%;
-  margin-left:20px;
+.topNav {
+  color: white;
+  justify-content: flex-end;
+  margin-right: 15%;
+  margin-left: 20px;
 }
-.topNav a{
-  color:inherit;
-  margin-right:8px;
-  font-size:1.2em;
+.topNav a {
+  color: inherit;
+  margin-right: 8px;
+  font-size: 1.2em;
 }
-.noShowBar{
-  display:none;
+.noShowBar {
+  display: none;
+}
+.showBar {
+  background-color: rgb(62, 62, 62);
 }
 
 .backgroundImg {
@@ -59,9 +61,9 @@ $purple-color: #717eee;
 }
 
 .aboutContainer {
-padding:0;
-margin:0;
-background: #E5E4E2;
+  padding: 0;
+  margin: 0;
+  background: #e5e4e2;
 }
 
 .aboutContainer h2 {
@@ -69,27 +71,27 @@ background: #E5E4E2;
   font-size: 2.5em;
 }
 
-.content{
-    height:800px;
-    overflow:hidden;
-    padding:5%;
+.content {
+  height: 800px;
+  overflow: hidden;
+  padding: 5%;
 }
-.background{
-    background-image: url("../../../Icons/wave.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
+.background {
+  background-image: url("../../../Icons/wave.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-.summaryContent{
-    display:flex;
-    overflow:hidden;
+.summaryContent {
+  display: flex;
+  overflow: hidden;
 }
-.textSummary{
-    width:33%;
-    padding:3%;
-    font-size:1.5em;
+.textSummary {
+  width: 33%;
+  padding: 3%;
+  font-size: 1.5em;
 }
-.imageSummary{
-    margin-left:auto;
+.imageSummary {
+  margin-left: auto;
 }
 //INFO CARDS
 .cardsContainer {
@@ -99,7 +101,7 @@ background: #E5E4E2;
   border-color: lightgray;
   border-width: 1px;
   border-radius: 25px;
-  height:100%;
+  height: 100%;
 }
 
 .cardInfo {
@@ -119,7 +121,7 @@ background: #E5E4E2;
 
   //   -webkit-box-shadow: 0px -9px 0px #16a085;
   //   -moz-box-shadow: 0px -9px 0px #16a085;
-  background:white;
+  background: white;
   box-shadow: 7px -7px 0px #05c665;
   overflow: hidden;
 }
@@ -153,34 +155,32 @@ background: #E5E4E2;
 }
 
 //FAQ
-.faq{
+.faq {
   // display:flex;
 }
-.qaContainer{
-  display:flex;
+.qaContainer {
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
 }
 .qa {
-  width:45%;
-  margin-top:15px;
-  margin-bottom:15px;
+  width: 45%;
+  margin-top: 15px;
+  margin-bottom: 15px;
   // width:100px;
-  height:250px;
-  background:white;
+  height: 250px;
+  background: white;
   // border:solid;
   border-radius: 5px;
-  padding:20px;
-  overflow:hidden;
+  padding: 20px;
+  overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-.question{
-  font-weight:bold;
-  font-size:1.2em;
+.question {
+  font-weight: bold;
+  font-size: 1.2em;
 }
-.answer{
-  
+.answer {
 }
 /* 
   ##Device = Desktops
@@ -188,9 +188,7 @@ background: #E5E4E2;
 */
 
 @media (min-width: 1281px) {
-  
   /* CSS */
-  
 }
 
 /* 
@@ -199,9 +197,7 @@ background: #E5E4E2;
 */
 
 @media (min-width: 1025px) and (max-width: 1280px) {
-  
   /* CSS */
-  
 }
 
 /* 
@@ -210,25 +206,24 @@ background: #E5E4E2;
 */
 
 @media (max-width: 1024px) {
-  
   /* CSS */
-  .textSummary{
-    width:100%;
-    font-weight:500;
+  .textSummary {
+    width: 100%;
+    font-weight: 500;
   }
-  .imageSummary{
-    display:none;
+  .imageSummary {
+    display: none;
   }
-  .mainContent{
-    width:100%;
+  .mainContent {
+    width: 100%;
   }
 
   .cardsContainer {
     grid-template-columns: 1fr 1fr;
   }
 
-  .summaryContent{
-    display:block;
+  .summaryContent {
+    display: block;
   }
 }
 
@@ -238,7 +233,6 @@ background: #E5E4E2;
 */
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-  
   /* CSS */
 }
 
@@ -248,7 +242,6 @@ background: #E5E4E2;
 */
 
 @media (min-width: 481px) and (max-width: 767px) {
-  
   /* CSS */
   .cardsContainer {
     grid-template-columns: 1fr;
@@ -261,7 +254,5 @@ background: #E5E4E2;
 */
 
 @media (min-width: 320px) and (max-width: 480px) {
-  
   /* CSS */
-  
 }

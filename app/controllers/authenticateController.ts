@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
-import axios from "axios"
-import axiosRetry from "axios-retry"
+import axios from "axios";
+import axiosRetry from "axios-retry";
 require("dotenv").config();
 
-const redirect_uri: string = `${process.env.API_IP}/api/authenticate/getTokens`
+const redirect_uri: string = `${process.env.API_IP}/api/authenticate/getTokens`;
 const client_id: string | undefined = process.env.CLIENT_ID;
 const client_secret: string | undefined = process.env.CLIENT_SECRET;
 const querystring = require("querystring");
@@ -72,7 +72,7 @@ export async function getTokens(req: Request, res: Response) {
     })
     .catch((error) => {
       if (error?.response?.status == undefined) {
-      }else{
+      } else {
       }
     });
 }
@@ -87,7 +87,7 @@ export async function checkAuth(req: Request, res: Response) {
 
 export async function refreshToken(req: Request, res: Response) {
   const refreshTokenUri: string = "https://accounts.spotify.com/api/token";
-  try{
+  try {
     let response = await axios({
       url: refreshTokenUri,
       method: "POST",
@@ -100,9 +100,9 @@ export async function refreshToken(req: Request, res: Response) {
         grant_type: "refresh_token",
         refresh_token: req.session["refresh_token"],
       },
-    })
+    });
     req.session["access_token"] = response.data.access_token;
-  }catch{
+  } catch {
     res.redirect(`${process.env.API_IP}`);
   }
 }
